@@ -1,9 +1,3 @@
-.card {
-  margin-block: 0 60px;
-  margin-inline: auto;
-  inline-size: 85%;
-}
-
 .brand {
   text-align: center;
 }
@@ -25,6 +19,7 @@
   grid-template-columns: 1fr 1fr;
   margin-inline: auto;
   max-inline-size: 860px;
+  padding-block-end: 20px;
 }
 
 .chunk {
@@ -56,18 +51,8 @@
   grid-area: content;
 }
 
-.headingIcon {
-  color: var(--primary-color);
-}
-
 @media only screen and (width <=650px) {
   .about-chunks {
     grid-template-columns: 1fr;
-  }
-}
-
-@media only screen and (width <=680px) {
-  .card {
-    inline-size: 90%;
   }
 }

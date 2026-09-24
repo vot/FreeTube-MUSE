@@ -1,55 +1,52 @@
 <template>
   <div class="settingsPage">
     <template v-if="unlocked">
-      <div v-show="settingsSectionTypeOpenInMobile != null">
-        <button
-          class="returnToMenuMobileButton"
-          :aria-label="t('Settings.Return to Settings Menu')"
-          :title="t('Settings.Return to Settings Menu')"
-          @click="returnToSettingsMenu"
+      <div class="settingsToolbar">
+        <FtButton
+          v-if="USING_ELECTRON"
+          :label="t('KeyboardShortcutPrompt.Show Keyboard Shortcuts')"
+          :icon="['fas', 'keyboard']"
+          @click="showKeyboardShortcutPrompt"
+        />
+      </div>
+      <FtFlexBox
+        class="tabs"
+        role="tablist"
+        :aria-label="$t('Settings.Settings Tabs')"
+      >
+        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+        <div
+          v-for="tab in settingsTabs"
+          :key="tab.type"
+          :ref="(element) => setTabRef(element, tab.type)"
+          class="tab"
+          role="tab"
+          :aria-selected="currentTab === tab.type"
+          :aria-controls="`${tab.type}SettingsPanel`"
+          :tabindex="currentTab === tab.type ? 0 : -1"
+          :class="{ selectedTab: currentTab === tab.type }"
+          @click="changeTab(tab.type)"
+          @keydown.space.enter.prevent="changeTab(tab.type)"
+          @keydown.left.right="focusTab($event, tab.type)"
         >
           <FontAwesomeIcon
-            class="returnToMenuMobileIcon"
-            :icon="['fas', 'angle-left']"
+            :icon="tab.icon"
+            class="tabIcon"
           />
-        </button>
-      </div>
-      <FtSettingsMenu
-        v-show="isInDesktopView || settingsSectionTypeOpenInMobile == null"
-        ref="menuRef"
-        :settings-sections="settingsSectionComponents"
-        :active-section="activeSection"
-        @navigate-to-section="navigateToSection"
-      />
+          {{ tab.title }}
+        </div>
+      </FtFlexBox>
       <div
-        v-show="isInDesktopView || settingsSectionTypeOpenInMobile != null"
-        class="settingsContent"
+        :id="`${currentTab}SettingsPanel`"
+        class="settingsPanel"
+        role="tabpanel"
       >
-        <div class="switchRow">
-          <FtButton
-            v-if="USING_ELECTRON"
-            :label="t('KeyboardShortcutPrompt.Show Keyboard Shortcuts')"
-            :icon="['fas', 'keyboard']"
-            @click="showKeyboardShortcutPrompt"
-          />
-          <FtToggleSwitch
-            class="settingsToggle"
-            :label="t('Settings.Sort Settings Sections (A-Z)')"
-            :default-value="settingsSectionSortEnabled"
-            @change="updateSettingsSectionSortEnabled"
-          />
-        </div>
-        <div class="settingsSections">
-          <component
-            :is="section.component"
-            v-for="section in settingsSectionComponents"
-            :key="section.type"
-            ref="sectionRefs"
-            class="section"
-            :class="{ hideOnMobile: settingsSectionTypeOpenInMobile !== section.type }"
-            :data-section="section.type"
-          />
-        </div>
+        <component
+          :is="section.component"
+          v-for="section in activeTabSections"
+          :key="`${currentTab}-${section.type}`"
+          class="section"
+        />
       </div>
     </template>
     <PasswordDialog
@@ -61,7 +58,7 @@
 
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import GeneralSettings from '../../components/GeneralSettings/GeneralSettings.vue'
@@ -78,244 +75,167 @@ import ParentalControlSettings from '../../components/ParentalControlSettings.vu
 import ExperimentalSettings from '../../components/ExperimentalSettings/ExperimentalSettings.vue'
 import PasswordSettings from '../../components/PasswordSettings/PasswordSettings.vue'
 import PasswordDialog from '../../components/PasswordDialog/PasswordDialog.vue'
-import FtToggleSwitch from '../../components/FtToggleSwitch/FtToggleSwitch.vue'
 import FtButton from '../../components/FtButton/FtButton.vue'
-import FtSettingsMenu from '../../components/FtSettingsMenu/FtSettingsMenu.vue'
+import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
+import AboutSettings from './AboutSettings.vue'
 
 import store from '../../store/index'
 
 const USING_ELECTRON = !!process.env.IS_ELECTRON
-const SETTINGS_MOBILE_WIDTH_THRESHOLD = 1015
 
-const { locale, t } = useI18n()
+const { t } = useI18n()
 
-const isInDesktopView = ref(true)
-const settingsSectionTypeOpenInMobile = ref(null)
-const activeSection = ref(null)
+/** @type {('general' | 'display' | 'data' | 'safety' | 'about')[]} */
+const tabTypes = ['general', 'display', 'data', 'safety', 'about']
 
-/** @type {import('vue').ComputedRef<boolean>} */
-const settingsSectionSortEnabled = computed(() => store.getters.getSettingsSectionSortEnabled)
+/**
+ * @returns {'general' | 'display' | 'data' | 'safety' | 'about'}
+ */
+function restoreCurrentTab() {
+  const savedTab = sessionStorage.getItem('Settings/currentTab')
+  return tabTypes.includes(savedTab) ? savedTab : 'general'
+}
 
-const settingsComponentsData = computed(() => {
-  return [
-    {
-      type: 'theme',
-      title: t('Settings.Theme Settings.Theme Settings'),
-      icon: ['fas', 'display'],
-      component: ThemeSettings
-    },
-    {
-      type: 'player',
-      title: t('Settings.Player Settings.Player Settings'),
-      icon: ['fas', 'circle-play'],
-      component: PlayerSettings
-    },
-    ...(process.env.IS_ELECTRON
-      ? [{
-          type: 'external-player',
-          title: t('Settings.External Player Settings.External Player Settings'),
-          icon: ['fas', 'clapperboard'],
-          component: ExternalPlayerSettings
-        }]
-      : []),
-    {
-      type: 'subscription',
-      title: t('Settings.Subscription Settings.Subscription Settings'),
-      icon: ['fas', 'play'],
-      component: SubscriptionSettings
-    },
-    {
-      type: 'distraction',
-      title: t('Settings.Distraction Free Settings.Distraction Free Settings'),
-      icon: ['fas', 'eye-slash'],
-      component: DistractionSettings
-    },
-    {
-      type: 'parental-control',
-      title: t('Settings.Parental Control Settings.Parental Control Settings'),
-      icon: ['fas', 'user-lock'],
-      component: ParentalControlSettings
-    },
-    {
-      type: 'privacy',
-      title: t('Settings.Privacy Settings.Privacy Settings'),
-      icon: ['fas', 'lock'],
-      component: PrivacySettings
-    },
-    {
-      type: 'data',
-      title: t('Settings.Data Settings.Data Settings'),
-      icon: ['fas', 'database'],
-      component: DataSettings
-    },
-    ...(process.env.IS_ELECTRON
-      ? [
-          {
-            type: 'proxy',
-            title: t('Settings.Proxy Settings.Proxy Settings'),
-            icon: ['fas', 'network-wired'],
-            component: ProxySettings
-          }
-        ]
-      : []),
-    {
-      type: 'sponsor-block',
-      title: t('Settings.SponsorBlock Settings.SponsorBlock Settings'),
-      // TODO: replace with SponsorBlock icon
-      icon: ['fas', 'shield'],
-      component: SponsorBlockSettings
-    },
-    {
-      type: 'password',
-      title: t('Settings.Password Settings.Password Settings'),
-      icon: ['fas', 'key'],
-      component: PasswordSettings
-    },
-    ...(process.env.IS_ELECTRON
-      ? [{
-          type: 'experimental',
-          title: t('Settings.Experimental Settings.Experimental Settings'),
-          icon: ['fas', 'flask'],
-          component: ExperimentalSettings
-        }]
-      : []),
-  ]
+/** @type {import('vue').Ref<'general' | 'display' | 'data' | 'safety' | 'about'>} */
+const currentTab = ref(restoreCurrentTab())
+
+watch(currentTab, (value) => {
+  // Save last used tab, restore when view mounted again
+  sessionStorage.setItem('Settings/currentTab', value)
 })
 
-const collator = computed(() => {
-  return new Intl.Collator([locale.value, 'en'], { sensitivity: 'base' })
-})
-
-const settingsSectionComponents = computed(() => {
-  let settingsSections = settingsComponentsData.value
-
-  if (settingsSectionSortEnabled.value) {
-    const collator_ = collator.value
-
-    settingsSections = settingsSections.toSorted((a, b) => {
-      return collator_.compare(a.title, b.title)
-    })
-  }
-
-  // ensure General Settings is placed first regardless of sorting
-  const generalSettingsEntry = {
+const settingsTabs = computed(() => [
+  {
     type: 'general',
-    title: t('Settings.General Settings.General Settings'),
+    title: t('Settings.Tabs.General'),
     icon: ['fas', 'border-all'],
-    component: GeneralSettings
+    sections: [
+      { type: 'general', component: GeneralSettings },
+      { type: 'subscription', component: SubscriptionSettings },
+      ...(process.env.IS_ELECTRON
+        ? [{
+            type: 'experimental',
+            component: ExperimentalSettings
+          }]
+        : [])
+    ]
+  },
+  {
+    type: 'display',
+    title: t('Settings.Tabs.Display'),
+    icon: ['fas', 'display'],
+    sections: [
+      { type: 'theme', component: ThemeSettings },
+      { type: 'player', component: PlayerSettings },
+      ...(process.env.IS_ELECTRON
+        ? [{
+            type: 'external-player',
+            component: ExternalPlayerSettings
+          }]
+        : []),
+      { type: 'distraction', component: DistractionSettings },
+      { type: 'sponsor-block', component: SponsorBlockSettings }
+    ]
+  },
+  {
+    type: 'data',
+    title: t('Settings.Tabs.Data'),
+    icon: ['fas', 'database'],
+    sections: [
+      { type: 'data', component: DataSettings },
+      { type: 'privacy', component: PrivacySettings },
+      ...(process.env.IS_ELECTRON
+        ? [{
+            type: 'proxy',
+            component: ProxySettings
+          }]
+        : [])
+    ]
+  },
+  {
+    type: 'safety',
+    title: t('Settings.Tabs.Safety'),
+    icon: ['fas', 'shield'],
+    sections: [
+      { type: 'parental-control', component: ParentalControlSettings },
+      { type: 'password', component: PasswordSettings }
+    ]
+  },
+  {
+    type: 'about',
+    title: t('Settings.Tabs.About'),
+    icon: ['fas', 'info-circle'],
+    sections: [
+      { type: 'about', component: AboutSettings }
+    ]
   }
+])
 
-  return [generalSettingsEntry, ...settingsSections]
+const activeTabSections = computed(() => {
+  return settingsTabs.value.find(tab => tab.type === currentTab.value)?.sections ?? []
 })
 
 const unlocked = ref(store.getters.getSettingsPassword === '')
 
-if (unlocked.value) {
-  onMounted(handleMounted)
-}
-
 function handleUnlock() {
   unlocked.value = true
-
-  nextTick(() => {
-    handleMounted()
-  })
 }
-
-onBeforeUnmount(() => {
-  document.removeEventListener('scroll', markScrolledToSectionAsActive)
-  window.removeEventListener('resize', handleResize)
-})
 
 function showKeyboardShortcutPrompt() {
   store.dispatch('showKeyboardShortcutPrompt')
 }
 
 /**
- * @param {boolean} value
+ * @param {'general' | 'display' | 'data' | 'safety' | 'about'} tab
  */
-function updateSettingsSectionSortEnabled(value) {
-  store.dispatch('updateSettingsSectionSortEnabled', value)
-}
-
-function handleMounted() {
-  handleResize()
-  window.addEventListener('resize', handleResize)
-  document.addEventListener('scroll', markScrolledToSectionAsActive)
-
-  // mark first section as active before any scrolling has taken place
-  activeSection.value = settingsSectionComponents.value[0].type
-}
-
-const sectionRefs = useTemplateRef('sectionRefs')
-
-/**
- * @param {string} sectionType
- */
-function navigateToSection(sectionType) {
-  if (isInDesktopView.value) {
-    nextTick(() => {
-      const sectionElement = sectionRefs.value.find(sectionRef => {
-        return sectionRef.$el.dataset.section === sectionType
-      })?.$el
-      sectionElement.scrollIntoView()
-
-      const sectionHeading = sectionElement.firstChild.firstChild
-      sectionHeading.tabIndex = 0
-      sectionHeading.focus()
-      sectionHeading.tabIndex = -1
-    })
-  } else {
-    settingsSectionTypeOpenInMobile.value = sectionType
-  }
-}
-
-const menuRef = useTemplateRef('menuRef')
-
-function returnToSettingsMenu() {
-  const openSection = settingsSectionTypeOpenInMobile.value
-  settingsSectionTypeOpenInMobile.value = null
-
-  // focus the corresponding Settings Menu title
-  nextTick(() => {
-    return menuRef.value?.focusLink(openSection)
-  })
-}
-
-/* Set the current section to be shown as active in the Settings Menu
-* if it is the lowest section within the top quarter of the viewport (25vh) */
-function markScrolledToSectionAsActive() {
-  if (!isInDesktopView.value) {
-    activeSection.value = null
+function changeTab(tab) {
+  if (tab === currentTab.value) {
     return
   }
 
-  const scrollY = window.scrollY + window.innerHeight / 4
+  currentTab.value = tab
+}
 
-  for (const sectionRef of sectionRefs.value) {
-    const sectionElement = sectionRef.$el
+/** @type {Record<string, HTMLElement>} */
+const tabRefs = {}
 
-    const sectionHeight = sectionElement.offsetHeight
-    const sectionTop = sectionElement.offsetTop
-
-    if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-      activeSection.value = sectionElement.dataset.section
-      break
-    }
+/**
+ * @param {HTMLElement | null} element
+ * @param {string} type
+ */
+function setTabRef(element, type) {
+  if (element) {
+    tabRefs[type] = element
   }
 }
 
-function handleResize() {
-  const wasNotInDesktopView = !isInDesktopView.value
-  isInDesktopView.value = window.innerWidth > SETTINGS_MOBILE_WIDTH_THRESHOLD
-
-  // navigate to section that was open in mobile or desktop view, if any
-  if (isInDesktopView.value && wasNotInDesktopView && settingsSectionTypeOpenInMobile.value != null) {
-    navigateToSection(settingsSectionTypeOpenInMobile.value)
-    settingsSectionTypeOpenInMobile.value = null
-  } else if (!isInDesktopView.value && !wasNotInDesktopView && activeSection.value) {
-    navigateToSection(activeSection.value)
+/**
+ * @param {KeyboardEvent} event
+ * @param {'general' | 'display' | 'data' | 'safety' | 'about'} focusedTab
+ */
+function focusTab(event, focusedTab) {
+  if (event.altKey) {
+    return
   }
+
+  event.preventDefault()
+
+  let index = tabTypes.indexOf(focusedTab)
+
+  if (event.key === 'ArrowLeft') {
+    index--
+  } else {
+    index++
+  }
+
+  if (index < 0) {
+    index = tabTypes.length - 1
+  } else if (index > tabTypes.length - 1) {
+    index = 0
+  }
+
+  tabRefs[tabTypes[index]]?.focus()
+  store.commit('setOutlinesHidden', false)
 }
 </script>
 

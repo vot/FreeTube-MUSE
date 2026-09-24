@@ -99,8 +99,8 @@
         class="navOption"
         :title="$t('About.About')"
         :aria-label="hideLabelsSideBar ? $t('About.About') : null"
-        to="/about"
-        @click="closeMenu"
+        to="/settings"
+        @click="openSettingsAboutTab"
       >
         <FontAwesomeIcon
           :icon="['fas', 'info-circle']"
@@ -175,8 +175,9 @@
     <router-link
       class="navOption mobileHidden"
       :title="$t('About.About')"
-      to="/about"
+      to="/settings"
       :aria-label="hideLabelsSideBar ? $t('About.About') : null"
+      @click="openSettingsAboutTab"
     >
       <FontAwesomeIcon
         :icon="['fas', 'info-circle']"
@@ -231,6 +232,11 @@ const applyNavIconExpand = computed(() => {
 
 function closeMenu() {
   openMoreOptions.value = false
+}
+
+function openSettingsAboutTab() {
+  closeMenu()
+  sessionStorage.setItem('Settings/currentTab', 'about')
 }
 
 function handleClickOutside(event) {

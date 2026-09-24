@@ -1,17 +1,12 @@
 <template>
   <div>
-    <FtCard class="card">
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'info-circle']"
-          class="headingIcon"
-        />
-        {{ $t("About.About") }}
-      </h2>
+    <FtSettingsSection
+      :title="t('About.About')"
+    >
       <section class="brand">
         <FtLogoFull class="logo" />
         <div class="version">
-          {{ versionNumber }} {{ $t("About.Beta") }}
+          {{ versionNumber }} {{ t('About.Beta') }}
         </div>
       </section>
       <section class="about-chunks">
@@ -33,7 +28,7 @@
           />
         </figure>
       </section>
-    </FtCard>
+    </FtSettingsSection>
   </div>
 </template>
 
@@ -42,7 +37,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import FtCard from '../../components/ft-card/ft-card.vue'
+import FtSettingsSection from '../../components/FtSettingsSection/FtSettingsSection.vue'
 import FtLogoFull from '../../components/FtLogoFull/FtLogoFull.vue'
 import { vSaferHtml } from '../../directives/vSaferHtml.js'
 
@@ -126,4 +121,4 @@ const chunks = computed(() => [
 ])
 </script>
 
-<style scoped src="./About.css" />
+<style scoped src="./AboutSettings.css" />

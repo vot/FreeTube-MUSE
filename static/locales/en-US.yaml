@@ -271,6 +271,13 @@ History:
 Settings:
   # On Settings Page
   Settings: Settings
+  Tabs:
+    General: General
+    Display: Display
+    Data: Data
+    Safety: Safety
+    About: About
+  Settings Tabs: Settings Tabs
   Sort Settings Sections (A-Z): Sort Settings Sections (A-Z)
   Return to Settings Menu: Return to Settings Menu
   The app needs to restart for changes to take effect. Restart and apply change?: The

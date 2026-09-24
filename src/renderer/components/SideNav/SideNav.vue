@@ -163,8 +163,9 @@
       <router-link
         class="navOption mobileHidden"
         role="button"
-        to="/about"
+        to="/settings"
         :title="$t('About.About')"
+        @click="openSettingsAboutTab"
       >
         <div
           class="thumbnailContainer"
@@ -352,6 +353,10 @@ const settingsTitle = computed(() => {
 })
 
 const enableChannelLinks = computed(() => !store.getters.getDisableChannelLinks)
+
+function openSettingsAboutTab() {
+  sessionStorage.setItem('Settings/currentTab', 'about')
+}
 </script>
 
 <style scoped src="./SideNav.css" />
