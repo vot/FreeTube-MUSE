@@ -1,5 +1,8 @@
 .settingsSection {
   margin-block: 0;
+  background-color: var(--card-bg-color);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px 0 var(--primary-shadow-color);
 
   @media only screen and (width <= 800px) {
     inline-size: 100%;
@@ -13,7 +16,6 @@
 }
 
 .sectionBody {
-  background-color: var(--card-bg-color);
   padding-block: 10px;
 
   > :deep(div) {
