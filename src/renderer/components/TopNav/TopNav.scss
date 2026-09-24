@@ -35,12 +35,6 @@
   }
 }
 
-.menuButton {
-  @media only screen and (width <= 680px) {
-    display: none;
-  }
-}
-
 .arrowDisabled :deep(.iconButton) {
   filter: grayscale(1);
   background-color: inherit;
@@ -139,8 +133,10 @@
     align-items: center;
     cursor: pointer;
     display: flex;
+    margin-block-start: -4px;
+    margin-inline-end: 12px;
     padding-block: 0;
-    padding-inline: 10px 25px;
+    padding-inline: 10px;
 
     &:hover {
       background-color: var(--side-nav-hover-color);

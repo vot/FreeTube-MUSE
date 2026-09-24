@@ -4,17 +4,20 @@
     :class="{ topNavBarColor: barColor }"
   >
     <div class="side">
-      <button
-        class="menuButton navButton"
-        :aria-label="expandCollapseSideBarLabel"
-        :title="expandCollapseSideBarLabel"
-        @click="toggleSideNav"
+      <RouterLink
+        v-if="!hideHeaderLogo"
+        class="logo"
+        dir="ltr"
+        :title="headerLogoTitle"
+        :to="landingPage"
       >
-        <FontAwesomeIcon
-          class="navIcon"
-          :icon="['fas', 'bars']"
+        <div
+          class="logoIcon"
         />
-      </button>
+        <div
+          class="logoText"
+        />
+      </RouterLink>
       <FtIconButton
         class="navIconButton"
         :disabled="isArrowBackwardDisabled"
@@ -67,20 +70,6 @@
         />
       </button>
       <FtRefreshWidget />
-      <RouterLink
-        v-if="!hideHeaderLogo"
-        class="logo"
-        dir="ltr"
-        :title="headerLogoTitle"
-        :to="landingPage"
-      >
-        <div
-          class="logoIcon"
-        />
-        <div
-          class="logoText"
-        />
-      </RouterLink>
     </div>
     <div class="middle">
       <div
@@ -175,10 +164,6 @@ const hideHeaderLogo = computed(() => store.getters.getHideHeaderLogo)
 const enableSearchSuggestions = computed(() => store.getters.getEnableSearchSuggestions)
 /** @type {import('vue').ComputedRef<string>} */
 const barColor = computed(() => store.getters.getBarColor)
-
-const expandCollapseSideBarLabel = computed(() => {
-  return store.getters.getIsSideNavOpen ? t('Compact side navigation') : t('Expand side navigation')
-})
 
 const landingPage = computed(() => '/' + store.getters.getLandingPage)
 

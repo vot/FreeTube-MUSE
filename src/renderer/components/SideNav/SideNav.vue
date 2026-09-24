@@ -8,6 +8,17 @@
       class="inner"
       :class="applyHiddenLabels"
     >
+      <button
+        class="sideNavToggle"
+        :aria-label="toggleSideNavLabel"
+        :title="toggleSideNavLabel"
+        @click="toggleSideNav"
+      >
+        <FontAwesomeIcon
+          class="navIcon"
+          :icon="isOpen ? ['fas', 'angles-left'] : ['fas', 'angles-right']"
+        />
+      </button>
       <router-link
         class="navOption topNavOption mobileShow "
         role="button"
@@ -289,6 +300,14 @@ const applyHiddenLabels = computed(() => {
     hiddenLabels: hideText.value
   }
 })
+
+const toggleSideNavLabel = computed(() => {
+  return isOpen.value ? t('Compact side navigation') : t('Expand side navigation')
+})
+
+function toggleSideNav() {
+  store.commit('toggleSideNav')
+}
 
 const historyTitle = computed(() => {
   const shortcut = process.platform === 'darwin'
