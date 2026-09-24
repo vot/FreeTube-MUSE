@@ -1,35 +1,60 @@
-@use '../../scss-partials/utils';
-
-.floatingRefreshSection {
-  box-sizing: border-box;
-  padding-block: 5px;
-  padding-inline: 10px;
-  box-shadow: 0 2px 1px 0 var(--primary-shadow-color);
-  background-color: var(--card-bg-color);
-  border-inline-start: 2px solid var(--primary-shadow-color);
-  display: flex;
+.refreshNavButton {
   align-items: center;
-  gap: 5px;
-  justify-content: flex-end;
+  background-color: transparent;
+  border: 0;
+  border-radius: 5px;
+  color: var(--primary-text-color);
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  line-height: 1em;
+  margin-inline-end: 10px;
+  padding-block: 8px;
+  padding-inline: 10px;
+  white-space: nowrap;
 
-  @include utils.fixed-top-bar;
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+
+  :global(.topNavBarColor) & {
+    color: var(--text-with-main-color);
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-color-hover);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--primary-color-active);
+    }
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--side-nav-hover-color);
+    color: var(--side-nav-hover-text-color);
+    transition: background 0.2s ease-in;
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--tertiary-text-color);
+    color: var(--side-nav-active-text-color);
+    transition: background 0.2s ease-in;
+  }
 }
 
-.floatingRefreshSection:has(.lastRefreshTimestamp + .refreshButton) {
-  justify-content: space-between;
-}
-
-.lastRefreshTimestamp {
-  margin-block: 0;
-  text-align: center;
+.refreshIcon {
+  block-size: 1em;
   font-size: 16px;
+  inline-size: 1em;
+}
+
+.refreshTimestamp {
+  font-size: 14px;
 }
 
 @media only screen and (width <= 680px) {
-  .floatingRefreshSection,
-  .floatingRefreshSection.sideNavOpen,
-  .floatingRefreshSection.hideLabelsSideBar {
-    inline-size: 100%;
-    border-inline-start: none;
+  .refreshTimestamp {
+    display: none;
   }
 }

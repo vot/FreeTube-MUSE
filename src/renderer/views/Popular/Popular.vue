@@ -19,12 +19,6 @@
         :data="shownResults"
       />
     </ft-card>
-    <ft-refresh-widget
-      :disable-refresh="isLoading"
-      :last-refresh-timestamp="lastPopularRefreshTimestamp"
-      :title="$t('Most Popular')"
-      @click="fetchPopularInfo"
-    />
   </div>
 </template>
 
@@ -35,8 +29,9 @@ import { computed, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
-import FtRefreshWidget from '../../components/FtRefreshWidget/FtRefreshWidget.vue'
 import store from '../../store/index'
+
+import { useFeedRefresh } from '../../composables/useFeedRefresh'
 
 import { getInvidiousPopularFeed } from '../../helpers/api/invidious'
 import { copyToClipboard, getRelativeTimeFromDate, showToast } from '../../helpers/utils'
@@ -49,6 +44,13 @@ const isLoading = ref(false)
 
 const lastPopularRefreshTimestamp = computed(() => {
   return getRelativeTimeFromDate(store.getters.getLastPopularRefreshTimestamp, true)
+})
+
+useFeedRefresh({
+  title: computed(() => t('Most Popular')),
+  lastRefreshTimestamp: lastPopularRefreshTimestamp,
+  disableRefresh: isLoading,
+  refreshAction: fetchPopularInfo
 })
 
 /** @type {import('vue').ComputedRef<Array | null>} */

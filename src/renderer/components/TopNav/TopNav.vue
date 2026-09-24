@@ -66,6 +66,7 @@
           :icon="['fas', 'clone']"
         />
       </button>
+      <FtRefreshWidget />
       <RouterLink
         v-if="!hideHeaderLogo"
         class="logo"
@@ -130,6 +131,7 @@ import { useRoute, useRouter } from 'vue-router'
 import FtInput from '../FtInput/FtInput.vue'
 import FtProfileSelector from '../FtProfileSelector/FtProfileSelector.vue'
 import FtIconButton from '../FtIconButton/FtIconButton.vue'
+import FtRefreshWidget from '../FtRefreshWidget/FtRefreshWidget.vue'
 
 import store from '../../store/index'
 

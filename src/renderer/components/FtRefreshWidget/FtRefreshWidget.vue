@@ -1,62 +1,46 @@
 <template>
-  <div
-    class="floatingRefreshSection"
+  <button
+    v-if="feedRefreshState.refreshAction"
+    class="refreshNavButton"
+    :aria-label="refreshFeedButtonTitle"
+    :disabled="feedRefreshState.disableRefresh"
+    :title="refreshFeedButtonTitle"
+    @click="refresh"
   >
-    <p
-      v-if="lastRefreshTimestamp"
-      class="lastRefreshTimestamp"
-    >
-      {{ t('Feed.Feed Last Updated', { feedName: title, date: lastRefreshTimestamp }) }}
-    </p>
-    <FtIconButton
-      :disabled="disableRefresh"
+    <FontAwesomeIcon
+      class="refreshIcon"
       :icon="['fas', 'sync']"
-      class="refreshButton"
-      :title="refreshFeedButtonTitle"
-      :size="12"
-      theme="primary"
-      @click="click"
     />
-  </div>
+    <span
+      v-if="feedRefreshState.lastRefreshTimestamp"
+      class="refreshTimestamp"
+    >
+      {{ feedRefreshState.lastRefreshTimestamp }}
+    </span>
+  </button>
 </template>
 
 <script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import FtIconButton from '../FtIconButton/FtIconButton.vue'
+import { feedRefreshState } from '../../composables/useFeedRefresh'
 
 import { KeyboardShortcuts } from '../../../constants'
 import { addKeyboardShortcutToActionTitle } from '../../helpers/utils'
-
-const props = defineProps({
-  disableRefresh: {
-    type: Boolean,
-    default: false
-  },
-  lastRefreshTimestamp: {
-    type: String,
-    default: ''
-  },
-  title: {
-    type: String,
-    required: true
-  }
-})
 
 const { t } = useI18n()
 
 const refreshFeedButtonTitle = computed(() => {
   return addKeyboardShortcutToActionTitle(
-    t('Feed.Refresh Feed', { subscriptionName: props.title }),
+    t('Feed.Refresh Feed', { subscriptionName: feedRefreshState.title }),
     KeyboardShortcuts.APP.SITUATIONAL.REFRESH
   )
 })
 
-const emit = defineEmits(['click'])
-
-function click() {
-  emit('click')
+function refresh() {
+  feedRefreshState.refreshAction?.()
 }
 </script>
 

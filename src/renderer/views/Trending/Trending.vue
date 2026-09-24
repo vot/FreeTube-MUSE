@@ -89,12 +89,6 @@
         />
       </div>
     </FtCard>
-    <FtRefreshWidget
-      :disable-refresh="isLoading[currentTab]"
-      :last-refresh-timestamp="lastTrendingRefreshTimestamp"
-      :title="$t('Trending.Trending')"
-      @click="getTrendingInfo(true)"
-    />
   </div>
 </template>
 
@@ -107,7 +101,8 @@ import FtCard from '../../components/ft-card/ft-card.vue'
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
-import FtRefreshWidget from '../../components/FtRefreshWidget/FtRefreshWidget.vue'
+
+import { useFeedRefresh } from '../../composables/useFeedRefresh'
 
 import store from '../../store/index'
 
@@ -146,6 +141,13 @@ const shownResults = shallowRef([])
 
 /** @type {import('vue').Ref<'gaming' | 'sports' | 'podcasts'>} */
 const currentTab = ref('gaming')
+
+useFeedRefresh({
+  title: computed(() => t('Trending.Trending')),
+  lastRefreshTimestamp: lastTrendingRefreshTimestamp,
+  disableRefresh: computed(() => isLoading.value[currentTab.value]),
+  refreshAction: () => getTrendingInfo(true)
+})
 
 const cacheEntry = trendingCache.value[currentTab.value]
 

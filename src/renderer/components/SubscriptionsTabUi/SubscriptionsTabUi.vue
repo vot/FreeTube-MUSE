@@ -62,18 +62,11 @@
         </FtFlexBox>
       </FtAutoLoadNextPageWrapper>
     </template>
-
-    <FtRefreshWidget
-      :disable-refresh="isLoading || !activeProfileHasSubscriptions"
-      :last-refresh-timestamp="lastRefreshTimestamp"
-      :title="title"
-      @click="refresh"
-    />
   </div>
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, toRef } from 'vue'
 
 import FtAutoLoadNextPageWrapper from '../FtAutoLoadNextPageWrapper.vue'
 import FtButton from '../FtButton/FtButton.vue'
@@ -81,7 +74,8 @@ import FtChannelBubble from '../FtChannelBubble/FtChannelBubble.vue'
 import FtElementList from '../FtElementList/FtElementList.vue'
 import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 import FtLoader from '../FtLoader/FtLoader.vue'
-import FtRefreshWidget from '../FtRefreshWidget/FtRefreshWidget.vue'
+
+import { useFeedRefresh } from '../../composables/useFeedRefresh'
 
 import store from '../../store/index'
 
@@ -138,6 +132,17 @@ const activeVideoList = computed(() => {
 
 const activeProfileHasSubscriptions = computed(() => {
   return store.getters.getActiveProfile.subscriptions.length > 0
+})
+
+const refreshDisabled = computed(() => {
+  return props.isLoading || !activeProfileHasSubscriptions.value
+})
+
+useFeedRefresh({
+  title: toRef(props, 'title'),
+  lastRefreshTimestamp: toRef(props, 'lastRefreshTimestamp'),
+  disableRefresh: refreshDisabled,
+  refreshAction: () => emit('refresh')
 })
 
 /** @type {import('vue').ComputedRef<boolean>} */
