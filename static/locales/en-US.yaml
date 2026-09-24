@@ -280,6 +280,8 @@ Settings:
   Settings Tabs: Settings Tabs
   Sort Settings Sections (A-Z): Sort Settings Sections (A-Z)
   Return to Settings Menu: Return to Settings Menu
+  Backend Settings:
+    Backend Settings: Backend
   The app needs to restart for changes to take effect. Restart and apply change?: The
     app needs to restart for changes to take effect. Restart and apply change?
   General Settings:

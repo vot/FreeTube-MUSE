@@ -68,6 +68,7 @@ import ExternalPlayerSettings from '../../components/ExternalPlayerSettings.vue'
 import SubscriptionSettings from '../../components/SubscriptionSettings/SubscriptionSettings.vue'
 import PrivacySettings from '../../components/PrivacySettings.vue'
 import DataSettings from '../../components/DataSettings/DataSettings.vue'
+import BackendSettings from '../../components/BackendSettings/BackendSettings.vue'
 import DistractionSettings from '../../components/DistractionSettings/DistractionSettings.vue'
 import ProxySettings from '../../components/ProxySettings/ProxySettings.vue'
 import SponsorBlockSettings from '../../components/SponsorBlockSettings.vue'
@@ -143,6 +144,7 @@ const settingsTabs = computed(() => [
     icon: ['fas', 'database'],
     sections: [
       { type: 'data', component: DataSettings },
+      { type: 'backend', component: BackendSettings },
       { type: 'privacy', component: PrivacySettings },
       ...(process.env.IS_ELECTRON
         ? [{

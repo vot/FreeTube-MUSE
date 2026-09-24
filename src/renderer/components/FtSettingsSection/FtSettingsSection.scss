@@ -57,9 +57,9 @@
 }
 
 :deep(.switchColumnGrid) {
-  @extend %switch-grid;
-
   align-items: start;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 :deep(.switchColumn) {
