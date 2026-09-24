@@ -1,13 +1,16 @@
 .sideNav {
   display: block;
-  block-size: calc(100vh - 60px);
+  block-size: calc(100vh - 60px - 20px);
   inline-size: 80px;
   overflow-x: hidden;
   position: sticky;
   inset-inline-start: 0;
   inset-block-start: 60px;
   z-index: 3;
-  box-shadow: 1px -1px 1px -1px var(--primary-shadow-color);
+  margin-block: 10px;
+  margin-inline: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px 0 var(--primary-shadow-color);
   background-color: var(--side-nav-color);
   transition-property: inline-size;
   transition-duration: 150ms;
@@ -238,7 +241,8 @@
     inset-inline-start: 0;
     position: fixed;
     display: flex;
-    margin-block-start: 0;
+    margin: 0;
+    border-radius: 0;
     block-size: 60px;
     inline-size: 100%;
     inset-block: auto 0;
