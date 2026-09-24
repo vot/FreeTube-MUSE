@@ -73,6 +73,7 @@ import DistractionSettings from '../../components/DistractionSettings/Distractio
 import ProxySettings from '../../components/ProxySettings/ProxySettings.vue'
 import SponsorBlockSettings from '../../components/SponsorBlockSettings.vue'
 import ParentalControlSettings from '../../components/ParentalControlSettings.vue'
+import HideContentSettings from '../../components/HideContentSettings/HideContentSettings.vue'
 import ExperimentalSettings from '../../components/ExperimentalSettings/ExperimentalSettings.vue'
 import PasswordSettings from '../../components/PasswordSettings/PasswordSettings.vue'
 import PasswordDialog from '../../components/PasswordDialog/PasswordDialog.vue'
@@ -159,6 +160,7 @@ const settingsTabs = computed(() => [
     title: t('Settings.Tabs.Safety'),
     icon: ['fas', 'shield'],
     sections: [
+      { type: 'hide-content', component: HideContentSettings },
       { type: 'parental-control', component: ParentalControlSettings },
       { type: 'password', component: PasswordSettings }
     ]
