@@ -64,6 +64,7 @@ import { useI18n } from 'vue-i18n'
 import GeneralSettings from '../../components/GeneralSettings/GeneralSettings.vue'
 import ThemeSettings from '../../components/ThemeSettings.vue'
 import PlayerSettings from '../../components/PlayerSettings/PlayerSettings.vue'
+import ScreenshotSettings from '../../components/ScreenshotSettings/ScreenshotSettings.vue'
 import ExternalPlayerSettings from '../../components/ExternalPlayerSettings.vue'
 import SubscriptionSettings from '../../components/SubscriptionSettings/SubscriptionSettings.vue'
 import PrivacySettings from '../../components/PrivacySettings.vue'
@@ -129,6 +130,7 @@ const settingsTabs = computed(() => [
     sections: [
       { type: 'theme', component: ThemeSettings },
       { type: 'player', component: PlayerSettings },
+      { type: 'screenshot', component: ScreenshotSettings },
       ...(process.env.IS_ELECTRON
         ? [{
             type: 'external-player',
