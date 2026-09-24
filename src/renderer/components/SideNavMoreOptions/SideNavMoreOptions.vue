@@ -95,45 +95,6 @@
           {{ $t("Most Popular") }}
         </p>
       </router-link>
-      <router-link
-        class="navOption"
-        :title="$t('About.About')"
-        :aria-label="hideLabelsSideBar ? $t('About.About') : null"
-        to="/settings"
-        @click="openSettingsAboutTab"
-      >
-        <FontAwesomeIcon
-          :icon="['fas', 'info-circle']"
-          class="navIcon"
-          :class="applyNavIconExpand"
-        />
-        <p
-          v-if="!hideLabelsSideBar"
-          id="aboutNavLabel"
-          class="navLabel"
-        >
-          {{ $t("About.About") }}
-        </p>
-      </router-link>
-      <router-link
-        class="navOption smallMobileOnlyShow"
-        :title="$t('Settings.Settings')"
-        :aria-label="hideLabelsSideBar ? $t('Settings.Settings') : null"
-        to="/settings"
-        @click="closeMenu"
-      >
-        <FontAwesomeIcon
-          :icon="['fas', 'sliders-h']"
-          class="navIcon"
-          :class="applyNavIconExpand"
-        />
-        <p
-          id="settingsNavLabel"
-          class="navLabel"
-        >
-          {{ $t("Settings.Settings") }}
-        </p>
-      </router-link>
     </div>
     <router-link
       class="navOption mobileShow"
@@ -151,44 +112,6 @@
         class="navLabel"
       >
         {{ $t("History.History") }}
-      </p>
-    </router-link>
-    <hr>
-    <router-link
-      class="navOption mobileShow"
-      :title="$t('Settings.Settings')"
-      :aria-label="hideLabelsSideBar ? $t('Settings.Settings') : null"
-      to="/settings"
-    >
-      <FontAwesomeIcon
-        :icon="['fas', 'sliders-h']"
-        class="navIcon"
-        :class="applyNavIconExpand"
-      />
-      <p
-        id="settingsNavLabel"
-        class="navLabel"
-      >
-        {{ $t("Settings.Settings") }}
-      </p>
-    </router-link>
-    <router-link
-      class="navOption mobileHidden"
-      :title="$t('About.About')"
-      to="/settings"
-      :aria-label="hideLabelsSideBar ? $t('About.About') : null"
-      @click="openSettingsAboutTab"
-    >
-      <FontAwesomeIcon
-        :icon="['fas', 'info-circle']"
-        class="navIcon"
-        :class="applyNavIconExpand"
-      />
-      <p
-        v-if="!hideLabelsSideBar"
-        class="navLabel"
-      >
-        {{ $t("About.About") }}
       </p>
     </router-link>
   </div>
@@ -232,11 +155,6 @@ const applyNavIconExpand = computed(() => {
 
 function closeMenu() {
   openMoreOptions.value = false
-}
-
-function openSettingsAboutTab() {
-  closeMenu()
-  sessionStorage.setItem('Settings/currentTab', 'about')
 }
 
 function handleClickOutside(event) {

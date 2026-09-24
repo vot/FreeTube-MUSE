@@ -139,50 +139,6 @@
         </p>
       </router-link>
       <hr>
-      <router-link
-        class="navOption mobileShow smallMobileOnlyHidden"
-        role="button"
-        to="/settings"
-        :title="settingsTitle"
-      >
-        <div
-          class="thumbnailContainer"
-        >
-          <FontAwesomeIcon
-            :icon="['fas', 'sliders-h']"
-            class="navIcon"
-            :class="applyNavIconExpand"
-          />
-        </div>
-        <p
-          class="navLabel"
-        >
-          {{ $t('Settings.Settings') }}
-        </p>
-      </router-link>
-      <router-link
-        class="navOption mobileHidden"
-        role="button"
-        to="/settings"
-        :title="$t('About.About')"
-        @click="openSettingsAboutTab"
-      >
-        <div
-          class="thumbnailContainer"
-        >
-          <FontAwesomeIcon
-            :icon="['fas', 'info-circle']"
-            class="navIcon"
-            :class="applyNavIconExpand"
-          />
-        </div>
-        <p
-          class="navLabel"
-        >
-          {{ $t("About.About") }}
-        </p>
-      </router-link>
-      <hr>
       <div
         v-if="!hideActiveSubscriptions"
         class="mobileHidden"
@@ -345,18 +301,7 @@ const historyTitle = computed(() => {
   )
 })
 
-const settingsTitle = computed(() => {
-  return localizeAndAddKeyboardShortcutToActionTitle(
-    t('Settings.Settings'),
-    KeyboardShortcuts.APP.GENERAL.NAVIGATE_TO_SETTINGS
-  )
-})
-
 const enableChannelLinks = computed(() => !store.getters.getDisableChannelLinks)
-
-function openSettingsAboutTab() {
-  sessionStorage.setItem('Settings/currentTab', 'about')
-}
 </script>
 
 <style scoped src="./SideNav.css" />

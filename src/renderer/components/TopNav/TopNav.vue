@@ -118,7 +118,22 @@
         </button>
       </div>
     </div>
-    <FtProfileSelector class="side profiles" />
+    <div
+      class="side profiles"
+    >
+      <RouterLink
+        class="settingsButton navButton"
+        :title="settingsTitle"
+        :aria-label="t('Settings.Settings')"
+        to="/settings"
+      >
+        <FontAwesomeIcon
+          class="navIcon"
+          :icon="['fas', 'sliders-h']"
+        />
+      </RouterLink>
+      <FtProfileSelector />
+    </div>
   </nav>
 </template>
 
@@ -208,6 +223,13 @@ const forwardText = computed(() => {
     t('Forward'),
     shortcuts
   ) + navigationHistoryAddendum.value
+})
+
+const settingsTitle = computed(() => {
+  return localizeAndAddKeyboardShortcutToActionTitle(
+    t('Settings.Settings'),
+    KeyboardShortcuts.APP.GENERAL.NAVIGATE_TO_SETTINGS
+  )
 })
 
 /**
