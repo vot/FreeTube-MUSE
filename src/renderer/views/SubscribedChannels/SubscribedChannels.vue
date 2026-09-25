@@ -1,84 +1,86 @@
 <template>
   <div>
-    <ft-card class="card">
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'user-check']"
-          class="headingIcon"
+    <div class="main-content-container">
+      <ft-card>
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'user-check']"
+            class="headingIcon"
+          />
+          {{ $t('Channels.Title') }}
+        </h2>
+        <ft-input
+          v-show="subscribedChannels.length > 1"
+          ref="searchBarChannels"
+          :placeholder="$t('Channels.Search bar placeholder')"
+          :value="query"
+          :show-clear-text-button="true"
+          :show-action-button="false"
+          :maxlength="255"
+          @input="handleQueryChange"
+          @clear="() => handleQueryChange('')"
         />
-        {{ $t('Channels.Title') }}
-      </h2>
-      <ft-input
-        v-show="subscribedChannels.length > 1"
-        ref="searchBarChannels"
-        :placeholder="$t('Channels.Search bar placeholder')"
-        :value="query"
-        :show-clear-text-button="true"
-        :show-action-button="false"
-        :maxlength="255"
-        @input="handleQueryChange"
-        @clear="() => handleQueryChange('')"
-      />
-      <ft-flex-box
-        v-if="activeSubscriptionList.length === 0"
-      >
-        <p class="message">
-          {{ $t('Channels.Empty') }}
-        </p>
-      </ft-flex-box>
-      <template v-else>
-        <ft-flex-box class="count">
-          {{ $t('Channels.Count', { number: channelList.length }) }}
+        <ft-flex-box
+          v-if="activeSubscriptionList.length === 0"
+        >
+          <p class="message">
+            {{ $t('Channels.Empty') }}
+          </p>
         </ft-flex-box>
-        <ft-flex-box class="channels">
-          <div
-            v-for="channel in channelList"
-            :key="channel.id"
-            class="channel"
-          >
-            <component
-              :is="enableChannelLinks ? 'router-link' : 'span'"
-              tabindex="-1"
-              class="thumbnailContainer"
-              :to="`/channel/${channel.id}`"
-            >
-              <img
-                v-if="channel.thumbnail != null"
-                class="channelThumbnail"
-                :src="thumbnailURL(channel.thumbnail)"
-                alt=""
-                @error.once="updateThumbnail(channel)"
-              >
-              <font-awesome-icon
-                v-else
-                class="channelThumbnail"
-                :icon="['fas', 'circle-user']"
-              />
-            </component>
-            <component
-              :is="enableChannelLinks ? 'router-link' : 'span'"
-              class="channelName"
-              dir="auto"
-              :title="channel.name"
-              :to="`/channel/${channel.id}`"
-            >
-              {{ channel.name }}
-            </component>
+        <template v-else>
+          <ft-flex-box class="count">
+            {{ $t('Channels.Count', { number: channelList.length }) }}
+          </ft-flex-box>
+          <ft-flex-box class="channels">
             <div
-              v-if="!hideUnsubscribeButton"
-              class="unsubscribeContainer"
+              v-for="channel in channelList"
+              :key="channel.id"
+              class="channel"
             >
-              <ft-subscribe-button
-                :channel-id="channel.id"
-                :channel-name="channel.name"
-                :channel-thumbnail="channel.thumbnail"
-                :open-dropdown-on-subscribe="false"
-              />
+              <component
+                :is="enableChannelLinks ? 'router-link' : 'span'"
+                tabindex="-1"
+                class="thumbnailContainer"
+                :to="`/channel/${channel.id}`"
+              >
+                <img
+                  v-if="channel.thumbnail != null"
+                  class="channelThumbnail"
+                  :src="thumbnailURL(channel.thumbnail)"
+                  alt=""
+                  @error.once="updateThumbnail(channel)"
+                >
+                <font-awesome-icon
+                  v-else
+                  class="channelThumbnail"
+                  :icon="['fas', 'circle-user']"
+                />
+              </component>
+              <component
+                :is="enableChannelLinks ? 'router-link' : 'span'"
+                class="channelName"
+                dir="auto"
+                :title="channel.name"
+                :to="`/channel/${channel.id}`"
+              >
+                {{ channel.name }}
+              </component>
+              <div
+                v-if="!hideUnsubscribeButton"
+                class="unsubscribeContainer"
+              >
+                <ft-subscribe-button
+                  :channel-id="channel.id"
+                  :channel-name="channel.name"
+                  :channel-thumbnail="channel.thumbnail"
+                  :open-dropdown-on-subscribe="false"
+                />
+              </div>
             </div>
-          </div>
-        </ft-flex-box>
-      </template>
-    </ft-card>
+          </ft-flex-box>
+        </template>
+      </ft-card>
+    </div>
   </div>
 </template>
 

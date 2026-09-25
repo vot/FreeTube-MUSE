@@ -1,80 +1,80 @@
 <template>
   <div>
-    <FtCard
-      class="card"
-    >
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'history']"
-          class="headingIcon"
-        />
-        {{ t('History.History') }}
-      </h2>
-      <FtInput
-        v-show="fullData.length > 1"
-        ref="searchBar"
-        :placeholder="t('History.Search bar placeholder')"
-        :show-clear-text-button="true"
-        :show-action-button="false"
-        :value="query"
-        @input="handleQueryChange"
-        @clear="() => handleQueryChange('')"
-      />
-      <div
-        v-if="fullData.length > 1"
-        class="optionsRow"
-      >
-        <FtToggleSwitch
-          :label="t('History.Case Sensitive Search')"
-          :compact="true"
-          :default-value="doCaseSensitiveSearch"
-          @change="doCaseSensitiveSearch = !doCaseSensitiveSearch"
-        />
-        <FtSelect
-          class="sortSelect"
-          :placeholder="t('Global.Sort By')"
-          :value="sortBy"
-          :select-names="sortByNames"
-          :select-values="SORT_BY_VALUES"
-          :icon="sortByIcon"
-          @change="updateUserHistorySortBy"
-        />
-      </div>
-      <FtFlexBox
-        v-if="fullData.length === 0"
-      >
-        <p class="message">
-          {{ t("History['Your history list is currently empty.']") }}
-        </p>
-      </FtFlexBox>
-      <FtFlexBox
-        v-else-if="activeData.length === 0"
-      >
-        <p class="message">
-          {{ t("History['Empty Search Message']") }}
-        </p>
-      </FtFlexBox>
-      <FtElementList
-        v-if="activeData.length > 0"
-        :data="activeData"
-        :show-video-with-last-viewed-playlist="true"
-        :use-channels-hidden-preference="false"
-        :hide-forbidden-titles="false"
-      />
-      <FtAutoLoadNextPageWrapper
-        v-if="showLoadMoreButton"
-        @load-next-page="increaseLimit"
-      >
-        <FtFlexBox>
-          <FtButton
-            :label="t('Subscriptions.Load More Videos')"
-            background-color="var(--primary-color)"
-            text-color="var(--text-with-main-color)"
-            @click="increaseLimit"
+    <div class="main-content-container">
+      <FtCard>
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'history']"
+            class="headingIcon"
           />
+          {{ t('History.History') }}
+        </h2>
+        <FtInput
+          v-show="fullData.length > 1"
+          ref="searchBar"
+          :placeholder="t('History.Search bar placeholder')"
+          :show-clear-text-button="true"
+          :show-action-button="false"
+          :value="query"
+          @input="handleQueryChange"
+          @clear="() => handleQueryChange('')"
+        />
+        <div
+          v-if="fullData.length > 1"
+          class="optionsRow"
+        >
+          <FtToggleSwitch
+            :label="t('History.Case Sensitive Search')"
+            :compact="true"
+            :default-value="doCaseSensitiveSearch"
+            @change="doCaseSensitiveSearch = !doCaseSensitiveSearch"
+          />
+          <FtSelect
+            class="sortSelect"
+            :placeholder="t('Global.Sort By')"
+            :value="sortBy"
+            :select-names="sortByNames"
+            :select-values="SORT_BY_VALUES"
+            :icon="sortByIcon"
+            @change="updateUserHistorySortBy"
+          />
+        </div>
+        <FtFlexBox
+          v-if="fullData.length === 0"
+        >
+          <p class="message">
+            {{ t("History['Your history list is currently empty.']") }}
+          </p>
         </FtFlexBox>
-      </FtAutoLoadNextPageWrapper>
-    </FtCard>
+        <FtFlexBox
+          v-else-if="activeData.length === 0"
+        >
+          <p class="message">
+            {{ t("History['Empty Search Message']") }}
+          </p>
+        </FtFlexBox>
+        <FtElementList
+          v-if="activeData.length > 0"
+          :data="activeData"
+          :show-video-with-last-viewed-playlist="true"
+          :use-channels-hidden-preference="false"
+          :hide-forbidden-titles="false"
+        />
+        <FtAutoLoadNextPageWrapper
+          v-if="showLoadMoreButton"
+          @load-next-page="increaseLimit"
+        >
+          <FtFlexBox>
+            <FtButton
+              :label="t('Subscriptions.Load More Videos')"
+              background-color="var(--primary-color)"
+              text-color="var(--text-with-main-color)"
+              @click="increaseLimit"
+            />
+          </FtFlexBox>
+        </FtAutoLoadNextPageWrapper>
+      </FtCard>
+    </div>
   </div>
 </template>
 

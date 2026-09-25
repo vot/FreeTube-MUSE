@@ -1,24 +1,25 @@
 <template>
   <div>
-    <ft-loader
-      v-if="isLoading"
-      :fullscreen="true"
-    />
-    <ft-card
-      v-else
-      class="card"
-    >
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'users']"
-          class="headingIcon"
-        />
-        {{ $t("Most Popular") }}
-      </h2>
-      <ft-element-list
-        :data="shownResults"
+    <div class="main-content-container">
+      <ft-loader
+        v-if="isLoading"
+        :fullscreen="true"
       />
-    </ft-card>
+      <ft-card
+        v-else
+      >
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'users']"
+            class="headingIcon"
+          />
+          {{ $t("Most Popular") }}
+        </h2>
+        <ft-element-list
+          :data="shownResults"
+        />
+      </ft-card>
+    </div>
   </div>
 </template>
 

@@ -1,12 +1,3 @@
-.card {
-  position: relative;
-  inline-size: 90%;
-  margin-block: 0 60px;
-  margin-inline: auto;
-  background-color: var(--card-bg-color);
-  border-radius: 10px;
-}
-
 .headingText {
   display: inline-block;
 }
@@ -60,10 +51,4 @@
 
 .headingIcon {
   color: var(--primary-color);
-}
-
-@media only screen and (width <= 680px) {
-  .card {
-    inline-size: 90%;
-  }
 }

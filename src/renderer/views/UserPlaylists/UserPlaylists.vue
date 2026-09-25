@@ -1,95 +1,95 @@
 <template>
   <div>
-    <FtCard
-      class="card"
-    >
-      <div class="heading">
-        <h2 class="headingText">
-          <FontAwesomeIcon
-            :icon="['fas', 'list']"
-            class="headingIcon"
+    <div class="main-content-container">
+      <FtCard>
+        <div class="heading">
+          <h2 class="headingText">
+            <FontAwesomeIcon
+              :icon="['fas', 'list']"
+              class="headingIcon"
+            />
+            {{ $t("User Playlists.Your Playlists") }}
+          </h2>
+          <FtIconButton
+            :title="$t('User Playlists.Create New Playlist')"
+            :icon="['fas', 'plus']"
+            theme="secondary"
+            class="newPlaylistButton"
+            @click="createNewPlaylist"
           />
-          {{ $t("User Playlists.Your Playlists") }}
-        </h2>
-        <FtIconButton
-          :title="$t('User Playlists.Create New Playlist')"
-          :icon="['fas', 'plus']"
-          theme="secondary"
-          class="newPlaylistButton"
-          @click="createNewPlaylist"
-        />
-        <div
-          v-if="fullData.length > 1"
-          class="searchInputsRow"
-        >
-          <FtInput
-            ref="searchBar"
-            :placeholder="$t('User Playlists.Search bar placeholder')"
-            :value="query"
-            :show-clear-text-button="true"
-            :show-action-button="false"
-            :maxlength="255"
-            @input="handleQueryChange"
-            @clear="() => handleQueryChange('')"
-          />
+          <div
+            v-if="fullData.length > 1"
+            class="searchInputsRow"
+          >
+            <FtInput
+              ref="searchBar"
+              :placeholder="$t('User Playlists.Search bar placeholder')"
+              :value="query"
+              :show-clear-text-button="true"
+              :show-action-button="false"
+              :maxlength="255"
+              @input="handleQueryChange"
+              @clear="() => handleQueryChange('')"
+            />
+          </div>
+          <div
+            v-if="fullData.length > 1"
+            class="optionsRow"
+          >
+            <FtToggleSwitch
+              :label="$t('User Playlists.Playlists with Matching Videos')"
+              :compact="true"
+              :default-value="doSearchPlaylistsWithMatchingVideos"
+              @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
+            />
+            <FtSelect
+              class="sortSelect"
+              :value="sortBy"
+              :select-names="sortByNames"
+              :select-values="SORT_BY_VALUES"
+              :placeholder="$t('Global.Sort By')"
+              :icon="sortByIcon"
+              @change="updateUserPlaylistsSortBy"
+            />
+          </div>
         </div>
-        <div
-          v-if="fullData.length > 1"
-          class="optionsRow"
+        <FtFlexBox
+          v-if="fullData.length === 0"
         >
-          <FtToggleSwitch
-            :label="$t('User Playlists.Playlists with Matching Videos')"
-            :compact="true"
-            :default-value="doSearchPlaylistsWithMatchingVideos"
-            @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
-          />
-          <FtSelect
-            class="sortSelect"
-            :value="sortBy"
-            :select-names="sortByNames"
-            :select-values="SORT_BY_VALUES"
-            :placeholder="$t('Global.Sort By')"
-            :icon="sortByIcon"
-            @change="updateUserPlaylistsSortBy"
-          />
-        </div>
-      </div>
-      <FtFlexBox
-        v-if="fullData.length === 0"
-      >
-        <p class="message">
-          {{ $t("User Playlists['You have no playlists. Click on the create new playlist button to create a new one.']") }}
-        </p>
-      </FtFlexBox>
-      <FtFlexBox
-        v-else-if="activeData.length === 0 && fullData.length > 0"
-      >
-        <p class="message">
-          {{ $t("User Playlists['Empty Search Message']") }}
-        </p>
-      </FtFlexBox>
-      <FtElementList
-        v-else-if="activeData.length > 0"
-        :data="activeData"
-        data-type="playlist"
-        :search-query-text="doSearchPlaylistsWithMatchingVideos ? lowerCaseQuery : ''"
-        :use-channels-hidden-preference="false"
-        :hide-forbidden-titles="false"
-      />
-      <FtAutoLoadNextPageWrapper
-        v-if="showLoadMoreButton"
-        @load-next-page="increaseLimit"
-      >
-        <FtFlexBox>
-          <FtButton
-            label="Load More"
-            background-color="var(--primary-color)"
-            text-color="var(--text-with-main-color)"
-            @click="increaseLimit"
-          />
+          <p class="message">
+            {{ $t("User Playlists['You have no playlists. Click on the create new playlist button to create a new one.']") }}
+          </p>
         </FtFlexBox>
-      </FtAutoLoadNextPageWrapper>
-    </FtCard>
+        <FtFlexBox
+          v-else-if="activeData.length === 0 && fullData.length > 0"
+        >
+          <p class="message">
+            {{ $t("User Playlists['Empty Search Message']") }}
+          </p>
+        </FtFlexBox>
+        <FtElementList
+          v-else-if="activeData.length > 0"
+          :data="activeData"
+          data-type="playlist"
+          :search-query-text="doSearchPlaylistsWithMatchingVideos ? lowerCaseQuery : ''"
+          :use-channels-hidden-preference="false"
+          :hide-forbidden-titles="false"
+        />
+        <FtAutoLoadNextPageWrapper
+          v-if="showLoadMoreButton"
+          @load-next-page="increaseLimit"
+        >
+          <FtFlexBox>
+            <FtButton
+              label="Load More"
+              background-color="var(--primary-color)"
+              text-color="var(--text-with-main-color)"
+              @click="increaseLimit"
+            />
+          </FtFlexBox>
+        </FtAutoLoadNextPageWrapper>
+      </FtCard>
+    </div>
   </div>
 </template>
 

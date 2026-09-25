@@ -1,126 +1,128 @@
 <template>
   <div>
-    <FtCard class="card">
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'rss']"
-          class="subscriptionIcon"
+    <div class="main-content-container">
+      <FtCard>
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'rss']"
+            class="subscriptionIcon"
+          />
+          {{ $t("Subscriptions.Subscriptions") }}
+        </h2>
+        <FtFlexBox
+          class="tabs"
+          role="tablist"
+          :aria-label="$t('Subscriptions.Subscriptions Tabs')"
+        >
+          <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+          <div
+            v-if="!hideSubscriptionsVideos"
+            ref="videosTab"
+            class="tab"
+            role="tab"
+            :aria-selected="currentTab === 'videos'"
+            aria-controls="subscriptionsPanel"
+            :tabindex="currentTab === 'videos' ? 0 : -1"
+            :class="{ selectedTab: currentTab === 'videos' }"
+            @click="changeTab('videos')"
+            @keydown.space.enter.prevent="changeTab('videos')"
+            @keydown.left.right="focusTab($event, 'videos')"
+          >
+            <FontAwesomeIcon
+              :icon="['fa', 'video']"
+              class="subscriptionIcon"
+            />
+            {{ $t("Global.Videos") }}
+          </div>
+          <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+          <div
+            v-if="!hideSubscriptionsShorts"
+            ref="shortsTab"
+            class="tab"
+            role="tab"
+            :aria-selected="currentTab === 'shorts'"
+            aria-controls="subscriptionsPanel"
+            :tabindex="currentTab === 'shorts' ? 0 : -1"
+            :class="{ selectedTab: currentTab === 'shorts' }"
+            @click="changeTab('shorts')"
+            @keydown.space.enter.prevent="changeTab('shorts')"
+            @keydown.left.right="focusTab($event, 'shorts')"
+          >
+            <FontAwesomeIcon
+              :icon="['fa', 'clapperboard']"
+              class="subscriptionIcon"
+            />
+            {{ $t("Global.Shorts") }}
+          </div>
+          <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+          <div
+            v-if="!hideSubscriptionsLive"
+            ref="liveTab"
+            class="tab"
+            role="tab"
+            :aria-selected="currentTab === 'live'"
+            aria-controls="subscriptionsPanel"
+            :tabindex="currentTab === 'live' ? 0 : -1"
+            :class="{ selectedTab: currentTab === 'live' }"
+            @click="changeTab('live')"
+            @keydown.space.enter.prevent="changeTab('live')"
+            @keydown.left.right="focusTab($event, 'live')"
+          >
+            <FontAwesomeIcon
+              :icon="['fa', 'tower-broadcast']"
+              class="subscriptionIcon"
+            />
+            {{ $t("Global.Live") }}
+          </div>
+          <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
+          <div
+            v-if="!hideSubscriptionsCommunity"
+            ref="communityTab"
+            class="tab"
+            role="tab"
+            :aria-selected="currentTab === 'community'"
+            aria-controls="subscriptionsPanel"
+            :tabindex="currentTab === 'community' ? 0 : -1"
+            :class="{ selectedTab: currentTab === 'community' }"
+            @click="changeTab('community')"
+            @keydown.space.enter.prevent="changeTab('community')"
+            @keydown.left.right="focusTab($event, 'community')"
+          >
+            <FontAwesomeIcon
+              :icon="['fa', 'message']"
+              class="subscriptionIcon"
+            />
+            {{ $t("Global.Posts") }}
+          </div>
+        </FtFlexBox>
+        <SubscriptionsVideos
+          v-if="currentTab === 'videos'"
+          id="subscriptionsPanel"
+          role="tabpanel"
         />
-        {{ $t("Subscriptions.Subscriptions") }}
-      </h2>
-      <FtFlexBox
-        class="tabs"
-        role="tablist"
-        :aria-label="$t('Subscriptions.Subscriptions Tabs')"
-      >
-        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
-        <div
-          v-if="!hideSubscriptionsVideos"
-          ref="videosTab"
-          class="tab"
-          role="tab"
-          :aria-selected="currentTab === 'videos'"
-          aria-controls="subscriptionsPanel"
-          :tabindex="currentTab === 'videos' ? 0 : -1"
-          :class="{ selectedTab: currentTab === 'videos' }"
-          @click="changeTab('videos')"
-          @keydown.space.enter.prevent="changeTab('videos')"
-          @keydown.left.right="focusTab($event, 'videos')"
-        >
-          <FontAwesomeIcon
-            :icon="['fa', 'video']"
-            class="subscriptionIcon"
-          />
-          {{ $t("Global.Videos") }}
-        </div>
-        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
-        <div
-          v-if="!hideSubscriptionsShorts"
-          ref="shortsTab"
-          class="tab"
-          role="tab"
-          :aria-selected="currentTab === 'shorts'"
-          aria-controls="subscriptionsPanel"
-          :tabindex="currentTab === 'shorts' ? 0 : -1"
-          :class="{ selectedTab: currentTab === 'shorts' }"
-          @click="changeTab('shorts')"
-          @keydown.space.enter.prevent="changeTab('shorts')"
-          @keydown.left.right="focusTab($event, 'shorts')"
-        >
-          <FontAwesomeIcon
-            :icon="['fa', 'clapperboard']"
-            class="subscriptionIcon"
-          />
-          {{ $t("Global.Shorts") }}
-        </div>
-        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
-        <div
-          v-if="!hideSubscriptionsLive"
-          ref="liveTab"
-          class="tab"
-          role="tab"
-          :aria-selected="currentTab === 'live'"
-          aria-controls="subscriptionsPanel"
-          :tabindex="currentTab === 'live' ? 0 : -1"
-          :class="{ selectedTab: currentTab === 'live' }"
-          @click="changeTab('live')"
-          @keydown.space.enter.prevent="changeTab('live')"
-          @keydown.left.right="focusTab($event, 'live')"
-        >
-          <FontAwesomeIcon
-            :icon="['fa', 'tower-broadcast']"
-            class="subscriptionIcon"
-          />
-          {{ $t("Global.Live") }}
-        </div>
-        <!-- eslint-disable-next-line vuejs-accessibility/interactive-supports-focus -->
-        <div
-          v-if="!hideSubscriptionsCommunity"
-          ref="communityTab"
-          class="tab"
-          role="tab"
-          :aria-selected="currentTab === 'community'"
-          aria-controls="subscriptionsPanel"
-          :tabindex="currentTab === 'community' ? 0 : -1"
-          :class="{ selectedTab: currentTab === 'community' }"
-          @click="changeTab('community')"
-          @keydown.space.enter.prevent="changeTab('community')"
-          @keydown.left.right="focusTab($event, 'community')"
-        >
-          <FontAwesomeIcon
-            :icon="['fa', 'message']"
-            class="subscriptionIcon"
-          />
-          {{ $t("Global.Posts") }}
-        </div>
-      </FtFlexBox>
-      <SubscriptionsVideos
-        v-if="currentTab === 'videos'"
-        id="subscriptionsPanel"
-        role="tabpanel"
-      />
-      <SubscriptionsShorts
-        v-else-if="currentTab === 'shorts'"
-        id="subscriptionsPanel"
-        role="tabpanel"
-      />
-      <SubscriptionsLive
-        v-else-if="currentTab === 'live'"
-        id="subscriptionsPanel"
-        role="tabpanel"
-      />
-      <SubscriptionsPosts
-        v-else-if="currentTab === 'community'"
-        id="subscriptionsPanel"
-        role="tabpanel"
-      />
-      <p v-else>
-        {{ $t("Subscriptions.All Subscription Tabs Hidden", {
-          subsection: $t('Settings.Distraction Free Settings.Sections.Subscriptions Page'),
-          settingsSection: $t('Settings.Distraction Free Settings.Distraction Free Settings')
-        }) }}
-      </p>
-    </FtCard>
+        <SubscriptionsShorts
+          v-else-if="currentTab === 'shorts'"
+          id="subscriptionsPanel"
+          role="tabpanel"
+        />
+        <SubscriptionsLive
+          v-else-if="currentTab === 'live'"
+          id="subscriptionsPanel"
+          role="tabpanel"
+        />
+        <SubscriptionsPosts
+          v-else-if="currentTab === 'community'"
+          id="subscriptionsPanel"
+          role="tabpanel"
+        />
+        <p v-else>
+          {{ $t("Subscriptions.All Subscription Tabs Hidden", {
+            subsection: $t('Settings.Distraction Free Settings.Sections.Subscriptions Page'),
+            settingsSection: $t('Settings.Distraction Free Settings.Distraction Free Settings')
+          }) }}
+        </p>
+      </FtCard>
+    </div>
   </div>
 </template>
 

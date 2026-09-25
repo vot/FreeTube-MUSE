@@ -1,50 +1,51 @@
 <template>
   <div>
-    <FtLoader
-      v-if="isLoading"
-      :fullscreen="true"
-    />
-    <FtCard
-      v-else
-      class="card"
-    >
-      <h2>
-        <font-awesome-icon
-          :icon="['fas', 'hashtag']"
-          aria-hidden="false"
-          class="headingIcon"
-        />
-        <bdi>{{ hashtag }}</bdi>
-      </h2>
-      <FtElementList
-        v-if="videos.length > 0"
-        :data="videos"
+    <div class="main-content-container">
+      <FtLoader
+        v-if="isLoading"
+        :fullscreen="true"
       />
-      <FtFlexBox
+      <FtCard
         v-else
       >
-        <p
-          class="message"
+        <h2>
+          <font-awesome-icon
+            :icon="['fas', 'hashtag']"
+            aria-hidden="false"
+            class="headingIcon"
+          />
+          <bdi>{{ hashtag }}</bdi>
+        </h2>
+        <FtElementList
+          v-if="videos.length > 0"
+          :data="videos"
+        />
+        <FtFlexBox
+          v-else
         >
-          {{ $t("Hashtag.This hashtag does not currently have any videos") }}
-        </p>
-      </FtFlexBox>
+          <p
+            class="message"
+          >
+            {{ $t("Hashtag.This hashtag does not currently have any videos") }}
+          </p>
+        </FtFlexBox>
 
-      <FtAutoLoadNextPageWrapper
-        v-if="showFetchMoreButton"
-        @load-next-page="handleFetchMore"
-      >
-        <div
-          class="getNextPage"
-          role="button"
-          tabindex="0"
-          @click="handleFetchMore"
-          @keydown.enter.space.prevent="handleFetchMore"
+        <FtAutoLoadNextPageWrapper
+          v-if="showFetchMoreButton"
+          @load-next-page="handleFetchMore"
         >
-          <FontAwesomeIcon :icon="['fas', 'search']" /> {{ $t("Search Filters.Fetch more results") }}
-        </div>
-      </FtAutoLoadNextPageWrapper>
-    </FtCard>
+          <div
+            class="getNextPage"
+            role="button"
+            tabindex="0"
+            @click="handleFetchMore"
+            @keydown.enter.space.prevent="handleFetchMore"
+          >
+            <FontAwesomeIcon :icon="['fas', 'search']" /> {{ $t("Search Filters.Fetch more results") }}
+          </div>
+        </FtAutoLoadNextPageWrapper>
+      </FtCard>
+    </div>
   </div>
 </template>
 <script setup>

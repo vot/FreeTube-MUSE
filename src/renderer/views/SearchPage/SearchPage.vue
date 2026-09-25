@@ -1,38 +1,39 @@
 <template>
   <div>
-    <FtLoader
-      v-if="isLoading"
-      :fullscreen="true"
-    />
-    <FtCard
-      v-else
-      class="card"
-    >
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'search']"
-          class="headingIcon"
-        />
-        {{ t("Search Filters.Search Results") }}
-      </h2>
-      <FtElementList
-        :data="shownResults"
+    <div class="main-content-container">
+      <FtLoader
+        v-if="isLoading"
+        :fullscreen="true"
       />
-      <FtAutoLoadNextPageWrapper
-        v-if="!isNextPageLoading"
-        @load-next-page="nextPage"
+      <FtCard
+        v-else
       >
-        <div
-          class="getNextPage"
-          role="button"
-          tabindex="0"
-          @click="nextPage"
-          @keydown.enter.space.prevent="nextPage"
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'search']"
+            class="headingIcon"
+          />
+          {{ t("Search Filters.Search Results") }}
+        </h2>
+        <FtElementList
+          :data="shownResults"
+        />
+        <FtAutoLoadNextPageWrapper
+          v-if="!isNextPageLoading"
+          @load-next-page="nextPage"
         >
-          <FontAwesomeIcon :icon="['fas', 'search']" /> {{ t("Search Filters.Fetch more results") }}
-        </div>
-      </FtAutoLoadNextPageWrapper>
-    </FtCard>
+          <div
+            class="getNextPage"
+            role="button"
+            tabindex="0"
+            @click="nextPage"
+            @keydown.enter.space.prevent="nextPage"
+          >
+            <FontAwesomeIcon :icon="['fas', 'search']" /> {{ t("Search Filters.Fetch more results") }}
+          </div>
+        </FtAutoLoadNextPageWrapper>
+      </FtCard>
+    </div>
   </div>
 </template>
 

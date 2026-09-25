@@ -1,269 +1,271 @@
 <template>
   <div>
-    <FtLoader
-      v-if="isLoading && !errorMessage"
-      :fullscreen="true"
-    />
-    <ChannelDetails
-      v-else-if="(isFamilyFriendly || !showFamilyFriendlyOnly)"
-      :id="id"
-      :name="channelName"
-      :banner-url="bannerUrl"
-      :has-error-message="!!errorMessage"
-      :thumbnail-url="thumbnailUrl"
-      :sub-count="subCount"
-      :show-share-menu="showShareMenu"
-      :show-search-bar="showSearchBar"
-      :is-subscribed="isSubscribed"
-      :visible-tabs="tabInfoValues"
-      :current-tab="currentTab"
-      :query="lastSearchQuery"
-      class="card channelDetails"
-      @change-tab="changeTab"
-      @search="newSearchWithStatePersist"
-      @subscribed="handleSubscription"
-    />
-    <FtCard
-      v-if="!isLoading && !errorMessage && (isFamilyFriendly || !showFamilyFriendlyOnly)"
-      class="card"
-    >
-      <ChannelAbout
-        v-if="currentTab === 'about'"
-        id="aboutPanel"
-        :description="description"
-        :joined="joined"
-        :views="viewCount"
-        :videos="videoCount"
-        :location="location"
-        :tags="tags"
-        :related-channels="relatedChannels"
-      />
-      <div class="select-container">
-        <FtButton
-          v-if="showViewAllButton"
-          style="margin-top: 33px;"
-          :label="$t('Channel.View All')"
-          @click="router.push(currentTabViewAllRoute)"
-        />
-        <FtSelect
-          v-if="showVideoSortBy"
-          v-show="currentTab === 'videos' && (showFetchMoreButton || filteredVideos.length > 1)"
-          :value="videoSortBy"
-          :select-names="videoLiveShortSelectNames"
-          :select-values="videoLiveShortSelectValues"
-          :placeholder="$t('Global.Sort By')"
-          :icon="getIconForSortPreference(videoSortBy)"
-          @change="videoSortBy = $event"
-        />
-        <FtSelect
-          v-if="!hideChannelShorts && showShortSortBy"
-          v-show="currentTab === 'shorts' && (showFetchMoreButton || filteredShorts.length > 1)"
-          :value="shortSortBy"
-          :select-names="videoLiveShortSelectNames"
-          :select-values="videoLiveShortSelectValues"
-          :placeholder="$t('Global.Sort By')"
-          :icon="getIconForSortPreference(shortSortBy)"
-          @change="shortSortBy = $event"
-        />
-        <FtSelect
-          v-if="!hideLiveStreams && showLiveSortBy"
-          v-show="currentTab === 'live' && (showFetchMoreButton || filteredLive.length > 1)"
-          :value="liveSortBy"
-          :select-names="videoLiveShortSelectNames"
-          :select-values="videoLiveShortSelectValues"
-          :placeholder="$t('Global.Sort By')"
-          :icon="getIconForSortPreference(liveSortBy)"
-          @change="liveSortBy = $event"
-        />
-        <FtSelect
-          v-if="!hideChannelPlaylists && showPlaylistSortBy"
-          v-show="currentTab === 'playlists' && latestPlaylists.length > 0"
-          :value="playlistSortBy"
-          :select-names="playlistSelectNames"
-          :select-values="PLAYLIST_SELECT_VALUES"
-          :placeholder="$t('Global.Sort By')"
-          :icon="getIconForSortPreference(playlistSortBy)"
-          @change="playlistSortBy = $event"
-        />
-      </div>
+    <div class="main-content-container">
       <FtLoader
-        v-if="isCurrentTabLoading"
+        v-if="isLoading && !errorMessage"
+        :fullscreen="true"
       />
-      <div
-        v-if="currentTab !== 'about' && !isElementListLoading"
-        class="elementList"
+      <ChannelDetails
+        v-else-if="(isFamilyFriendly || !showFamilyFriendlyOnly)"
+        :id="id"
+        :name="channelName"
+        :banner-url="bannerUrl"
+        :has-error-message="!!errorMessage"
+        :thumbnail-url="thumbnailUrl"
+        :sub-count="subCount"
+        :show-share-menu="showShareMenu"
+        :show-search-bar="showSearchBar"
+        :is-subscribed="isSubscribed"
+        :visible-tabs="tabInfoValues"
+        :current-tab="currentTab"
+        :query="lastSearchQuery"
+        class="card channelDetails"
+        @change-tab="changeTab"
+        @search="newSearchWithStatePersist"
+        @subscribed="handleSubscription"
+      />
+      <FtCard
+        v-if="!isLoading && !errorMessage && (isFamilyFriendly || !showFamilyFriendlyOnly)"
+        class="card"
       >
-        <ChannelHome
-          v-show="currentTab === 'home'"
-          id="homePanel"
-          :shelves="homeData"
-          role="tabpanel"
-          aria-labelledby="homeTab"
+        <ChannelAbout
+          v-if="currentTab === 'about'"
+          id="aboutPanel"
+          :description="description"
+          :joined="joined"
+          :views="viewCount"
+          :videos="videoCount"
+          :location="location"
+          :tags="tags"
+          :related-channels="relatedChannels"
         />
-        <FtElementList
-          v-show="currentTab === 'videos'"
-          id="videoPanel"
-          :data="filteredVideos"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="videosTab"
+        <div class="select-container">
+          <FtButton
+            v-if="showViewAllButton"
+            style="margin-top: 33px;"
+            :label="$t('Channel.View All')"
+            @click="router.push(currentTabViewAllRoute)"
+          />
+          <FtSelect
+            v-if="showVideoSortBy"
+            v-show="currentTab === 'videos' && (showFetchMoreButton || filteredVideos.length > 1)"
+            :value="videoSortBy"
+            :select-names="videoLiveShortSelectNames"
+            :select-values="videoLiveShortSelectValues"
+            :placeholder="$t('Global.Sort By')"
+            :icon="getIconForSortPreference(videoSortBy)"
+            @change="videoSortBy = $event"
+          />
+          <FtSelect
+            v-if="!hideChannelShorts && showShortSortBy"
+            v-show="currentTab === 'shorts' && (showFetchMoreButton || filteredShorts.length > 1)"
+            :value="shortSortBy"
+            :select-names="videoLiveShortSelectNames"
+            :select-values="videoLiveShortSelectValues"
+            :placeholder="$t('Global.Sort By')"
+            :icon="getIconForSortPreference(shortSortBy)"
+            @change="shortSortBy = $event"
+          />
+          <FtSelect
+            v-if="!hideLiveStreams && showLiveSortBy"
+            v-show="currentTab === 'live' && (showFetchMoreButton || filteredLive.length > 1)"
+            :value="liveSortBy"
+            :select-names="videoLiveShortSelectNames"
+            :select-values="videoLiveShortSelectValues"
+            :placeholder="$t('Global.Sort By')"
+            :icon="getIconForSortPreference(liveSortBy)"
+            @change="liveSortBy = $event"
+          />
+          <FtSelect
+            v-if="!hideChannelPlaylists && showPlaylistSortBy"
+            v-show="currentTab === 'playlists' && latestPlaylists.length > 0"
+            :value="playlistSortBy"
+            :select-names="playlistSelectNames"
+            :select-values="PLAYLIST_SELECT_VALUES"
+            :placeholder="$t('Global.Sort By')"
+            :icon="getIconForSortPreference(playlistSortBy)"
+            @change="playlistSortBy = $event"
+          />
+        </div>
+        <FtLoader
+          v-if="isCurrentTabLoading"
         />
-        <FtFlexBox
-          v-if="currentTab === 'videos' && latestVideos.length === 0"
+        <div
+          v-if="currentTab !== 'about' && !isElementListLoading"
+          class="elementList"
         >
-          <p class="message">
-            {{ $t("Channel.Videos.This channel does not currently have any videos") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelShorts && currentTab === 'shorts'"
-          id="shortPanel"
-          :data="filteredShorts"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="shortsTab"
-        />
-        <FtFlexBox
-          v-if="!hideChannelShorts && currentTab === 'shorts' && latestShorts.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Shorts.This channel does not currently have any shorts") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideLiveStreams"
-          v-show="currentTab === 'live'"
-          id="livePanel"
-          :data="filteredLive"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="liveTab"
-        />
-        <FtFlexBox
-          v-if="!hideLiveStreams && currentTab === 'live' && latestLive.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Live.This channel does not currently have any live streams") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelPodcasts && currentTab === 'podcasts'"
-          id="podcastPanel"
-          :data="latestPodcasts"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="podcastsTab"
-        />
-        <FtFlexBox
-          v-if="!hideChannelPodcasts && currentTab === 'podcasts' && latestPodcasts.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Podcasts.This channel does not currently have any podcasts") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelReleases && currentTab === 'releases'"
-          id="releasePanel"
-          :data="latestReleases"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="releasesTab"
-        />
-        <FtFlexBox
-          v-if="!hideChannelReleases && currentTab === 'releases' && latestReleases.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Releases.This channel does not currently have any releases") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelCourses && currentTab === 'courses'"
-          id="coursesPanel"
-          :data="latestCourses"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="coursesTab"
-        />
-        <FtFlexBox
-          v-if="!hideChannelCourses && currentTab === 'courses' && latestCourses.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Courses.This channel does not currently have any courses") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelPlaylists && currentTab === 'playlists'"
-          id="playlistPanel"
-          :data="latestPlaylists"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="playlistsTab"
-        />
-        <FtFlexBox
-          v-if="!hideChannelPlaylists && currentTab === 'playlists' && latestPlaylists.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Playlists.This channel does not currently have any playlists") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-if="!hideChannelCommunity && currentTab === 'community'"
-          id="communityPanel"
-          class="communityPanel"
-          :data="latestCommunityPosts"
-          :use-channels-hidden-preference="false"
-          role="tabpanel"
-          aria-labelledby="communityTab"
-          display="list"
-        />
-        <FtFlexBox
-          v-if="!hideChannelCommunity && currentTab === 'community' && latestCommunityPosts.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Posts.This channel currently does not have any posts") }}
-          </p>
-        </FtFlexBox>
-        <FtElementList
-          v-show="currentTab === 'search'"
-          :data="searchResults"
-          :use-channels-hidden-preference="false"
-        />
-        <FtFlexBox
-          v-if="currentTab === 'search' && !isSearchTabLoading && searchResults.length === 0"
-        >
-          <p class="message">
-            {{ $t("Channel.Your search results have returned 0 results") }}
-          </p>
-        </FtFlexBox>
-        <FtAutoLoadNextPageWrapper
-          v-if="showFetchMoreButton && !isFetchMoreLoading"
-          @load-next-page="handleFetchMore"
-        >
-          <div
-            class="getNextPage"
-            role="button"
-            tabindex="0"
-            @click="handleFetchMore"
-            @keydown.enter.space.prevent="handleFetchMore"
+          <ChannelHome
+            v-show="currentTab === 'home'"
+            id="homePanel"
+            :shelves="homeData"
+            role="tabpanel"
+            aria-labelledby="homeTab"
+          />
+          <FtElementList
+            v-show="currentTab === 'videos'"
+            id="videoPanel"
+            :data="filteredVideos"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="videosTab"
+          />
+          <FtFlexBox
+            v-if="currentTab === 'videos' && latestVideos.length === 0"
           >
-            <FontAwesomeIcon :icon="['fas', 'search']" /> {{ $t("Search Filters.Fetch more results") }}
-          </div>
-        </FtAutoLoadNextPageWrapper>
-      </div>
-    </FtCard>
-    <FtCard
-      v-if="errorMessage"
-      class="card"
-    >
-      <p>
-        {{ errorMessage }}
-      </p>
-    </FtCard>
-    <FtAgeRestricted
-      v-else-if="!isLoading && (!isFamilyFriendly && showFamilyFriendlyOnly)"
-      class="ageRestricted"
-      :is-channel="true"
-    />
+            <p class="message">
+              {{ $t("Channel.Videos.This channel does not currently have any videos") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelShorts && currentTab === 'shorts'"
+            id="shortPanel"
+            :data="filteredShorts"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="shortsTab"
+          />
+          <FtFlexBox
+            v-if="!hideChannelShorts && currentTab === 'shorts' && latestShorts.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Shorts.This channel does not currently have any shorts") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideLiveStreams"
+            v-show="currentTab === 'live'"
+            id="livePanel"
+            :data="filteredLive"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="liveTab"
+          />
+          <FtFlexBox
+            v-if="!hideLiveStreams && currentTab === 'live' && latestLive.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Live.This channel does not currently have any live streams") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelPodcasts && currentTab === 'podcasts'"
+            id="podcastPanel"
+            :data="latestPodcasts"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="podcastsTab"
+          />
+          <FtFlexBox
+            v-if="!hideChannelPodcasts && currentTab === 'podcasts' && latestPodcasts.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Podcasts.This channel does not currently have any podcasts") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelReleases && currentTab === 'releases'"
+            id="releasePanel"
+            :data="latestReleases"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="releasesTab"
+          />
+          <FtFlexBox
+            v-if="!hideChannelReleases && currentTab === 'releases' && latestReleases.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Releases.This channel does not currently have any releases") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelCourses && currentTab === 'courses'"
+            id="coursesPanel"
+            :data="latestCourses"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="coursesTab"
+          />
+          <FtFlexBox
+            v-if="!hideChannelCourses && currentTab === 'courses' && latestCourses.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Courses.This channel does not currently have any courses") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelPlaylists && currentTab === 'playlists'"
+            id="playlistPanel"
+            :data="latestPlaylists"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="playlistsTab"
+          />
+          <FtFlexBox
+            v-if="!hideChannelPlaylists && currentTab === 'playlists' && latestPlaylists.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Playlists.This channel does not currently have any playlists") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-if="!hideChannelCommunity && currentTab === 'community'"
+            id="communityPanel"
+            class="communityPanel"
+            :data="latestCommunityPosts"
+            :use-channels-hidden-preference="false"
+            role="tabpanel"
+            aria-labelledby="communityTab"
+            display="list"
+          />
+          <FtFlexBox
+            v-if="!hideChannelCommunity && currentTab === 'community' && latestCommunityPosts.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Posts.This channel currently does not have any posts") }}
+            </p>
+          </FtFlexBox>
+          <FtElementList
+            v-show="currentTab === 'search'"
+            :data="searchResults"
+            :use-channels-hidden-preference="false"
+          />
+          <FtFlexBox
+            v-if="currentTab === 'search' && !isSearchTabLoading && searchResults.length === 0"
+          >
+            <p class="message">
+              {{ $t("Channel.Your search results have returned 0 results") }}
+            </p>
+          </FtFlexBox>
+          <FtAutoLoadNextPageWrapper
+            v-if="showFetchMoreButton && !isFetchMoreLoading"
+            @load-next-page="handleFetchMore"
+          >
+            <div
+              class="getNextPage"
+              role="button"
+              tabindex="0"
+              @click="handleFetchMore"
+              @keydown.enter.space.prevent="handleFetchMore"
+            >
+              <FontAwesomeIcon :icon="['fas', 'search']" /> {{ $t("Search Filters.Fetch more results") }}
+            </div>
+          </FtAutoLoadNextPageWrapper>
+        </div>
+      </FtCard>
+      <FtCard
+        v-if="errorMessage"
+        class="card"
+      >
+        <p>
+          {{ errorMessage }}
+        </p>
+      </FtCard>
+      <FtAgeRestricted
+        v-else-if="!isLoading && (!isFamilyFriendly && showFamilyFriendlyOnly)"
+        class="ageRestricted"
+        :is-channel="true"
+      />
+    </div>
   </div>
 </template>
 

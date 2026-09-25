@@ -2,36 +2,154 @@ h2 {
   text-align: center;
 }
 
-.message {
-  color: var(--tertiary-text-color);
+.pageColumns {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-block-start: 10px;
+}
+
+.profileListColumn {
+  flex: 0 0 300px;
+  max-inline-size: 300px;
+  min-inline-size: 0;
 }
 
 .profileList {
-  max-inline-size: 1000px;
-  margin-block: 0 10px;
-  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.openedProfile {
-  background-color: var(--primary-text-color);
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 6px;
+  padding-inline: 8px;
+  border-radius: 10px;
+  cursor: pointer;
   transition: background 0.2s ease-out;
-  color: var(--card-bg-color);
 }
 
-.openedProfile:hover,
-.openedProfile:focus-visible {
-  background-color: var(--tertiary-text-color);
+.profileRow:hover,
+.profileRow:focus-visible {
+  background-color: var(--side-nav-hover-color);
+  color: var(--side-nav-hover-text-color);
   transition: background 0.2s ease-in;
 }
 
-.card {
-  inline-size: 90%;
-  margin-block: 0 15px;
-  margin-inline: auto;
+.profileRow.selected,
+.profileRow.selected:hover,
+.profileRow.selected:focus-visible {
+  background-color: var(--primary-text-color);
+  color: var(--card-bg-color);
+}
+
+.profileRow.indented {
+  margin-inline-start: 28px;
+}
+
+.bubble {
+  inline-size: 34px;
+  block-size: 34px;
+  flex: 0 0 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1em;
+  user-select: none;
+}
+
+.initial {
+  font-weight: 600;
+}
+
+.profileInfo {
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profileName {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activeBadge {
+  align-self: flex-start;
+  font-size: 11px;
+  line-height: 1.2em;
+  padding-block: 1px;
+  padding-inline: 6px;
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  color: var(--text-with-main-color);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.profileRow.selected .activeBadge {
+  background-color: var(--card-bg-color);
+  color: var(--primary-text-color);
+}
+
+.editButton {
+  flex: 0 0 auto;
+}
+
+.profileRow.selected :deep(.iconButton) {
+  color: var(--card-bg-color);
+}
+
+.profileRow.selected :deep(.iconButton:hover),
+.profileRow.selected :deep(.iconButton:focus-visible) {
+  color: var(--card-bg-color);
+  opacity: 0.8;
+}
+
+.createButton {
+  margin-block-start: 12px;
+}
+
+.subscriptionsColumn {
+  flex: 1 1 0;
+  min-inline-size: 0;
+}
+
+.subscriptionsColumn :deep(.card) {
+  inline-size: 100%;
+  margin: 0;
+}
+
+.editProfileCard {
+  inline-size: 100%;
+}
+
+.editProfileCard :deep(.card) {
+  inline-size: 100%;
+  margin-block: 0;
+  box-shadow: none;
+}
+
+.editProfileCard :deep(.card > h2) {
+  display: none;
 }
 
 @media only screen and (width <= 680px) {
-  .card {
-    inline-size: 90%;
+  .pageColumns {
+    flex-direction: column;
+  }
+
+  .profileListColumn {
+    flex: none;
+    max-inline-size: none;
+    inline-size: 100%;
   }
 }
