@@ -6,7 +6,6 @@
   box-sizing: border-box;
   background-color: var(--card-bg-color);
   border-radius: 10px;
-  box-shadow: 0 2px 8px 0 var(--primary-shadow-color);
 }
 
 .channelDetails {
