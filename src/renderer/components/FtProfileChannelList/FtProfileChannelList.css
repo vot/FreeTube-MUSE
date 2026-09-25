@@ -3,6 +3,33 @@ h2,
   text-align: center;
 }
 
+.addToProfileDescription {
+  margin: 0;
+  margin-block-end: 2em;
+  text-align: center;
+}
+
+.deletePromptDescription {
+  margin: 0;
+  margin-block-end: 1em;
+  text-align: center;
+}
+
+.addToProfileSelect {
+  display: flex;
+  justify-content: center;
+  margin-block-start: 8px;
+}
+
+.addToProfileSelect :deep(.select) {
+  margin-block-start: 0;
+  inline-size: 100%;
+}
+
+.subscriptionActions {
+  justify-content: space-between;
+}
+
 .card {
   inline-size: 90%;
   margin-block: 0 15px;

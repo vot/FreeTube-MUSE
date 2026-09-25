@@ -1,6 +1,7 @@
 <template>
   <button
     class="btn ripple"
+    :disabled="disabled"
     :style="{
       color: textColor,
       backgroundColor: backgroundColor,
@@ -37,6 +38,10 @@ defineProps({
   icon: {
     type: Array,
     default: null
+  },
+  disabled: {
+    type: Boolean,
+    default: false
   }
 })
 

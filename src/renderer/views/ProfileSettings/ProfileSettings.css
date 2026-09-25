@@ -42,8 +42,8 @@ h2 {
 .profileRow.selected,
 .profileRow.selected:hover,
 .profileRow.selected:focus-visible {
-  background-color: var(--primary-text-color);
-  color: var(--card-bg-color);
+  background-color: var(--primary-color);
+  color: var(--text-with-main-color);
 }
 
 .profileRow.indented {
@@ -82,36 +82,49 @@ h2 {
   white-space: nowrap;
 }
 
-.activeBadge {
+.badgesRow {
   align-self: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.activeBadge,
+.defaultBadge {
   font-size: 11px;
   line-height: 1.2em;
   padding-block: 1px;
   padding-inline: 6px;
   border-radius: 8px;
-  background-color: var(--primary-color);
-  color: var(--text-with-main-color);
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 
-.profileRow.selected .activeBadge {
+.activeBadge {
+  background-color: var(--primary-color);
+  color: var(--text-with-main-color);
+}
+
+.defaultBadge {
+  background-color: var(--side-nav-hover-color);
+  color: var(--side-nav-hover-text-color);
+}
+
+.profileRow.selected .activeBadge,
+.profileRow.selected .defaultBadge {
   background-color: var(--card-bg-color);
   color: var(--primary-text-color);
 }
 
-.editButton {
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.editButton,
+.makeActiveButton {
   flex: 0 0 auto;
-}
-
-.profileRow.selected :deep(.iconButton) {
-  color: var(--card-bg-color);
-}
-
-.profileRow.selected :deep(.iconButton:hover),
-.profileRow.selected :deep(.iconButton:focus-visible) {
-  color: var(--card-bg-color);
-  opacity: 0.8;
 }
 
 .createButton {
@@ -130,16 +143,6 @@ h2 {
 
 .editProfileCard {
   inline-size: 100%;
-}
-
-.editProfileCard :deep(.card) {
-  inline-size: 100%;
-  margin-block: 0;
-  box-shadow: none;
-}
-
-.editProfileCard :deep(.card > h2) {
-  display: none;
 }
 
 @media only screen and (width <= 680px) {

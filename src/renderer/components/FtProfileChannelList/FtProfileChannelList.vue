@@ -24,31 +24,88 @@
       </FtFlexBox>
       <FtFlexBox
         v-if="showUnsubscribeButton"
+        class="subscriptionActions"
       >
-        <FtButton
-          :label="$t('Profile.Select All')"
-          @click="selectAll"
-        />
-        <FtButton
-          :label="$t('Profile.Select None')"
-          @click="selectNone"
-        />
-        <FtButton
-          :label="$t('Profile.Delete Selected')"
-          text-color="var(--destructive-text-color)"
-          background-color="var(--destructive-color)"
-          @click="displayDeletePrompt"
-        />
+        <FtFlexBox class="actionsGroup">
+          <FtButton
+            :label="$t('Profile.Select All')"
+            @click="selectAll"
+          />
+          <FtButton
+            :label="$t('Profile.Select None')"
+            @click="selectNone"
+          />
+        </FtFlexBox>
+        <FtFlexBox class="actionsGroup">
+          <FtButton
+            v-if="targetProfiles.length > 0"
+            :label="$t('Profile.Copy selected')"
+            :disabled="selected.size === 0"
+            @click="displayAddToProfilePrompt"
+          />
+          <FtButton
+            :label="$t('Profile.Delete Selected')"
+            text-color="var(--destructive-text-color)"
+            background-color="var(--destructive-color)"
+            :disabled="selected.size === 0"
+            @click="displayDeletePrompt"
+          />
+        </FtFlexBox>
       </FtFlexBox>
     </FtCard>
     <FtPrompt
+      v-if="showAddToProfilePrompt"
+      :label="addToProfilePromptLabel"
+      theme="narrow"
+      @click="handleAddToProfilePromptClick"
+    >
+      <p class="addToProfileDescription">
+        {{ addToProfilePromptDescription }}
+      </p>
+      <div class="addToProfileSelect">
+        <FtSelect
+          :value="addToProfileTargetProfileId"
+          :placeholder="t('Profile.Copy to profile')"
+          :select-names="targetProfileNames"
+          :select-values="targetProfileIds"
+          :icon="['fas', 'copy']"
+          @change="handleAddToProfileTargetChange"
+        />
+      </div>
+      <FtFlexBox>
+        <FtButton
+          :label="t('Profile.Copy')"
+          @click="confirmAddToProfile"
+        />
+        <FtButton
+          :label="t('Cancel')"
+          @click="handleAddToProfilePromptClick"
+        />
+      </FtFlexBox>
+    </FtPrompt>
+    <FtPrompt
       v-if="showDeletePrompt"
-      :label="deletePromptMessage"
-      :option-names="deletePromptNames"
-      :option-values="DELTE_PROMPT_VALUES"
-      :is-first-option-destructive="true"
+      :label="t('Profile.Delete Selected')"
+      theme="narrow"
       @click="handleDeletePromptClick"
-    />
+    >
+      <p class="deletePromptDescription">
+        {{ deletePromptMessage }}
+      </p>
+      <FtFlexBox>
+        <FtButton
+          :label="t('Yes, Delete')"
+          text-color="var(--destructive-text-color)"
+          background-color="var(--destructive-color)"
+          :icon="['fas', 'trash']"
+          @click="handleDeletePromptClick('delete')"
+        />
+        <FtButton
+          :label="t('Cancel')"
+          @click="handleDeletePromptClick('cancel')"
+        />
+      </FtFlexBox>
+    </FtPrompt>
   </div>
 </template>
 
@@ -61,11 +118,13 @@ import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 import FtChannelBubble from '../FtChannelBubble/FtChannelBubble.vue'
 import FtButton from '../FtButton/FtButton.vue'
 import FtPrompt from '../FtPrompt/FtPrompt.vue'
+import FtSelect from '../FtSelect/FtSelect.vue'
 
 import store from '../../store/index'
 
 import { deepCopy, showToast } from '../../helpers/utils'
 import { youtubeImageUrlToInvidious } from '../../helpers/api/invidious'
+import { MAIN_PROFILE_ID } from '../../../constants'
 
 /**
  * @typedef {object} Profile
@@ -170,17 +229,108 @@ function handleChannelToggle(channelId) {
   }
 }
 
-const DELTE_PROMPT_VALUES = ['delete', 'cancel']
-
-const deletePromptNames = computed(() => [
-  t('Yes, Delete'),
-  t('Cancel')
-])
-
 /** @type {import('vue').ComputedRef<Profile[]>} */
 const profileList = computed(() => {
   return store.getters.getProfileList
 })
+
+/** @type {import('vue').ComputedRef<Profile[]>} */
+const targetProfiles = computed(() => {
+  return profileList.value.filter((profile) => profile._id !== props.profile._id)
+})
+
+/** @type {import('vue').ComputedRef<string[]>} */
+const targetProfileIds = computed(() => {
+  return targetProfiles.value.map((profile) => profile._id)
+})
+
+/** @type {import('vue').ComputedRef<string[]>} */
+const targetProfileNames = computed(() => {
+  return targetProfiles.value.map(translateProfileName)
+})
+
+/**
+ * @param {Profile} profile
+ */
+function translateProfileName(profile) {
+  return profile._id === MAIN_PROFILE_ID ? t('Profile.All Channels') : profile.name
+}
+
+const showAddToProfilePrompt = ref(false)
+
+const addToProfilePromptLabel = computed(() => {
+  return t('Profile.Copy selected')
+})
+
+const addToProfilePromptDescription = computed(() => {
+  if (selected.size === 1) {
+    return t('Profile.Choose the profile to copy the selected channel to')
+  }
+
+  return t('Profile.Choose the profile to copy the {number} selected channels to', {
+    number: selected.size
+  })
+})
+
+/** @type {import('vue').Ref<string>} */
+const addToProfileTargetProfileId = ref('')
+
+function displayAddToProfilePrompt() {
+  if (selected.size === 0) {
+    showToast(t('Profile.No channel(s) have been selected'))
+    return
+  }
+
+  addToProfileTargetProfileId.value = targetProfiles.value[0]?._id ?? ''
+  showAddToProfilePrompt.value = true
+}
+
+/**
+ * @param {string} value
+ */
+function handleAddToProfileTargetChange(value) {
+  addToProfileTargetProfileId.value = value
+}
+
+function handleAddToProfilePromptClick() {
+  showAddToProfilePrompt.value = false
+}
+
+function confirmAddToProfile() {
+  if (addToProfileTargetProfileId.value !== '') {
+    addSelectedChannelsToProfile(addToProfileTargetProfileId.value)
+  }
+
+  showAddToProfilePrompt.value = false
+}
+
+/**
+ * @param {string} targetProfileId
+ */
+function addSelectedChannelsToProfile(targetProfileId) {
+  const targetProfile = targetProfiles.value.find((profile) => profile._id === targetProfileId)
+
+  if (targetProfile === undefined) {
+    return
+  }
+
+  const targetSubscriptions = deepCopy(targetProfile.subscriptions)
+  const existingIds = new Set(targetSubscriptions.map((channel) => channel.id))
+
+  props.profile.subscriptions.forEach((channel) => {
+    if (selected.has(channel.id) && !existingIds.has(channel.id)) {
+      targetSubscriptions.push(deepCopy(channel))
+    }
+  })
+
+  store.dispatch('updateProfile', {
+    ...targetProfile,
+    subscriptions: targetSubscriptions
+  })
+
+  showToast(t('Profile.Profile has been updated'))
+  selectNone()
+}
 
 const showDeletePrompt = ref(false)
 

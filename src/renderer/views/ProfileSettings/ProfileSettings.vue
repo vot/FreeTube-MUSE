@@ -42,19 +42,41 @@
                 >
                   {{ translatedProfileName(profile) }}
                 </p>
-                <span
-                  v-if="isActiveProfile(profile)"
-                  class="activeBadge"
-                >
-                  {{ $t("Profile.Active Profile") }}
-                </span>
+                <div class="badgesRow">
+                  <span
+                    v-if="isActiveProfile(profile)"
+                    class="activeBadge"
+                  >
+                    {{ $t("Profile.Active Profile") }}
+                  </span>
+                  <span
+                    v-if="isDefaultProfile(profile)"
+                    class="defaultBadge"
+                  >
+                    {{ $t("Profile.Default Profile") }}
+                  </span>
+                </div>
               </div>
-              <FtIconButton
-                class="editButton"
-                :icon="['fas', 'edit']"
-                :title="$t('Profile.Edit Profile')"
-                @click.stop="openEditProfile(profile)"
-              />
+              <span
+                class="actionButtons"
+                @click.stop
+              >
+                <FtIconButton
+                  class="makeActiveButton"
+                  :icon="['fas', 'check']"
+                  :title="isActiveProfile(profile)
+                    ? $t('Profile.Active Profile')
+                    : $t('Profile.Make Active')"
+                  :disabled="isActiveProfile(profile)"
+                  @click="setActiveProfile(profile)"
+                />
+                <FtIconButton
+                  class="editButton"
+                  :icon="['fas', 'edit']"
+                  :title="$t('Profile.Edit Profile')"
+                  @click="openEditProfile(profile)"
+                />
+              </span>
             </div>
           </div>
           <FtFlexBox class="createButton">
@@ -77,6 +99,7 @@
     <FtPrompt
       v-if="editModalProfile"
       :label="editModalTitle"
+      theme="half"
       @click="closeEditModal"
     >
       <FtProfileEdit
@@ -87,6 +110,7 @@
         :is-main-profile="isEditModalProfileMain"
         @new-profile-created="handleNewProfileCreated"
         @profile-deleted="handleProfileDeleted"
+        @cancel="closeEditModal"
       />
     </FtPrompt>
   </div>
@@ -105,6 +129,7 @@ import FtPrompt from '../../components/FtPrompt/FtPrompt.vue'
 
 import store from '../../store/index'
 
+import { showToast } from '../../helpers/utils'
 import { calculateColorLuminance, getRandomColor } from '../../helpers/colors'
 import { getFirstCharacter } from '../../helpers/strings'
 import { MAIN_PROFILE_ID } from '../../../constants'
@@ -214,6 +239,21 @@ function handleProfileDeleted() {
 /**
  * @param {Profile} profile
  */
+function setActiveProfile(profile) {
+  if (profile._id === activeProfile.value?._id) {
+    return
+  }
+
+  store.commit('setActiveProfile', profile._id)
+
+  showToast(t('Profile.{profile} is now the active profile', {
+    profile: translatedProfileName(profile)
+  }))
+}
+
+/**
+ * @param {Profile} profile
+ */
 function isMainProfile(profile) {
   return profile._id === MAIN_PROFILE_ID
 }
@@ -223,6 +263,13 @@ function isMainProfile(profile) {
  */
 function isActiveProfile(profile) {
   return profile._id === activeProfile.value?._id
+}
+
+/**
+ * @param {Profile} profile
+ */
+function isDefaultProfile(profile) {
+  return profile._id === store.state.settings.defaultProfile
 }
 
 /**

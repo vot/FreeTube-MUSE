@@ -1,101 +1,91 @@
 <template>
   <div>
-    <FtCard class="card">
-      <h2>{{ editOrCreateProfileLabel }}</h2>
-      <FtFlexBox class="profileEdit">
-        <div>
-          <h3>{{ $t("Profile.Color Picker") }}</h3>
-          <FtFlexBox
-            class="colorOptions"
-          >
-            <div
-              v-for="color in COLOR_VALUES"
-              :key="color"
-              class="colorOption"
-              :title="color + ' ' + $t('Profile.Custom Color')"
-              :style="{ background: color }"
-              tabindex="0"
-              role="button"
-              @click="profileBgColor = color"
-              @keydown.enter.space.prevent="profileBgColor = color"
-            />
-          </FtFlexBox>
-          <div class="customColorSection">
-            <label for="colorPicker">{{ $t("Profile.Custom Color") }}</label>
-            <input
-              id="colorPicker"
-              v-model="profileBgColor"
-              type="color"
-            >
-          </div>
-          <FtInput
-            class="colorSelection"
-            placeholder=""
-            :value="profileBgColor"
-            :show-action-button="false"
-            :disabled="true"
-          />
+    <div class="profilePreviewSection">
+      <h3>{{ $t("Profile.Profile Preview") }}</h3>
+      <div
+        class="colorOption previewBubble"
+        :style="{ background: profileBgColor, color: profileTextColor }"
+      >
+        <div
+          class="initial"
+          dir="auto"
+        >
+          {{ profileInitial }}
         </div>
-        <div class="secondEditRow">
-          <div>
-            <h3>{{ editOrCreateProfileNameLabel }}</h3>
-            <FtInput
-              class="profileName"
-              :placeholder="$t('Profile.Profile Name')"
-              :disabled="isMainProfile"
-              :value="translatedProfileName"
-              :show-action-button="false"
-              :maxlength="100"
-              @input="profileName = $event"
-              @keydown.enter="saveProfile"
-            />
-          </div>
-          <div>
-            <h3>{{ $t("Profile.Profile Preview") }}</h3>
-            <div class="profilePreviewSection">
-              <div
-                class="colorOption"
-                :style="{ background: profileBgColor, color: profileTextColor }"
-              >
-                <div
-                  class="initial"
-                  dir="auto"
-                >
-                  {{ profileInitial }}
-                </div>
-              </div>
-              <FtFlexBox>
-                <FtButton
-                  v-if="isNew"
-                  :label="$t('Profile.Create Profile')"
-                  @click="saveProfile"
-                />
-                <template
-                  v-else
-                >
-                  <FtButton
-                    :label="$t('Profile.Update Profile')"
-                    @click="saveProfile"
-                  />
-                  <FtButton
-                    :label="$t('Profile.Make Default Profile')"
-                    @click="setDefaultProfile"
-                  />
-                  <FtButton
-                    v-if="!isMainProfile"
-                    :label="$t('Profile.Delete Profile')"
-                    text-color="var(--destructive-text-color)"
-                    background-color="var(--destructive-color)"
-                    :icon="['fas', 'trash']"
-                    @click="showDeletePrompt = true"
-                  />
-                </template>
-              </FtFlexBox>
-            </div>
-          </div>
-        </div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div class="profileNameSection">
+      <h3>{{ editOrCreateProfileNameLabel }}</h3>
+      <FtInput
+        class="profileName"
+        :placeholder="$t('Profile.Profile Name')"
+        :disabled="isMainProfile"
+        :value="translatedProfileName"
+        :show-action-button="false"
+        :maxlength="100"
+        @input="profileName = $event"
+        @keydown.enter="saveProfile"
+      />
+    </div>
+    <hr class="divider">
+    <div class="colorPickerSection">
+      <h3>{{ $t("Profile.Color Picker") }}</h3>
+      <FtFlexBox
+        class="colorOptions"
+      >
+        <div
+          v-for="color in COLOR_VALUES"
+          :key="color"
+          class="colorOption"
+          :title="color + ' ' + $t('Profile.Custom Color')"
+          :style="{ background: color }"
+          tabindex="0"
+          role="button"
+          @click="profileBgColor = color"
+          @keydown.enter.space.prevent="profileBgColor = color"
+        />
       </FtFlexBox>
-    </FtCard>
+      <div class="customColorSection">
+        <label for="colorPicker">{{ $t("Profile.Custom Color") }}</label>
+        <input
+          id="colorPicker"
+          v-model="profileBgColor"
+          type="color"
+        >
+      </div>
+      <FtInput
+        class="colorSelection"
+        placeholder=""
+        :value="profileBgColor"
+        :show-action-button="false"
+        :disabled="true"
+      />
+    </div>
+    <hr class="divider">
+    <FtFlexBox class="actionButtons">
+      <FtButton
+        :label="editOrCreateProfileActionLabel"
+        @click="saveProfile"
+      />
+      <FtButton
+        :label="$t('Cancel')"
+        @click="emit('cancel')"
+      />
+      <FtButton
+        v-if="!isNew"
+        :label="$t('Profile.Make Default Profile')"
+        @click="setDefaultProfile"
+      />
+      <FtButton
+        v-if="!isNew && !isMainProfile"
+        :label="$t('Profile.Delete Profile')"
+        text-color="var(--destructive-text-color)"
+        background-color="var(--destructive-color)"
+        :icon="['fas', 'trash']"
+        @click="showDeletePrompt = true"
+      />
+    </FtFlexBox>
     <FtPrompt
       v-if="showDeletePrompt"
       :label="deletePromptLabel"
@@ -111,7 +101,6 @@
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import FtCard from '../ft-card/ft-card.vue'
 import FtPrompt from '../FtPrompt/FtPrompt.vue'
 import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 import FtInput from '../FtInput/FtInput.vue'
@@ -153,7 +142,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['new-profile-created', 'profile-deleted'])
+const emit = defineEmits(['new-profile-created', 'profile-deleted', 'cancel'])
 
 const COLOR_VALUES = colors.map(color => color.value)
 
@@ -186,8 +175,8 @@ const profileInitial = computed(() => {
     : ''
 })
 
-const editOrCreateProfileLabel = computed(() => {
-  return props.isNew ? t('Profile.Create Profile') : t('Profile.Edit Profile')
+const editOrCreateProfileActionLabel = computed(() => {
+  return props.isNew ? t('Profile.Create Profile') : t('Profile.Update Profile')
 })
 
 const editOrCreateProfileNameLabel = computed(() => {

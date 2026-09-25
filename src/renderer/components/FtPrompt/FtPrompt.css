@@ -54,6 +54,27 @@
   padding-inline: 0;
 }
 
+.promptCard.narrow {
+  inline-size: 30em;
+  max-inline-size: 90%;
+  inset-inline: 0;
+  margin-inline: auto;
+}
+
+.promptCard.wide {
+  inline-size: 75%;
+  max-inline-size: 75%;
+  inset-inline: 0;
+  margin-inline: auto;
+}
+
+.promptCard.half {
+  inline-size: 50%;
+  max-inline-size: 90%;
+  inset-inline: 0;
+  margin-inline: auto;
+}
+
 .center {
   text-align: center;
 }

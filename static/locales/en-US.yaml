@@ -755,6 +755,9 @@ Profile:
   Profile Select: Profile Select
   Profile Filter: Profile Filter
   All Channels: All Channels
+  Active Profile: Active
+  Default Profile: Default
+  Make Active: Make Active
   Profile Manager: Profile Manager
   Create New Profile: Create New Profile
   Edit Profile: Edit Profile
@@ -786,6 +789,13 @@ Profile:
   Select None: Select None
   Delete Selected: Delete Selected
   Add Selected To Profile: Add Selected To Profile
+  Copy selected: Copy selected
+  Choose the profile to copy the selected channel to: Choose the profile to copy the selected
+    channel to
+  Choose the profile to copy the {number} selected channels to: Choose the profile to copy
+    the {number} selected channels to
+  Copy to profile: Copy to profile
+  Copy: Copy
   No channel(s) have been selected: No channel(s) have been selected
   ? This is your primary profile.  Are you sure you want to delete the selected channels?  The
     same channels will be deleted in any profile they are found in.
