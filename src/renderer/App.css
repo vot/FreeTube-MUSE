@@ -16,6 +16,10 @@
   margin-inline: 10px;
 }
 
+.flexBox.routerView {
+  margin-block-start: 0;
+}
+
 .banner {
   inline-size: 85%;
   margin-block: 40px 0;

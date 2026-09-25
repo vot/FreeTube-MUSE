@@ -1,11 +1,11 @@
 .settingsMenu {
   /* top nav + margin */
-  inset-block-start: 96px;
+  inset-block-start: 78px;
   position: sticky;
   display: flex;
   flex-direction: column;
   padding-inline-start: 0;
-  block-size: calc(85vh - 96px);
+  block-size: calc(85vh - 78px);
   max-block-size: 600px;
 }
 
