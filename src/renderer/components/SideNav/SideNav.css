@@ -257,59 +257,6 @@
   }
 }
 
-@media only screen and (width <= 680px) {
-  .inner {
-    display: contents; /* sunglasses emoji */
-  }
-
-  hr,
-  .mobileHidden,
-  .refreshIcon,
-  .sideNavToggle {
-    display: none;
-  }
-
-  .sideNav {
-    inset-inline-start: 0;
-    position: fixed;
-    display: flex;
-    margin: 0;
-    border-radius: 0;
-    block-size: 60px;
-    inline-size: 100%;
-    inset-block: auto 0;
-    overflow-y: hidden;
-  }
-
-  .topNavOption {
-    margin-block-start: 0;
-    padding-inline: 10px;
-  }
-
-  .navLabel {
-    margin-inline: 0;
-    inline-size: 100%;
-    text-align: center;
-    inset-inline-start: 0;
-    font-size: 11px;
-  }
-
-  .moreOption {
-    display: block;
-  }
-
-  .navOption {
-    inline-size: 70px;
-    block-size: 40px;
-    padding: 0;
-    padding-block: 10px;
-  }
-
-  .hiddenLabels {
-    inline-size: 100%;
-  }
-}
-
 @media only screen and (width <= 400px) {
   /* Hide settings so that they appear in the more dropdown on smaller screens */
   .smallMobileOnlyHidden {

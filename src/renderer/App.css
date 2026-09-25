@@ -18,16 +18,11 @@
 
 .flexBox.routerView {
   margin-block-start: 0;
+  margin-inline-start: 80px;
 }
 
-@media only screen and (width > 680px) {
-  .flexBox.routerView {
-    margin-inline-start: 100px;
-  }
-
-  .app.isSideNavOpen .flexBox.routerView {
-    margin-inline-start: 220px;
-  }
+.app.isSideNavOpen .flexBox.routerView {
+  margin-inline-start: 220px;
 }
 
 .banner {
@@ -77,17 +72,13 @@
 
 @media only screen and (width <= 680px) {
   .routerView {
-    margin-block: 68px;
+    margin-block: 78px;
     margin-inline: 8px;
   }
 
   .banner {
     inline-size: 90%;
     margin-block: 60px 0;
-  }
-
-  .flexBox {
-    margin-block: 60px -75px;
   }
 
   .changeLogText {
