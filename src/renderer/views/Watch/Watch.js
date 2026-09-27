@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue'
+import { computed, defineComponent, getCurrentInstance } from 'vue'
 import { isNavigationFailure, NavigationFailureType } from 'vue-router'
 import { mapActions, mapMutations } from 'vuex'
 import shaka from 'shaka-player'
@@ -42,6 +42,8 @@ import {
 import { sortCaptions } from '../../helpers/player/utils'
 import { MANIFEST_TYPE_SABR } from '../../helpers/player/SabrManifestParser'
 import { useI18n } from 'vue-i18n'
+import { useFeedRefresh } from '../../composables/useFeedRefresh'
+import { KeyboardShortcuts } from '../../../constants'
 
 /**
  * @typedef {{
@@ -82,6 +84,7 @@ export default defineComponent({
     this.handleRouteChange()
     window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
     document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
+    document.removeEventListener('keydown', this.keyboardShortcutHandler)
     document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
 
     if (this.$refs.player) {
@@ -92,6 +95,16 @@ export default defineComponent({
   },
   setup: function () {
     const { t, locale } = useI18n()
+
+    const instance = getCurrentInstance()
+
+    // show the top nav refresh button, which unregisters and re-adds the player
+    useFeedRefresh({
+      title: computed(() => instance.proxy.videoTitle),
+      lastRefreshTimestamp: computed(() => ''),
+      disableRefresh: computed(() => instance.proxy.isLoading),
+      refreshAction: () => instance.proxy.reloadPlayerAtCurrentTimestamp()
+    })
 
     return { t, currentLocale: locale }
   },
@@ -454,6 +467,9 @@ export default defineComponent({
       document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
       document.addEventListener('keydown', this.resetAutoplayInterruptionTimeout)
       document.addEventListener('click', this.resetAutoplayInterruptionTimeout)
+
+      document.removeEventListener('keydown', this.keyboardShortcutHandler)
+      document.addEventListener('keydown', this.keyboardShortcutHandler)
 
       window.addEventListener('beforeunload', this.handleWatchProgressAutoSave)
       this.resetAutoplayInterruptionTimeout()
@@ -1964,6 +1980,21 @@ export default defineComponent({
       this.blockVideoAutoplay = false
     },
 
+    keyboardShortcutHandler(event) {
+      if (document.activeElement?.classList.contains('ft-input')) { return }
+      // Avoid handling events due to user holding a key (not released)
+      // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat
+      if (event.repeat) { return }
+
+      switch (event.key.toLowerCase()) {
+        case KeyboardShortcuts.APP.SITUATIONAL.REFRESH:
+          if (!this.isLoading) {
+            this.reloadPlayerAtCurrentTimestamp()
+          }
+          break
+      }
+    },
+
     updatePlaybackRate(newRate) {
       this.currentPlaybackRate = newRate
     },
@@ -1975,9 +2006,7 @@ export default defineComponent({
       this.startNextVideoInPip = uiState.startNextVideoInPip
     },
 
-    async onPlayerReloadRequested() {
-      showToast('Reloading player according to SABR request')
-
+    async reloadPlayerAtCurrentTimestamp() {
       const timestamp = this.getTimestamp()
       if (timestamp > 0) {
         // Reload at the middle should restart at current timestamp
@@ -1995,6 +2024,12 @@ export default defineComponent({
         }
       }
       await this.reloadView()
+    },
+
+    async onPlayerReloadRequested() {
+      showToast('Reloading player according to SABR request')
+
+      await this.reloadPlayerAtCurrentTimestamp()
     },
 
     ...mapActions([
