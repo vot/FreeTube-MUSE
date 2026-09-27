@@ -236,11 +236,27 @@
   padding: 0;
 }
 
-@media only screen and (width <=400px) {
-  :deep(.shaka-text-container) {
-    /* make subtitles take up slightly less space when a mobile phone is in portrait orientation */
-    font-size: 16px !important;
-  }
+/*
+  Subtitles are sized relative to the height of the displayed video, down to a
+  minimum, and offset from the bottom by a proportion of it (see
+  SUBTITLE_HEIGHT_RATIO / SUBTITLE_MIN_FONT_SIZE / SUBTITLE_BOTTOM_OFFSET_RATIO
+  in ft-shaka-video-player.js), so that they always cover the same proportion of
+  the picture whether the player is small, in theatre mode, full window or
+  fullscreen.
+
+  !important is needed to beat shaka-player's own rules, which use a fixed
+  20px font size and switch to 4.4vmin in fullscreen.
+*/
+:deep(.shaka-text-container) {
+  font-size: var(--subtitle-font-size, 20px) !important;
+
+  /*
+    Applied as padding instead of `bottom` because shaka-player moves the
+    container itself to keep subtitles clear of the controls, and this offset
+    has to survive that. A percentage wouldn't do either, as it would resolve
+    against the width, so this is a length computed from the video height.
+  */
+  padding-bottom: var(--subtitle-bottom-offset, 0);
 }
 
 @media only screen and (width <=1000px) {

@@ -1250,6 +1250,27 @@ export default defineComponent({
     const videoElementWidth = ref(0)
     const videoElementHeight = ref(0)
 
+    /**
+     * Subtitles are sized as a proportion of the height of the displayed video, so
+     * that they always cover the same amount of the picture, no matter how big the
+     * player is or how much of it the video doesn't fill. 0.044 is the proportion
+     * shaka-player itself uses in fullscreen. shaka doesn't expose the scaled size
+     * of the video, so we use the size of the video element itself.
+     */
+    const SUBTITLE_HEIGHT_RATIO = 0.044
+
+    /**
+     * Keeps subtitles readable in a small player, such as a phone held in portrait
+     * orientation, where a strict proportion would make them tiny.
+     */
+    const SUBTITLE_MIN_FONT_SIZE = 14
+
+    /**
+     * Lifts the subtitles off the bottom edge of the picture by this proportion of
+     * the video height, so they aren't flush against it.
+     */
+    const SUBTITLE_BOTTOM_OFFSET_RATIO = 0.02
+
     /** @type {ResizeObserver} */
     const videoResizeObserver = new ResizeObserver(() => {
       if (video.value) {
@@ -1258,6 +1279,12 @@ export default defineComponent({
 
         videoElementWidth.value = video_.clientWidth * devicePixelRatio
         videoElementHeight.value = video_.clientHeight * devicePixelRatio
+
+        // nothing sets object-fit on the video, so its box is the displayed picture
+        const videoHeight = video_.clientHeight
+        const subtitleFontSize = Math.max(videoHeight * SUBTITLE_HEIGHT_RATIO, SUBTITLE_MIN_FONT_SIZE)
+        container.value?.style.setProperty('--subtitle-font-size', `${subtitleFontSize}px`)
+        container.value?.style.setProperty('--subtitle-bottom-offset', `${videoHeight * SUBTITLE_BOTTOM_OFFSET_RATIO}px`)
       }
     })
 
