@@ -560,11 +560,13 @@ const windowTitle = computed(() => {
 /** @type {import('vue').ComputedRef<string>} */
 const appTitle = computed(() => store.getters.getAppTitle)
 
+const appName = `${packageDetails.productName}-MUSE`
+
 watch(appTitle, (value) => {
   if (value.length > 0) {
-    document.title = `${value} - ${packageDetails.productName}`
+    document.title = `${value} - ${appName}`
   } else {
-    document.title = packageDetails.productName
+    document.title = appName
   }
 })
 
