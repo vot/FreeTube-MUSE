@@ -152,7 +152,7 @@
         :in-user-playlist="!!selectedUserPlaylist"
         :is-unlisted="isUnlisted"
         :can-save-watched-progress="canSaveWatchProgress"
-        class="watchVideo"
+        class="watchVideo card-bg"
         :class="{ theatreWatchVideo: useTheatreMode }"
         @change-format="handleFormatChange"
         @pause-player="pausePlayer"
@@ -163,7 +163,7 @@
         :chapters="videoChapters"
         :current-chapter-index="videoCurrentChapterIndex"
         :kind="videoChaptersKind"
-        class="watchVideo"
+        class="watchVideo card-bg"
         :class="{ theatreWatchVideo: useTheatreMode }"
         @timestamp-event="changeTimestamp"
       />
@@ -172,14 +172,14 @@
         :description="videoDescription"
         :description-html="videoDescriptionHtml"
         :license="license"
-        class="watchVideo"
+        class="watchVideo card-bg"
         :class="{ theatreWatchVideo: useTheatreMode }"
         @timestamp-event="changeTimestamp"
       />
       <CommentSection
         v-if="!isLoading && !isLive && !hideComments"
         :id="videoId"
-        class="watchVideo"
+        class="watchVideo card-bg"
         :class="{ theatreWatchVideo: useTheatreMode }"
         :channel-thumbnail="channelThumbnail"
         :channel-name="channelName"
@@ -196,7 +196,7 @@
         :live-chat="liveChat"
         :video-id="videoId"
         :channel-id="channelId"
-        class="watchVideoSideBar watchVideoPlaylist"
+        class="watchVideoSideBar watchVideoPlaylist card-bg"
         :class="{ theatrePlaylist: useTheatreMode }"
       />
       <watch-video-playlist
@@ -208,14 +208,14 @@
         :playlist-type="playlistType"
         :video-id="videoId"
         :playlist-item-id="playlistItemId"
-        class="watchVideoSideBar watchVideoPlaylist"
+        class="watchVideoSideBar watchVideoPlaylist card-bg"
         :class="{ theatrePlaylist: useTheatreMode }"
         @pause-player="pausePlayer"
       />
       <watch-video-recommendations
         v-if="!isLoading && !hideRecommendedVideos"
         :data="recommendedVideos"
-        class="watchVideoSideBar watchVideoRecommendations"
+        class="watchVideoSideBar watchVideoRecommendations card-bg"
         :class="{
           theatreRecommendations: useTheatreMode,
           watchVideoRecommendationsLowerCard: watchingPlaylist || isLive,
