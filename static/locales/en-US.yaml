@@ -492,6 +492,13 @@ Settings:
     Default Playback Rate: Default Playback Rate
     Max Video Playback Rate: Max Video Playback Rate
     Video Playback Rate Interval: Video Playback Rate Interval
+    Subtitles Size:
+      Subtitles Size: Subtitles Size
+      Smallest: Smallest
+      Small: Small
+      Normal: Normal
+      Large: Large
+      Largest: Largest
     Default Video Format:
       Default Video Format: Default Video Format
       Dash Formats: DASH Formats
@@ -1123,6 +1130,8 @@ Tooltips:
   Player Settings:
     Proxy Videos Through Invidious: Will connect to Invidious to serve videos instead
       of making a direct connection to YouTube.
+    Subtitles Size: Subtitles are sized to match the video, so this scales them up or
+      down everywhere you watch.
     Default Video Format: Set the formats used when a video plays. DASH formats can
       play higher qualities. Legacy formats are limited to a max of 360p but use less
       bandwidth. Audio formats are audio only streams.

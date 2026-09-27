@@ -300,6 +300,7 @@ const state = {
   screenshotQuality: 95,
   screenshotFolderPath: '',
   screenshotFilenamePattern: '%Y%M%D-%H%N%S',
+  subtitleSize: 'normal',
   settingsSectionSortEnabled: false,
   fetchSubscriptionsAutomatically: true,
   settingsPassword: '',

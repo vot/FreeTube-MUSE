@@ -1261,7 +1261,9 @@ export default defineComponent({
 
     /**
      * Keeps subtitles readable in a small player, such as a phone held in portrait
-     * orientation, where a strict proportion would make them tiny.
+     * orientation, where a strict proportion would make them tiny. Scaled along with
+     * the chosen size, otherwise the smallest options would all be clamped to the
+     * same size in a small player.
      */
     const SUBTITLE_MIN_FONT_SIZE = 14
 
@@ -1271,6 +1273,35 @@ export default defineComponent({
      */
     const SUBTITLE_BOTTOM_OFFSET_RATIO = 0.02
 
+    /**
+     * Scale each "Subtitles Size" setting is multiplied by.
+     * @type {Record<string, number>}
+     */
+    const SUBTITLE_SIZE_MULTIPLIERS = {
+      smallest: 0.6,
+      small: 0.8,
+      normal: 1,
+      large: 1.25,
+      largest: 1.6
+    }
+
+    function updateSubtitleSizing() {
+      // nothing sets object-fit on the video, so its box is the displayed picture
+      const videoHeight = video.value?.clientHeight
+
+      if (!videoHeight) {
+        return
+      }
+
+      const size = SUBTITLE_SIZE_MULTIPLIERS[store.getters.getSubtitleSize] ?? SUBTITLE_SIZE_MULTIPLIERS.normal
+      const fontSize = Math.max(videoHeight * SUBTITLE_HEIGHT_RATIO, SUBTITLE_MIN_FONT_SIZE) * size
+
+      container.value?.style.setProperty('--subtitle-font-size', `${fontSize}px`)
+      container.value?.style.setProperty('--subtitle-bottom-offset', `${videoHeight * SUBTITLE_BOTTOM_OFFSET_RATIO}px`)
+    }
+
+    watch(() => store.getters.getSubtitleSize, updateSubtitleSizing)
+
     /** @type {ResizeObserver} */
     const videoResizeObserver = new ResizeObserver(() => {
       if (video.value) {
@@ -1279,13 +1310,9 @@ export default defineComponent({
 
         videoElementWidth.value = video_.clientWidth * devicePixelRatio
         videoElementHeight.value = video_.clientHeight * devicePixelRatio
-
-        // nothing sets object-fit on the video, so its box is the displayed picture
-        const videoHeight = video_.clientHeight
-        const subtitleFontSize = Math.max(videoHeight * SUBTITLE_HEIGHT_RATIO, SUBTITLE_MIN_FONT_SIZE)
-        container.value?.style.setProperty('--subtitle-font-size', `${subtitleFontSize}px`)
-        container.value?.style.setProperty('--subtitle-bottom-offset', `${videoHeight * SUBTITLE_BOTTOM_OFFSET_RATIO}px`)
       }
+
+      updateSubtitleSizing()
     })
 
     /** @type {PictureInPictureWindow | null} */

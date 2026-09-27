@@ -110,6 +110,15 @@
         :icon="['fas', 'gauge']"
         @change="updateVideoPlaybackRateInterval"
       />
+      <FtSelect
+        :placeholder="t('Settings.Player Settings.Subtitles Size.Subtitles Size')"
+        :value="subtitleSize"
+        :select-names="subtitleSizeNames"
+        :select-values="SUBTITLE_SIZE_VALUES"
+        :tooltip="t('Tooltips.Player Settings.Subtitles Size')"
+        :icon="['fas', 'font']"
+        @change="updateSubtitleSize"
+      />
     </FtFlexBox>
     <FtFlexBox>
       <FtSlider
@@ -359,6 +368,26 @@ const viewingModeValues = computed(() => {
  */
 function updateDefaultViewingMode(value) {
   store.dispatch('updateDefaultViewingMode', value)
+}
+
+const SUBTITLE_SIZE_VALUES = ['smallest', 'small', 'normal', 'large', 'largest']
+
+const subtitleSizeNames = computed(() => [
+  t('Settings.Player Settings.Subtitles Size.Smallest'),
+  t('Settings.Player Settings.Subtitles Size.Small'),
+  t('Settings.Player Settings.Subtitles Size.Normal'),
+  t('Settings.Player Settings.Subtitles Size.Large'),
+  t('Settings.Player Settings.Subtitles Size.Largest')
+])
+
+/** @type {import('vue').ComputedRef<'smallest' | 'small' | 'normal' | 'large' | 'largest'>} */
+const subtitleSize = computed(() => store.getters.getSubtitleSize)
+
+/**
+ * @param {'smallest' | 'small' | 'normal' | 'large' | 'largest'} value
+ */
+function updateSubtitleSize(value) {
+  store.dispatch('updateSubtitleSize', value)
 }
 
 const FORMAT_VALUES = ['dash', 'legacy', 'audio']
