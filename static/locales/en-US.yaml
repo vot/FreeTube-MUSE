@@ -302,6 +302,8 @@ Settings:
   The app needs to restart for changes to take effect. Restart and apply change?: The
     app needs to restart for changes to take effect. Restart and apply change?
   General Settings:
+    Enable Tabbed Interface: Enable Tabbed Interface
+    Open All Video Links In New Tabs: Open All Video Links In New Tabs
     General Settings: General
     Check for Updates: Check for Updates
     Fallback to Non-Preferred Backend on Failure: Fallback to Non-Preferred Backend
@@ -1106,10 +1108,15 @@ Up Next: Up Next
 Description:
   Expand Description: ...more
   Collapse Description: Show less
+Tabs:
+  New Tab: New Tab
+  Close Tab: Close Tab
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: Show multiple pages as tabs. Players of tabs that are not shown are paused and released after a while to save memory.
+    Open All Video Links In New Tabs: Open video links in a new background tab. Middle-click or Ctrl-click (Cmd-click on macOS) opens a video link in a new tab regardless of this setting.
     Preferred API Backend: Choose the backend that FreeTube uses to obtain data. The
       local API is a built-in extractor. The Invidious API requires an Invidious server
       to connect to.

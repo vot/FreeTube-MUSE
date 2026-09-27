@@ -212,6 +212,8 @@ Settings:
   Settings: 'Stillingar'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Þú þarft að endurræsa forritið svo breytingarnar taki gildi. á að endurræsa og virkja breytingar?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Almennt'
     Check for Updates: 'Athuga með uppfærslur'
     Fallback to Non-Preferred Backend on Failure: 'Nota varaleið um ekki-forgangsbakenda þegar villa kemur upp'
@@ -952,10 +954,15 @@ Comments:
   Loading replies: Hleð inn svörum...
   Comments are turned off: Slökkt er á athugasemdum
 Up Next: 'Næst í spilun'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Veldu bakendann sem FreeTube notar til að ná í gögn. Staðværa API-kerfisviðmótið er innbyggður skrapari. Invidious API-kerfisviðmótið krefst tengingar við Invidious-netþjón.'
     Fallback to Non-Preferred Backend on Failure: 'Þegar forgangsbakendi API-kerfisviðmóts á í vandræðum, mun FreeTube reyna sjálfkrafa að nota ekki-forgangsbakenda API-kerfisviðmóts sem varaleið, þegar þetta er virkjað.'
     Thumbnail Preference: 'Öllum smámyndum í FreeTube verður skipt út fyrir ramma með myndskeiðinu, móskaðan eða falinn, í stað sjálfgefinnar smámyndar.'

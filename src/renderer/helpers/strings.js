@@ -76,3 +76,33 @@ export function getFirstCharacter(text, locale) {
   const firstSegment = segmenter.segment(text)[Symbol.iterator]().next().value
   return firstSegment.segment
 }
+
+/**
+ * @param {import('./tabs').Tab} tab
+ * @returns {string}
+ */
+export function getTabTitle(tab) {
+  if (tab.context.title !== '') {
+    return tab.context.title
+  }
+
+  const route = tab.router.currentRoute.value
+  const translatedTitle = translateWindowTitle(route.meta.title)
+
+  if (translatedTitle !== null) {
+    return translatedTitle
+  }
+
+  // Pages without a title of their own fall back to the interesting part
+  // of their path, e.g. the search text of a search results page
+  if (route.path.startsWith('/search/')) {
+    return decodeURIComponent(route.params.query ?? '')
+  }
+
+  if (route.path.startsWith('/hashtag/')) {
+    return `#${decodeURIComponent(route.params.hashtag ?? '')}`
+  }
+
+  return route.meta.title ?? ''
+}
+

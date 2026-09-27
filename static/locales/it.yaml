@@ -209,6 +209,8 @@ Settings:
   # On Settings Page
   Settings: 'Impostazioni'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Generale'
     Fallback to Non-Preferred Backend on Failure: 'Ritorna al backend non preferito in caso di errore'
     Enable Search Suggestions: 'Abilita suggerimenti di ricerca'
@@ -979,6 +981,9 @@ Profile:
   Create Profile Name: Crea un nome per il profilo
   Go To Profile Manager: Vai a Gestione dei profili
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Questo video non è disponibile a causa di alcuni formati mancanti. Questo può succedere in caso di mancata disponibilità della nazione.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Player Settings:
     Default Video Format: Imposta i formati usati quando un video viene riprodotto. I formati DASH possono riprodurre qualità maggiore. I formati compatibili sono limitati ad un massimo di 360p ma usano meno banda. I formati audio riproducono solo l'audio.
@@ -989,6 +994,8 @@ Tooltips:
     Fetch Feeds from RSS: Se abilitato, FreeTube userà gli RSS invece del metodo standard per leggere le iscrizioni. Gli RSS sono più veloci e impediscono il blocco dell'IP, ma non forniscono determinate informazioni come la durata del video, lo stato dal vivo o i post
     Fetch Automatically: Se abilitato, FreeTube recupererà automaticamente il feed delle tue iscrizioni all'avvio e quando viene aperta una nuova finestra.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: L'istanza di Invidious a cui FreeTube si connetterà per le chiamate API. Le modifiche a questa impostazione si applicano solo alla finestra corrente, a meno che non si imposti questa istanza come predefinita.
     Thumbnail Preference: Tutte le miniature su FreeTube verranno sostituite con un fotogramma del video, sfocato o nascosto al posto della miniatura predefinita.
     Fallback to Non-Preferred Backend on Failure: Quando le API preferite hanno un problema, FreeTube userà automaticamente le API secondarie come riserva (se abilitate).

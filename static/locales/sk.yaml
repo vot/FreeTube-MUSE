@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: 'Nastavenia'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Všeobecné'
     Fallback to Non-Preferred Backend on Failure: 'Pri chybe prepnúť na alternatívny backend'
     Enable Search Suggestions: 'Zapnúť návrhy vyhľadávania'
@@ -929,6 +931,9 @@ Yes: 'Áno'
 No: 'Nie'
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Toto video nie je dostupné kvôli chýbajúcim formátom. Toto sa môže stať kvôli nedostupnosti krajiny.
 The playlist has been reversed: Playlist bol obrátený
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Keď je zapnuté, FreeTube použije RSS namiesto predvolenej metódy na získanie vášho odoberaného kanála. RSS je rýchlejší a zabraňuje blokovaniu IP, ale neposkytuje určité informácie ako trvanie videa, stav naživo alebo príspevky
@@ -939,6 +944,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Keď je kurzor nad videom, stlačte a podržte kláves Control (kláves Command na Macu) a posúvaním kolieska myši dopredu alebo dozadu ovládajte rýchlosť prehrávania. Stlačte a podržte kláves Control (kláves Command na Macu) a kliknite ľavým tlačidlom myši pre rýchly návrat k predvolenej rýchlosti prehrávania (1x, ak nebola zmenená v nastaveniach).
     Skip by Scrolling Over Video Player: Použite koliesko myši na preskakovanie cez video v štýle MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Región trendov vám umožňuje zvoliť si krajinu pre trendové videá, ktoré chcete zobraziť.
     Invidious Instance: Inštancia Invidious, ku ktorej sa FreeTube pripojí na účely volania API. Zmeny tohto nastavenia sa vzťahujú len na aktuálne okno, pokiaľ túto inštanciu nenastavíte ako predvolenú.
     Thumbnail Preference: Všetky náhľady vo FreeTube budú nahradené snímkou z videa, ktorá bude rozmazaná alebo skrytá namiesto východzieho náhľadu.

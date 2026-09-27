@@ -212,6 +212,8 @@ Settings:
   # On Settings Page
   Settings: 'Seadistused'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Üldist'
     Check for Updates: 'Kontrolli uuendusi'
     Fallback to Non-Preferred Backend on Failure: 'Luba vigade korral kasutada teist taustateenust'
@@ -983,6 +985,9 @@ No: 'Ei'
 More: Veel
 Open New Window: Ava uus aken
 Unknown YouTube url type, cannot be opened in app: Tundmatu YouTube'i urli tüüp, mida ei saa rakenduses avada
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   External Player Settings:
     Custom External Player Executable: Vaikimisi eeldab FreeTube, et väline meediamängija on leitav PATH keskkonnamuutuja alusel. Aga kui vaja, siis saad siin seadistada muu asukoha.
@@ -995,6 +1000,8 @@ Tooltips:
     Fetch Feeds from RSS: Selle valiku kasutamisel FreeTube pruugib tellimuste andmete laadimisel vaikimisi meetodi asemel RSS-uudisvoogu. RSS on kiirem ja välistab IP-aadressi blokeerimise, kuid ei sisalda video kestust, otseesituse olekut ja postitusi
     Fetch Automatically: Kui see valik on kasutusel, siis FreeTube automaatselt laadib rakenduse käivitamisel ja uue akna avamisel sinu tellimuste loendi.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Piirkond, mille alusel kuvame hetkel menukad ehk populaarsust koguvad videod.
     Thumbnail Preference: Vaikimisi pisipildi asemel kuvab FreeTube kõikjal läbi rakenduse kaadrit videost ja seda hägusena ja peidetuna.
     Fallback to Non-Preferred Backend on Failure: Kui sinu eelistatud APi ei toimi, siis kui vähegi võimalik, FreeTube üritab kasutada alternatiivi.

@@ -205,6 +205,8 @@ Settings:
   # On Settings Page
   Settings: 'Instellingen'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Algemeen'
     Fallback to Non-Preferred Backend on Failure: 'Terugvallen op alternatieve backend bij problemen'
     Enable Search Suggestions: 'Zoeksuggesties inschakelen'
@@ -938,6 +940,9 @@ Profile:
 Download From Site: Van website downloaden
 Version {versionNumber} is now available!  Click for more details: Versie {versionNumber} is nu beschikbaar! Klik voor meer informatie
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Deze video is niet beschikbaar vanwege ontbrekende videoformaten. Dit kan gebeuren als de video niet in uw land beschikbaar is.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Player Settings:
     Default Video Format: Selecteer de video indeling die wordt gebruikt wanneer u een video afspeelt. DASH kan video's afspelen met hogere kwaliteitsinstellingen. Legacy gaat niet hoger dan 360p maar gebruikt minder bandbreedte. Audio zal alleen het geluid streamen.
@@ -948,6 +953,8 @@ Tooltips:
     Fetch Feeds from RSS: Wanneer ingeschakeld zal FreeTube RSS gebruiken in plaats van de standaard­methode om uw abonnementen­feed op te halen. RSS is sneller en voorkomt IP-blokkering, maar geeft geen toegang tot sommige informatie zoals de video­duur, live-status en berichten
     Fetch Automatically: Indien ingeschakeld, haalt FreeTube automatisch uw abonnementen­feed op bĳ het opstarten en wanneer een nieuw venster wordt geopend.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: Dit is de Invidious-instantie waar FreeTube mee zal verbinden om API calls te maken.
     Thumbnail Preference: Alle miniaturen in FreeTube zullen worden vervangen met een moment­opname uit de video, worden vervaagd, of worden verborgen, in plaats van de standaard­miniatuur.
     Fallback to Non-Preferred Backend on Failure: Wanneer het API met voorkeur problemen geeft dan zal FreeTube automatisch terugvallen op het alternatieve niet-voorkeur API wanneer deze instelling is ingeschakeld.

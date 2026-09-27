@@ -1,0 +1,221 @@
+/*
+  The tabs follow the look of the tabs of the settings page:
+  a row that shares the whole width, no gaps, no rounding, and an
+  underline that marks the tab that is currently shown.
+
+  The class names are prefixed, since `global.css` has a `.tab` rule
+  for the tabs of the settings page, which must not apply here.
+*/
+
+.tabBar {
+  align-items: center;
+  /*
+    A shade of the card background, which is the background of the top bar.
+    Mixing in the text color moves the bar away from the top bar in every
+    theme, since that color is dark in light themes and light in dark ones.
+    The active tab then brings the card background back, so it reads as the
+    surface the content is shown on.
+  */
+  background-color: color-mix(in srgb, var(--card-bg-color) 88%, var(--primary-text-color));
+  block-size: 40px;
+  display: flex;
+  flex: 1 1 100%;
+  margin-block: 0;
+  // The tabs fill the bar, so that they are not surrounded by empty space
+  padding: 0;
+  // Sits right underneath the top bar and stays there while scrolling
+  position: sticky;
+  inset-block-start: 60px;
+  z-index: 3;
+  width: 100%;
+
+  @media only screen and (width <= 680px) {
+    // The top bar is not part of the layout on small screens
+    margin-block-start: 60px;
+  }
+}
+
+.tabBarBarColor {
+  // A shade of the top bar instead of the exact same color,
+  // so that the two bars stay distinguishable
+  background-color: color-mix(in srgb, var(--primary-color) 85%, #000);
+
+  .tabItem {
+    // The card background would clash with the colored bar,
+    // so the tabs get a shade of the bar color instead
+    background-color: rgb(0 0 0 / 12%);
+    color: var(--primary-text-color);
+  }
+
+  .tabItem:hover,
+  .tabItem:focus-visible {
+    background-color: rgb(0 0 0 / 25%);
+    color: var(--primary-text-color);
+  }
+
+  .tabItem.isActive {
+    // The card background would clash with the colored bar,
+    // so the active tab is marked by its underline and weight instead
+    background-color: transparent;
+    border-block-end-color: var(--primary-text-color);
+    color: var(--primary-text-color);
+  }
+}
+
+.tabList {
+  align-items: stretch;
+  align-self: stretch;
+  color: var(--tertiary-text-color);
+  display: flex;
+  /*
+    Only as wide as its tabs, so that the button for a new tab follows the
+    last tab directly instead of being pushed to the end of the bar.
+    `min-inline-size: 0` lets the list give up width instead of forcing the
+    bar wider, and `overflow: hidden` keeps it from ever scrolling: the tabs
+    below are made to fit rather than the row being scrolled. The height is
+    clipped as well, since the tabs give up a pixel to the underline of the
+    row and would otherwise bring up a scrollbar here.
+  */
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  // Only a horizontal gap, so that the tabs sit next to each other
+  // without being separated from the bar above and below them
+  column-gap: 2px;
+}
+
+.tabItem {
+  align-items: center;
+  /*
+    A slightly stronger mix than the bar, which makes the extent of each
+    tab visible. Inactive tabs keep a plain background instead of the one
+    of the active tab, so that only the shown page is raised.
+  */
+  background-color: color-mix(in srgb, var(--card-bg-color) 74%, var(--primary-text-color));
+  border-block-end: 2px solid var(--instance-menu-color);
+  box-sizing: border-box;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  /*
+    240px is the width a tab is happy with, and it is also the point where
+    the list stops being wider than the bar needs. Below that, flexbox
+    takes the width away from every tab in proportion to this basis, so all
+    of them stay the same size and all of them remain visible.
+
+    The minimum is deliberately not a fixed length. A flex item will not
+    shrink below the size of its content, and a fixed `min-inline-size`
+    would cap how far they can go, which is what makes a row of tabs
+    overflow the window in the first place. Letting the title and the close
+    button give up their space instead means the tabs autoscale for as long
+    as it takes, and `overflow: hidden` clips whatever is left over.
+  */
+  flex: 0 1 240px;
+  gap: 4px;
+  justify-content: space-between;
+  max-inline-size: 240px;
+  min-inline-size: 0;
+  overflow: hidden;
+  padding-block: 4px;
+  padding-inline: 12px;
+  // Leaves room for the underline of the active tab,
+  // which is drawn over the one of the row
+  margin-block-end: -1px;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  user-select: none;
+}
+
+.tabItem:hover,
+.tabItem:focus-visible {
+  background-color: color-mix(in srgb, var(--card-bg-color) 60%, var(--primary-text-color));
+  color: var(--primary-text-color);
+}
+
+.tabItem.isActive {
+  background-color: var(--card-bg-color);
+  border-block-end: 2px solid var(--primary-color);
+  color: var(--primary-text-color);
+  font-weight: bold;
+}
+
+.tabItem.isActive:hover,
+.tabItem.isActive:focus-visible {
+  // The active tab keeps the card background, since that is the surface
+  // of the content that is currently shown
+  background-color: var(--card-bg-color);
+}
+
+.tabTitle {
+  /*
+    A flex item will not shrink below the size of its content by default,
+    and this text never wraps, so without this the title would keep every
+    tab at its full text width and push the row out of the window. This
+    lets it shrink, so the ellipsis takes over and the tab can make room.
+  */
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.closeButton,
+.newTabButton {
+  align-items: center;
+  background-color: transparent;
+  block-size: 20px;
+  border-radius: 20px;
+  border-style: none;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  inline-size: 20px;
+  justify-content: center;
+  opacity: 0.7;
+  padding: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.closeButton {
+  /*
+    A tab that runs out of room gives up the close button before it gives
+    up its title, so that as many tabs as possible stay readable. The
+    button of a new tab never shrinks, since it has to stay reachable.
+  */
+  flex: 0 1 auto;
+  min-inline-size: 0;
+  opacity: 0;
+}
+
+.newTabButton {
+  /*
+    The one thing in the bar that may not shrink: however narrow the tabs
+    become, this stays at its full size so that a new tab can always be
+    opened. The list beside it gives up its width instead.
+  */
+  flex: 0 0 auto;
+  /*
+    No space in front of the button: the background of the bar would show
+    through there, which reads as a differently colored block right before
+    the button. The space behind it keeps it off the edge of the bar.
+  */
+  margin-inline: 0 8px;
+}
+
+.closeButton:hover,
+.newTabButton:hover {
+  background-color: var(--side-nav-hover-color);
+  opacity: 1;
+}
+
+.closeButton {
+  opacity: 0;
+}
+
+.tabItem:hover .closeButton,
+.tabItem.isActive .closeButton,
+.closeButton:focus-visible {
+  // Only the tab that is hovered or shown has a close button,
+  // so that a row of tabs does not turn into a row of buttons
+  opacity: 0.7;
+}

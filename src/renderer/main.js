@@ -4,6 +4,7 @@ import router from './router/index'
 import store from './store/index'
 import App from './App.vue'
 import { showExternalPlayerUnsupportedActionToast, showToast } from './helpers/utils'
+import { getActiveTabRouter } from './helpers/tabs'
 import { library } from './fontawesome-minimal'
 // import the styles
 import '@fortawesome/fontawesome-svg-core/styles.css'
@@ -291,7 +292,10 @@ router.isReady().then(() => {
 // to avoid accessing electron api from web app build
 if (process.env.IS_ELECTRON) {
   window.ftElectron.handleChangeView((route) => {
-    router.push(route)
+    // The shown page belongs to a tab, so the change has to be applied there
+    const targetRouter = getActiveTabRouter() ?? router
+
+    targetRouter.push(route)
   })
 
   window.ftElectron.handleOpenInExternalPlayerResult(

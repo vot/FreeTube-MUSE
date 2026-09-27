@@ -220,6 +220,8 @@ Settings:
   Settings: 'Налады'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Праграму трэба перазапусціць, каб змены ўступілі ў сілу. Перазапусціць і прымяніць змены?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Агульныя'
     Check for Updates: 'Правяраць наяўнасць абнаўленняў'
     Fallback to Non-Preferred Backend on Failure: 'Вяртанне да непераважнага бэкэнда ў выпадку няўдачы'
@@ -920,10 +922,15 @@ Comments:
   There are no comments available for this post: Да гэтай публікацыі няма каментарыяў
   Hide Replies: Схаваць адказ | Схаваць адказы
 Up Next: 'Далей'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Выберыце бэкэнд, які FreeTube выкарыстоўвае для атрымання даных. Лакальны API - гэта ўбудаваны экстрактар. Для падключэння Invidious API патрабуецца сервер Invidious.'
     Fallback to Non-Preferred Backend on Failure: 'Калі ў вашым абраным API ўзнікае праблема, FreeTube аўтаматычна паспрабуе выкарыстаць непрыярытэтны API у якасці рэзервовага метаду, калі ён уключаны.'
     Thumbnail Preference: 'Усе мініяцюры FreeTube будуць заменены кадрам відэа, размыты або схаваны замест мініяцюр па змаўчанні.'

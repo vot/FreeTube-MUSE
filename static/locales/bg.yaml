@@ -209,6 +209,8 @@ Settings:
   # On Settings Page
   Settings: 'Настройки'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Общи'
     Check for Updates: 'Проверка за актуализации'
     Fallback to Non-Preferred Backend on Failure: 'При грешка, връщане към непредпочитан интерфейс'
@@ -965,6 +967,9 @@ Canceled next video autoplay: 'Следващото видео е отказан
 
 Yes: 'Да'
 No: 'Не'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: FreeTube ще използва RSS вместо метода по подразбиране за получаване на абонаментите. RSS е по-бърз метод и преодолява блокиранията на IP адреса, но не получава някои съпътстващи данни, като продължителност на видеото, дали е на живо или публикации
@@ -975,6 +980,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Докато курсорът е върху видеото, натиснете и задръжте клавиша Control (Command Key за Mac) и превъртете колелцето на мишката напред или назад, за да контролирате скоростта на възпроизвеждане. Натиснете и задръжте клавиша Control (Command Key за Mac) и щракнете с левия бутон на мишката, за да се върнете бързо към стандартната скорост на възпроизвеждане (1x, освен ако не е променена в настройките).
     Skip by Scrolling Over Video Player: Използване колелцето на мишката за превъртане на видео в стил MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Регионът на набиращите популярност дава възможност да се избере страната, за която това се отнася.
     Invidious Instance: Сървър на Invidious, към който FreeTube ще се свързва.
     Thumbnail Preference: Всички миниатюри във FreeTube ще бъдат подменени с кадър от видеото, замъглени или скрити, вместо тези по подразбиране.

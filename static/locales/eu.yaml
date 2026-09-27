@@ -214,6 +214,8 @@ Settings:
   Settings: 'Ezarpenak'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Aplikazioa berrabiarazi behar da aldaketek eragina izan dezaten. Berrabiarazi eta aldaketa aplikatu?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Orokorra'
     Check for Updates: 'Bilatu eguneraketak'
     Fallback to Non-Preferred Backend on Failure: 'Hutsegitean, joan hobetsi gabeko motorrera'
@@ -962,10 +964,15 @@ Comments:
   Hide Replies: Ezkutatu erantzuna | Ezkutatu erantzunak
   Comments are turned off: Iruzkinak desaktibatuta daude
 Up Next: 'Hurrengoa'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Aukeratu FreeTubek datuak lortzeko erabiltzen duen motorra. Tokiko APIa integratutako erauzgailua da. Invidious APIak Invidious zerbitzari bat behar du konektatzeko.'
     Fallback to Non-Preferred Backend on Failure: 'Zure hobetsitako APIak arazoren bat duenean, FreeTube automatikoki saiatuko da hobetsi ez den APIa erabiltzen ordezko metodo gisa, posible denean.'
     Thumbnail Preference: 'FreeTubeko miniatura guztiak bideoaren fotograma batekin ordezkatuko dira, lausotuta edo ezkutatuta, lehenetsitako miniaturaren ordez.'

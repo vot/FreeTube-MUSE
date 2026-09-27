@@ -203,6 +203,8 @@ Settings:
   # On Settings Page
   Settings: 'Cài đặt'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Chung'
     Fallback to Non-Preferred Backend on Failure: 'Trở về Backend không mong muốn khi có lỗi'
     Enable Search Suggestions: 'Bật gợi ý tìm kiếm'
@@ -961,8 +963,13 @@ Channels:
   Empty: Danh sách kênh của bạn hiện đang trống.
   Unsubscribe Prompt: Bạn có chắc răng bạn muốn huỷ đăng ký kênh "{channelName}"?
   Count: '{number} kênh đã tìm được.'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Thumbnail Preference: Tất cả các hình thu nhỏ trên FreeTube sẽ được thay thế bằng khung hình của video, làm mờ hoặc ẩn thay vì hình thu nhỏ mặc định.
     External Link Handling: "Chọn tác vụ mặc định khi một liên kết không thể mở được nhập vào FreeTube.\nTheo mặc định, FreeTube sẽ mở liên kết này trong trình duyệt mặc định của bạn.\n"
     Fallback to Non-Preferred Backend on Failure: Khi API ưu tiên của bạn gặp sự cố, FreeTube sẽ tự động sử dụng API không ưu tiên của bạn làm phương án dự phòng khi nó được bật lên.

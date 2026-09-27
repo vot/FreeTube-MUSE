@@ -228,6 +228,8 @@ Settings:
   Settings: 'Gosodiadau'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Mae angen i''r ap ailgychwyn er mwyn i newidiadau ddod i rym. Ailgychwyn a gosod y newidiadau?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Cyffredinol'
     Check for Updates: 'Chwilio am Ddiweddariadau'
     Fallback to Non-Preferred Backend on Failure: 'Nôl i''r Cefn Diddewis ar Fethiant'
@@ -970,10 +972,15 @@ Comments:
   View {replyCount} replies from {channelName} and others: Gweld {replyCount} ateb gan {channelName} ac eraill
   Loading replies: Yn llwytho atebion...
 Up Next: 'Nesaf'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Dewiswch y peirianwaith cefn y mae FreeTube yn ei ddefnyddio i gael data. Mae''r API lleol yn echdynnwr mewnol. Mae''r API Invidious angen gweinydd Invidious i gysylltu ag ef.'
     Fallback to Non-Preferred Backend on Failure: 'Pan fydd gan eich API dewisol broblem, bydd FreeTube yn ceisio defnyddio''ch API nad yw''n well gennych yn awtomatig fel dull wrth gefn pan fydd wedi''i alluogi.'
     Thumbnail Preference: 'Bydd holl luniau bach FreeTube yn cael eu newid i ffrâm o''r fideo, pŵl neu gudd yn lle''r llun bach rhagosodedig.'

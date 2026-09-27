@@ -204,6 +204,8 @@ Settings:
   Settings: 'Tənzimləmələr'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Dəyişiklikləri işə salmaq üçün tətbiq yenidən başladılmalıdır. Yenidən başladılsın və dəyişiklik tətbiq edilsin?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Ümumi'
     Check for Updates: 'Yeniləmələri Yoxlayın'
     Fallback to Non-Preferred Backend on Failure: 'Uğursuzluqda Üstünlük Verilməyən Arxa Uca Qayıdış'
@@ -798,8 +800,13 @@ Video:
   Playlist:
     Unavailable videos are hidden: 1 əlçatmaz video gizlədilib | {count} əlçatmaz video gizlədilib
   Premiere: Premyera
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: FreeTube-un məlumatları əldə etmək üçün istifadə edəcəyi arxa uc sistemini seçin. Yerli API daxili çıxarıcıdır. Invidious API isə Invidious serverinə qoşulmağı tələb edir.
     Fallback to Non-Preferred Backend on Failure: Üstünlük verdiyiniz API-də problem yarandıqda, aktiv edilibsə FreeTube avtomatik olaraq ehtiyat üsul kimi digər API-ni istifadə etməyə cəhd edəcək.
     Thumbnail Preference: FreeTube üzrə bütün miniatürlər standart miniatür əvəzinə videodan bir kadrla əvəz olunacaq, bulanıqlaşdırılacaq və ya gizlədiləcək.

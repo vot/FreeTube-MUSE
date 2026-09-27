@@ -185,6 +185,8 @@ Settings:
   Settings: 'تنظیمات'
   The app needs to restart for changes to take effect. Restart and apply change?: 'این نرم افزار نیاز به راه اندازی دوباره دارد تا تغییرات لحاظ شوند. تغییرات ذخیره و راه اندازی شود؟'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'عمومی'
     Check for Updates: 'بررسی برای به روزرسانی ها'
     Fallback to Non-Preferred Backend on Failure: 'بازگشت به Backend غیر ترجیحی در صورت شکست'
@@ -749,8 +751,13 @@ Video:
   DRMProtected: ویدیوهای محافظت شده DRM را نمی توان در FreeTube پخش کرد، زیرا به اجزای اختصاصی و منبع بسته نیاز دارند. اگر می‌خواهید این ویدیو را تماشا کنید، لطفاً آن را در وب‌سایت رسمی YouTube در یک مرورگر وب با قابلیت DRM تماشا کنید.
   Save Watched Progress: ذخیره پیشرفت تماشا شده
   Watched Progress Saved: پیشرفت های تماشا شده نجات یافته
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     External Link Handling: "وقتی روی پیوندی که در FreeTube باز نمی شود، روی آن کلیک می شود، رفتار پیش فرض را انتخاب کنید.\nبه طور پیش فرض FreeTube پیوند کلیک شده را در مرورگر پیش فرض شما باز می کند.\n"
     Region for Trending: منطقه گرایش‌ها به شما امکان می‌دهد ویدیوهای پرطرفدار کشوری را که می‌خواهید نمایش دهید انتخاب کنید.
     Thumbnail Preference: تمام تصاویر کوچک در سراسر FreeTube با یک قاب از ویدیو، به جای تصویر کوچک پیش‌فرض، محو یا پنهان می‌شوند.

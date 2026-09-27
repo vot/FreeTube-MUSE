@@ -209,6 +209,8 @@ Settings:
   # On Settings Page
   Settings: 'Innstillinger'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Generelle'
     Fallback to Non-Preferred Backend on Failure: 'Tilbakefall til alternativ bakende ved feil'
     Enable Search Suggestions: 'Slå på søkeforslag'
@@ -966,8 +968,13 @@ Profile:
   Close Profile Dropdown: Lukk profilrullgardinmenyen
   Open Profile Dropdown: Åpne profilrullgardinmenyen
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Denne videoen er utilgjengelig på grunn av manglende formater. Dette kan skyldes tilgangbegrensninger i landet ditt.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: Invidious-forekomsten som FreeTube kobler seg til for API-påkalling. Endringer i denne innstillingen gjelder bare for gjeldende vindu med mindre du angir denne forekomsten som standard.
     Thumbnail Preference: Alle miniatyrbilder i FreeTube vil bli erstattet av et enkeltbilde fra videoen som har blitt skjult eller blurret, i stedet for standard miniatyrbildet.
     Fallback to Non-Preferred Backend on Failure: Når ditt foretrukne API har et problem, vil FreeTube automatisk prøve å bruke ditt ikke-foretrukne API som en reservemetode dersom det er aktivert.

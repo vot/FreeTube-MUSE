@@ -37,12 +37,15 @@ import FtLoader from '../components/FtLoader/FtLoader.vue'
 import CommentSection from '../components/CommentSection/CommentSection.vue'
 
 import store from '../store/index'
+import { usePageTitle } from '../composables/usePageTitle'
 
 import { getInvidiousCommunityPost } from '../helpers/api/invidious'
 import { getLocalCommunityPost } from '../helpers/api/local'
 import { copyToClipboard, showToast } from '../helpers/utils'
 
 const { t } = useI18n()
+
+const setPageTitle = usePageTitle()
 
 const router = useRouter()
 const route = useRoute()
@@ -79,7 +82,7 @@ onMounted(async () => {
 })
 
 function updateTitleAndRoute() {
-  store.commit('setAppTitle', post.value.author)
+  setPageTitle(post.value.author)
   isLoading.value = false
 
   // If the authorId is missing from the URL we should add it,

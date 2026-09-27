@@ -1,11 +1,11 @@
 .sideNav {
   display: block;
-  block-size: calc(100vh - 60px - 36px);
+  block-size: calc(100vh - 60px - 36px - var(--tab-bar-height, 0px));
   inline-size: 80px;
   overflow-x: hidden;
   position: fixed;
   inset-inline-start: 0;
-  inset-block-start: 60px;
+  inset-block-start: calc(60px + var(--tab-bar-height, 0px));
   z-index: 3;
   margin-block: 18px;
   margin-inline: 10px;

@@ -204,6 +204,8 @@ Settings:
   # On Settings Page
   Settings: 'الإعدادات'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'العامة'
     Fallback to Non-Preferred Backend on Failure: 'الرجوع إلى الواجهة الخلفية الغير مفضلة عند الفشل'
     Enable Search Suggestions: 'تفعيل الإقتراحات عند البحث'
@@ -945,8 +947,13 @@ No: 'لا'
 The playlist has been reversed: تم عكس قائمة التشغيل
 Download From Site: تنزيل من الموقع
 Version {versionNumber} is now available!  Click for more details: 'الإصدار {versionNumber} متاح الآن!  انقر لمزيد من التفاصيل'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Thumbnail Preference: كلّ الصّور المصغّرة في FreeTube سيتمّ استبدالها بإطار من الفيديو، يكون ضبابيًا أو مخفيًا، بدل من الصّورة المصغّرة الافتراضيّة.
     Preferred API Backend: اختر الواجهة الخلفية التي يستخدمها FreeTube لجلب البيانات. الواجهة البرمجية المحلية للتطبيق هي مستخرج محلي. الواجهة البرمجية للتطبيق التابعة لInvidious (بديل لموقع يوتيوب) يتطلب التواصل مع خادم شبكة Invidious.
     Invidious Instance: مثيل Invidious الذي سيتصل به FreeTube لاستدعاءات API.

@@ -1,6 +1,7 @@
 import { nextTick } from 'vue'
 import i18n from '../i18n/index'
 import router from '../router/index'
+import { createTab, getActiveTabRouter, isTabsEnabled } from './tabs'
 import { UnsupportedPlayerActions } from '../../constants'
 
 // allowed characters in channel handle: A-Z, a-z, 0-9, -, _, .
@@ -266,23 +267,54 @@ export async function openExternalLink(url) {
 }
 
 /**
- * Opens an internal path in the same or a new window.
+ * Opens an internal path in the same tab, a new tab or a new window.
  * Optionally with query params and setting the contents of the search bar in the new window.
  * @param {object} params
  * @param {string} params.path the internal path to open
  * @param {boolean} params.doCreateNewWindow set to true to open a new window
+ * @param {boolean} params.doCreateNewTab set to true to open a new tab in the background
  * @param {object} params.query the query params to use (optional)
  * @param {string} params.searchQueryText the text to show in the search bar in the new window (optional)
  */
-export function openInternalPath({ path, query = undefined, doCreateNewWindow, searchQueryText = null }) {
-  if (process.env.IS_ELECTRON && doCreateNewWindow) {
+export function openInternalPath({ path, query = undefined, doCreateNewWindow, doCreateNewTab, searchQueryText = null }) {
+  if (doCreateNewTab && isTabsEnabled()) {
+    void createTab({
+      path,
+      query,
+      searchQueryText: searchQueryText ?? '',
+      activate: false
+    })
+  } else if (process.env.IS_ELECTRON && doCreateNewWindow) {
     window.ftElectron.openInNewWindow(path, query, searchQueryText)
   } else {
-    router.push({
+    // Pages are rendered by a tab, so the navigation has to go through the
+    // router of the tab that is shown
+    const targetRouter = getActiveTabRouter() ?? router
+
+    targetRouter.push({
       path,
       query
     })
   }
+}
+
+/**
+ * Detects the gestures that are commonly used to open a link in a new tab
+ * @param {MouseEvent} event
+ * @returns {boolean}
+ */
+export function isNewTabEvent(event) {
+  if (event.type === 'auxclick') {
+    return event.button === 1
+  }
+
+  if (event.button !== 0) {
+    return false
+  }
+
+  return process.platform === 'darwin'
+    ? event.metaKey
+    : event.ctrlKey
 }
 
 /**

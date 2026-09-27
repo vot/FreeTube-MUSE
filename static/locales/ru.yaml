@@ -201,6 +201,8 @@ Settings:
   # On Settings Page
   Settings: 'Настройки'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Общие'
     Fallback to Non-Preferred Backend on Failure: 'Откатить к непредпочтительному движку при сбое'
     Enable Search Suggestions: 'Включить поисковые предложения'
@@ -946,8 +948,13 @@ The playlist has been reversed: Порядок плейлиста был обё�
 Download From Site: Скачать с сайта
 Version {versionNumber} is now available!  Click for more details: Версия {versionNumber} теперь доступна!  Нажмите для получения более подробной информации
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Это видео недоступно из-за отсутствия форматов. Это может произойти из-за региональных ограничений.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Thumbnail Preference: Все заставки на FreeTube будут заменены снимком из видео, размытым или скрытым, вместо заставки по умолчанию.
     Invidious Instance: Образец Invidious, к которому FreeTube будет подключаться для вызовов набора функций.
     Fallback to Non-Preferred Backend on Failure: Если у вашего предпочитаемого набора функций есть проблема, FreeTube автоматически попытается использовать ваш нежелательный набор функций в качестве запасного метода, если он включен.

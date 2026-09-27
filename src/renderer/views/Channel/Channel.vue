@@ -290,6 +290,7 @@ import FtSelect from '../../components/FtSelect/FtSelect.vue'
 import FtButton from '../../components/FtButton/FtButton.vue'
 
 import store from '../../store/index'
+import { usePageTitle } from '../../composables/usePageTitle'
 
 import {
   copyToClipboard,
@@ -332,6 +333,8 @@ import {
 } from '../../helpers/api/local'
 
 const { t } = useI18n()
+
+const setPageTitle = usePageTitle()
 const route = useRoute()
 const router = useRouter()
 
@@ -707,7 +710,7 @@ async function getChannelLocal() {
       channelName.value = channelName
       thumbnailUrl.value = channelThumbnailUrl
 
-      store.commit('setAppTitle', channelName_)
+      setPageTitle(channelName_)
 
       store.dispatch('updateSubscriptionDetails', { channelThumbnailUrl, channelName: channelName_, channelId: id.value })
 
@@ -755,7 +758,7 @@ async function getChannelLocal() {
     }
     tags.value = tags_
 
-    store.commit('setAppTitle', channelName_)
+    setPageTitle(channelName_)
 
     if (subscriberText) {
       const subCount_ = parseLocalSubscriberCount(subscriberText)
@@ -970,7 +973,7 @@ async function getChannelInfoInvidious() {
     const channelName_ = response.author
     const channelId = response.authorId
     channelName.value = channelName_
-    store.commit('setAppTitle', channelName_)
+    setPageTitle(channelName_)
     id.value = channelId
     isFamilyFriendly.value = response.isFamilyFriendly
     subCount.value = response.subCount

@@ -200,6 +200,8 @@ Settings:
   # On Settings Page
   Settings: 'Asetukset'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Yleistä'
     Fallback to Non-Preferred Backend on Failure: 'Vikatilanteessa palaa toissijaiseen taustaohjelmaan'
     Enable Search Suggestions: 'Salli hakuehdotukset'
@@ -937,8 +939,13 @@ Profile:
 Version {versionNumber} is now available!  Click for more details: Versio {versionNumber} on nyt saatavilla! Napsauta saadaksesi lisätietoja
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Tämä video ei ole saatavilla puuttuvien formaattien takia. Tämä voi tapahtua koska video ei ole saatavilla maassasi.
 Download From Site: Lataa sivustolta Napsauta nähdäksesi lisää
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: Valitse taustaohjelma, jota Freetube käyttää datan noutamiseen. Paikallinen API on ohjelmiston sisäinen. Invidious API vaatii yhteyden Invidious-palvelimeen.
     Region for Trending: Valitsee minkä maan Nousevat videot sinulle näytetään.
     Invidious Instance: Invidious instanssi, jota Freetube käyttää.

@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: 'Paramètres'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Général'
     Fallback to Non-Preferred Backend on Failure: 'Basculer vers l''API interne non préférée en cas d''échec'
     Enable Search Suggestions: 'Activer les suggestions de recherche'
@@ -980,6 +982,9 @@ The playlist has been reversed: La playlist a été inversée
 Download From Site: Télécharger depuis le site
 Version {versionNumber} is now available!  Click for more details: La version {versionNumber} est maintenant disponible !  Cliquez pour plus de détails
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Cette vidéo est indisponible car elle n'est pas dans un format valide. Cela peut arriver en raison de restrictions d'accès dans certains pays.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Lorsqu'il est activé, FreeTube utilisera RSS au lieu de sa méthode par défaut pour récupérer votre flux d'abonnement. RSS est plus rapide et empêche le blocage d'IP, mais ne fournit pas certaines informations comme la durée de la vidéo, le statut en direct ou les posts
@@ -990,6 +995,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Lorsque le curseur se trouve sur la vidéo, maintenez la touche Contrôle (touche Commande sur Mac) enfoncée et faites défiler la molette de la souris vers l'avant ou l'arrière pour contrôler la vitesse de lecture. Maintenez la touche Contrôle (touche Commande sur Mac) enfoncée et cliquez sur le bouton gauche de la souris pour revenir rapidement à la vitesse de lecture par défaut (1x, sauf si elle a été modifiée dans les paramètres).
     Skip by Scrolling Over Video Player: Utilisez la molette de défilement pour passer d'une vidéo à l'autre, en style MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: Instance Invidious à laquelle FreeTube se connectera pour les appels API. Les modifications apportées à ce paramètre ne s'appliquent qu'à la fenêtre actuelle, sauf si vous définissez cette instance comme instance par défaut.
     Thumbnail Preference: Toutes les miniatures dans FreeTube seront remplacées par une image extraite de la vidéo, floutée ou masquée, au lieu de la miniature par défaut.
     Fallback to Non-Preferred Backend on Failure: Lorsque votre API préférée a un problème, FreeTube tentera automatiquement d'utiliser votre API non préférée comme méthode de secours lorsqu'elle est activée.

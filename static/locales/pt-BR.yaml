@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: 'Configurações'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Geral'
     Fallback to Non-Preferred Backend on Failure: 'Usar mecanismo de busca alternativo em caso de falha'
     Enable Search Suggestions: 'Habilitar sugestões de busca'
@@ -977,6 +979,9 @@ Version {versionNumber} is now available!  Click for more details: A versão {ve
 Download From Site: Faça o download no site
 The playlist has been reversed: A playlist foi invertida
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Este vídeo não está disponível devido à falta de formatos. Isto pode acontecer devido à indisponibilidade do país.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Quando habilitado, o FreeTube usará RSS em vez de seu método padrão para obter o feed de sua inscrição. O RSS é mais rápido e evita bloqueio de IP, mas não fornece certas informações como duração do vídeo, status ao vivo ou postagens
@@ -987,6 +992,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Com o cursor sobre o vídeo, pressione e segure a tecla Ctrl (tecla Command no Mac) e role a roda do mouse para frente ou para trás para controlar a taxa de reprodução. Pressione e segure a tecla Ctrl (tecla Command no Mac) e clique com o botão esquerdo do mouse para retornar rapidamente à taxa de reprodução padrão (1x a menos que tenha sido alterada nas configurações).
     Skip by Scrolling Over Video Player: Use o botão de rolagem do mouse para avançar ou retroceder o vídeo, estilo MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: A região de tendências permite que você escolha os vídeos em alta do país que deseja exibir.
     Invidious Instance: A instância Invidious à qual o FreeTube se conectará para chamadas de API. As alterações nesta configuração aplicam-se apenas à janela atual, a menos que você defina esta instância como padrão.
     Thumbnail Preference: Todas as miniaturas no FreeTube serão substituídas por um quadro do vídeo, desfocado ou oculto, em vez da miniatura padrão.

@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: 'Postavke'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Opće'
     Fallback to Non-Preferred Backend on Failure: 'U slučaju problema koristi sekundarni pozadinski sustav'
     Enable Search Suggestions: 'Aktiviraj prijedloge pretrage'
@@ -964,6 +966,9 @@ The playlist has been reversed: Redoslijed zbirke je obrnut
 Download From Site: Preuzmi s web-stranice
 Version {versionNumber} is now available!  Click for more details: Dostupna je verzija {versionNumber}! Pritisni za prikaz detalja
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Ovaj video nije dostupan zbog nedostajućih formata. Uzrok tome može biti nedostupnost u zemlji.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Player Settings:
     Default Video Format: Postavi formate za reprodukciju videa. DASH formati mogu reproducirati višu kvalitetu slike. Stari formati su ograničeni na 360 p, ali su zato brži. Audioformati sadrže samo prijenose audiosnimaka.
@@ -971,6 +976,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Dok se pokazivač nalazi na videu, pritisni i drži tipku Control (Command tipka na Macu) i pomiči kotačić miša naprijed ili natrag za upravljanje brzine reprodukcije. Pritisni i drži tipku Control (Command tipka na Macu) i pritisni lijevom tipkom miša za brzo vraćanje na standardnu brzinu reprodukcije (jednostruka brzina, ukoliko nije promijenjena u postavkama).
     Skip by Scrolling Over Video Player: Koristi kotačić za pregledavanje videa, MPV stil.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: Invidious primjerak na koji će se FreeTube povezati za pozive API-a.
     Thumbnail Preference: U FreeTubeu će se sve minijature zamijeniti s jednim kadrom videa – zamućeno ili skriveno – umjesto standardne minijature.
     Fallback to Non-Preferred Backend on Failure: Ako primarno odabrano sučelje ima problema, FreeTube će automatski pokušati koristiti sekundarno sučelje kao zamjensku metodu, ako je aktivirano.

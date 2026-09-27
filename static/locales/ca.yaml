@@ -102,6 +102,8 @@ Settings:
   # On Settings Page
   Settings: 'Configuració'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Paràmetres generals'
     Check for Updates: 'Comprovar si hi ha actualitzacions'
     Fallback to Non-Preferred Backend on Failure: 'Torna al motor per defecte en cas d''error'
@@ -496,3 +498,11 @@ Expand side navigation: Expandir navegació lateral
 Right-click or hold to see history: Clic dret o manté pressionat per veure l'historial
 Go to page: Ves a {page}
 Close Banner: Tanca el bàner
+Tabs:
+  New Tab: ''
+  Close Tab: ''
+
+Tooltips:
+  General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''

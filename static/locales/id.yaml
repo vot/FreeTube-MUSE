@@ -212,6 +212,8 @@ Settings:
   # On Settings Page
   Settings: 'Pengaturan'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Umum'
     Check for Updates: 'Cek Pembaruan'
     Fallback to Non-Preferred Backend on Failure: 'Beralih ke Layanan Cadangan saat terjadi Kegagalan'
@@ -981,6 +983,9 @@ Canceled next video autoplay: 'Putar-otomatis video berikutnya dibatalkan'
 Yes: 'Ya'
 No: 'Tidak'
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Video ini tidak tersedia karena format hilang. Ini bisa terjadi karena dibatasi berdasarkan wilayah.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Saat diaktifkan, FreeTube akan menggunakan RSS, bukan metode default untuk mengambil umpan langganan Anda. RSS lebih cepat dan mencegah pemblokiran IP, tetapi tidak memberikan informasi tertentu seperti durasi video, status langsung, atau postingan komunitas
@@ -992,6 +997,8 @@ Tooltips:
     Allow DASH AV1 formats: Format DASH AV1 mungkin terlihat lebih baik daripada format DASH H.264. Format DASH AV1 memerlukan lebih banyak energi untuk pemutaran! Format itu juga tidak tersedia di semua video, yang mana pemutar akan menggunakan format DASH H.264.
     Skip by Scrolling Over Video Player: Gunakan guliran tetikus untuk melewati lewat video, seperti MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Wilayah tren memungkinkan Anda memilih video yang sedang ngetren dari negara tersebut untuk ditampilkan.
     Invidious Instance: Instance Invidious yang akan dihubungkan oleh FreeTube untuk panggilan API. Perubahan pada pengaturan ini hanya berlaku untuk jendela saat ini, kecuali Anda menetapkan instance ini sebagai default.
     Thumbnail Preference: Semua gambar mini di dalam aplikasi FreeTube akan diganti dengan frame dari video, diburamkan atau disembunyikan alih-alih menggunakan gambar mini bawaan.

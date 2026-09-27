@@ -111,6 +111,8 @@ Settings:
   Settings: 'Nustatymai'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Kad pakeitimai įsigaliotų, programą reikia paleisti iš naujo. Paleisti iš naujo ir pritaikyti pakeitimus?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Bendrieji nustatymai'
     Check for Updates: 'Tikrinti ar yra atnaujinimų'
     Fallback to Non-Preferred Backend on Failure: 'Nepavykus rinktis alternatyvią posistemę'
@@ -576,10 +578,15 @@ Comments:
   Pinned by: Prisegė
   Member: Narys
 Up Next: 'Sekantis'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Pasirinkite posistemę, kurią „FreeTube“ naudoja duomenims gauti. Vietinis API yra su integruota ištraukimo funkciją. Norint prisijungti prie „Invidious“ API reikalingas „Invidious“ serveris.'
     Fallback to Non-Preferred Backend on Failure: 'Kai jūsų pageidaujamoje API kyla problemų, „FreeTube“ automatiškai bandys naudoti jūsų nepasirinktą API kaip atsarginį metodą, kai tai yra įgalinta.'
     Thumbnail Preference: 'Visos FreeTube vaizdo įrašų miniatiūros vietoje numatytosios bus pakeistos atitinkamu vaizdo įrašo stop kardu.'

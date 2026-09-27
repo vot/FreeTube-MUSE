@@ -209,6 +209,8 @@ Settings:
   # On Settings Page
   Settings: 'Configuración'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'General'
     Fallback to Non-Preferred Backend on Failure: 'Vuelta al backend no preferido en caso de fallo'
     Enable Search Suggestions: 'Activar sugerencias de búsqueda'
@@ -974,6 +976,9 @@ Download From Site: Descargar desde el sitio web
 Version {versionNumber} is now available!  Click for more details: ¡La versión {versionNumber} está disponible! Haz clic para saber más
 The playlist has been reversed: Orden de lista de reproducción invertido
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Este vídeo no está disponible por no tener un formato válido. Esto puede suceder por la falta de acceso de este formato a tu región.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Cuando se activa, FreeTube utilizará RSS en lugar de su método por defecto para obtener su feed de suscripción. RSS es más rápido y evita el bloqueo de IP, pero no proporciona cierta información como la duración del vídeo, el estado en directo o los mensajes
@@ -984,6 +989,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Cuando el cursor esté sobre el vídeo, presiona y mantén la tecla Control (Comando en Mac) y desplaza la rueda del ratón hacia arriba o abajo para cambiar la velocidad de reproducción. Presiona y mantén la tecla Control (Comando en Mac) y haz clic izquierdo para volver a la velocidad de reproducción por defecto (1x o la que hayas configurado en ajustes).
     Skip by Scrolling Over Video Player: Use la rueda de desplazamiento para saltar el vídeo, estilo MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: La región de las tendencias permite ver los vídeos más populares en un país determinado.
     Invidious Instance: La instancia de Invidious por defecto a la que FreeTube se conectará para las llamadas a la API.
     Thumbnail Preference: Todas las miniaturas en FreeTube se reemplazarán con un fotograma del vídeo, borroso o oculto, en lugar de la miniatura predeterminada.

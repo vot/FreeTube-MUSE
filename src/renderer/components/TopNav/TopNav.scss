@@ -187,7 +187,7 @@
       background-color: var(--side-nav-color);
       inset-inline: 0;
       position: fixed;
-      inset-block-start: 60px;
+      inset-block-start: calc(60px + var(--tab-bar-height, 0px));
 
       @include top-nav-is-colored {
         background-color: var(--primary-color-hover);

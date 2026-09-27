@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: Einstellungen
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: Allgemein
     Fallback to Non-Preferred Backend on Failure: Bei Ausfall auf nicht bevorzugtes Backend zurückgreifen
     Enable Search Suggestions: Suchvorschläge aktivieren
@@ -979,8 +981,13 @@ Profile:
 The playlist has been reversed: Die Playlist wurde umgedreht
 Download From Site: Von der Website herunterladen
 Version {versionNumber} is now available!  Click for more details: Version {versionNumber} ist jetzt verfügbar!  Für mehr Details klicken
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Thumbnail Preference: Alle Vorschaubilder in FreeTube werden verpixelt, versteckt oder durch ein Einzelbild aus dem Video ersetzt, anstatt das Standard-Vorschaubild anzuzeigen.
     Invidious Instance: Die Invidious-Instanz, mit der sich FreeTube für API-Aufrufe verbinden wird. Änderungen an dieser Einstellung gelten nur für das aktuelle Fenster, es sei denn, Sie legen diese Instanz als Standard fest.
     Fallback to Non-Preferred Backend on Failure: Wenn deine bevorzugte API ein Problem hat, wird FreeTube automatisch versuchen, deine nicht-bevorzugte API als Ausweichmethode zu verwenden, wenn sie aktiviert ist.

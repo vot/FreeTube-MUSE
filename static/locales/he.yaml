@@ -207,6 +207,8 @@ Settings:
   # On Settings Page
   Settings: 'הגדרות'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'כללי'
     Check for Updates: 'לבדוק אם קיימים עדכונים'
     Fallback to Non-Preferred Backend on Failure: 'נסיגה למנגנון שאינו מועדף בעת כשל'
@@ -945,8 +947,13 @@ Canceled next video autoplay: 'ניגון הסרטון הבא אוטומטית �
 
 Yes: 'כן'
 No: 'לא'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Fallback to Non-Preferred Backend on Failure: כאשר ל־API המועדף עליך יש בעיה, FreeTube ינסה להשתמש ב־API בעדיפות הנמוכה יותר באופן אוטומטי כשיטת נסיגה כאשר האפשרות פעילה.
     Preferred API Backend: נא לבחור את המנגנון לשימוש FreeTube כדי לקבל נתונים. ה־API המקומי הוא מחלץ מובנה. ה־API של Invidious דורש התחברות לשרת Invidious.
     Invidious Instance: העותק של Invidious שאליו FreeTube יתחבר לקבלת פניות API.

@@ -185,6 +185,8 @@ Settings:
   # On Settings Page
   Settings: 'Ajustes'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Ajustes generales'
     Fallback to Non-Preferred Backend on Failure: 'Recurrir a otro motor en caso de fallo'
     Enable Search Suggestions: 'Activar sugerencias de búsqueda'
@@ -648,8 +650,13 @@ Are you sure you want to open this link?: ¿Estás seguro de abrir este link?
 Search Bar:
   Clear Input: Limpiar entrada
   Remove: Eliminar
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: Elija el método que usará FreeTube para obtener datos. La API local es un recolector integrado. La API de Invidious requerirá un servidor al cual conectarse.
     Invidious Instance: La dirección de Invidious a la que FreeTube se conectará para solicitudes de la API.
     Region for Trending: La región de tendencias le permitirá elegir las tendencias del país que deseé ver mostradas.

@@ -208,6 +208,8 @@ Settings:
   Settings: Definições
   The app needs to restart for changes to take effect. Restart and apply change?: Tem que reiniciar a aplicação para aplicar as alterações. Reiniciar e aplicar alterações?
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: Geral
     Check for Updates: Procurar atualizações
     Fallback to Non-Preferred Backend on Failure: Utilizar sistema de ligação secundário, em caso de falha
@@ -928,10 +930,15 @@ Comments:
   View 1 reply from {channelName}: Ver 1 resposta de {channelName}
   View {replyCount} replies from {channelName} and others: Ver {replyCount} respostas de {channelName} e outros
 Up Next: Próximo
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: Escolha o sistema que o FreeTube usa para se ligar ao YouTube. A API local é um extrator incorporado. A API Invidious requer um servidor Invidious para fazer a ligação.
     Fallback to Non-Preferred Backend on Failure: Se a sua API preferida tiver um problema, FreeTube tentará usar automaticamente a API secundária, caso esta opção esteja ativada.
     Thumbnail Preference: Todas as miniaturas dos vídeos no FreeTube serão substituídas por um quadro borrado ou escondido do vídeo em vez da miniatura original.

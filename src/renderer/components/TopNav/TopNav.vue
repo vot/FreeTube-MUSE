@@ -133,6 +133,7 @@ import store from '../../store/index'
 
 import { KeyboardShortcuts, MOBILE_WIDTH_THRESHOLD, SEARCH_RESULTS_DISPLAY_LIMIT } from '../../../constants'
 import { debounce, localizeAndAddKeyboardShortcutToActionTitle, openInternalPath } from '../../helpers/utils'
+import { getActiveTab, getActiveTabId } from '../../helpers/tabs'
 import { translateWindowTitle } from '../../helpers/strings'
 import { clearLocalSearchSuggestionsSession, getLocalClip, getLocalSearchSuggestions } from '../../helpers/api/local'
 import { getClipInvidious, getInvidiousSearchSuggestions } from '../../helpers/api/invidious'
@@ -210,12 +211,21 @@ const settingsTitle = computed(() => {
 })
 
 /**
+ * The history of the app router is shared between all tabs,
+ * so going back and forth has to be delegated to the router of the active tab
+ * @returns {import('vue-router').Router}
+ */
+function getNavigationRouter() {
+  return getActiveTab()?.router ?? router
+}
+
+/**
  * @param {number} offset
  */
 function goToOffset(offset) {
   // no point navigating to the current route
   if (offset !== 0) {
-    router.go(offset)
+    getNavigationRouter().go(offset)
   }
 }
 
@@ -226,7 +236,7 @@ function historyBack(offset) {
   if (offset != null) {
     goToOffset(offset)
   } else {
-    router.back()
+    getNavigationRouter().back()
   }
 }
 
@@ -237,7 +247,7 @@ function historyForward(offset) {
   if (offset != null) {
     goToOffset(offset)
   } else {
-    router.forward()
+    getNavigationRouter().forward()
   }
 }
 
@@ -514,7 +524,22 @@ function clearLastSuggestionQuery() {
  */
 function updateSearchInputText(text) {
   searchInput.value?.setText(text)
+
+  const tab = getActiveTab()
+
+  if (tab !== null) {
+    tab.context.searchQueryText = text
+  }
 }
+
+/** @type {import('vue').ComputedRef<string | null>} */
+const activeTabId = computed(() => getActiveTabId())
+
+// Every tab keeps its own search text, so switching tabs swaps the text of
+// the search bar with the one of the tab that is shown
+watch(activeTabId, () => {
+  updateSearchInputText(getActiveTab()?.context.searchQueryText ?? '')
+})
 
 /**
  * @param {string} query

@@ -1,5 +1,5 @@
-import { computed, defineComponent, getCurrentInstance } from 'vue'
-import { isNavigationFailure, NavigationFailureType } from 'vue-router'
+import { computed, defineComponent, getCurrentInstance, inject, watch } from 'vue'
+import { isNavigationFailure, NavigationFailureType, useRoute, useRouter } from 'vue-router'
 import { mapActions, mapMutations } from 'vuex'
 import shaka from 'shaka-player'
 import { Utils, YTNodes } from 'youtubei.js'
@@ -41,8 +41,10 @@ import {
 } from '../../helpers/api/invidious'
 import { sortCaptions } from '../../helpers/player/utils'
 import { MANIFEST_TYPE_SABR } from '../../helpers/player/SabrManifestParser'
+import { TAB_CONTEXT_KEY } from '../../helpers/tabs'
 import { useI18n } from 'vue-i18n'
 import { useFeedRefresh } from '../../composables/useFeedRefresh'
+import { usePageTitle } from '../../composables/usePageTitle'
 import { KeyboardShortcuts } from '../../../constants'
 
 /**
@@ -61,6 +63,12 @@ import { KeyboardShortcuts } from '../../../constants'
 
 const MANIFEST_TYPE_DASH = 'application/dash+xml'
 const MANIFEST_TYPE_HLS = 'application/x-mpegurl'
+
+/**
+ * Time an inactive watch page is kept around before its player gets released
+ */
+const INACTIVE_PLAYER_LIFETIME = 60_000
+
 const UNAVAILABLE_VIDEO_THUMBNAILS = {
   light: 'https://www.youtube.com/img/desktop/unavailable/unavailable_video.png',
   dark: 'https://www.youtube.com/img/desktop/unavailable/unavailable_video_dark_theme.png'
@@ -82,10 +90,7 @@ export default defineComponent({
   },
   beforeRouteLeave: async function (to, from, next) {
     this.handleRouteChange()
-    window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
-    document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
-    document.removeEventListener('keydown', this.keyboardShortcutHandler)
-    document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
+    this.removePlayerListeners()
 
     if (this.$refs.player) {
       await this.destroyPlayer()
@@ -93,10 +98,25 @@ export default defineComponent({
 
     next()
   },
+  beforeUnmount: function () {
+    this.cancelPlayerDestruction()
+
+    // The player is released by the player component itself,
+    // so only the state of the page has to be taken care of here
+    this.handleRouteChange()
+    this.removePlayerListeners()
+  },
   setup: function () {
     const { t, locale } = useI18n()
 
     const instance = getCurrentInstance()
+
+    // The page is rendered inside of a tab, which provides its own router
+    // instead of the one of the app
+    const route = useRoute()
+    const tabRouter = useRouter()
+    const tabContext = inject(TAB_CONTEXT_KEY, null)
+    const setPageTitle = usePageTitle()
 
     // show the top nav refresh button, which unregisters and re-adds the player
     useFeedRefresh({
@@ -106,7 +126,24 @@ export default defineComponent({
       refreshAction: () => instance.proxy.reloadPlayerAtCurrentTimestamp()
     })
 
-    return { t, currentLocale: locale }
+    watch(route, () => {
+      instance.proxy.reloadView()
+    })
+
+    if (tabContext !== null) {
+      // Players of tabs that are not shown are paused right away and
+      // released once the tab has been inactive for a while
+      watch(() => tabContext.isActive, (isActive) => {
+        if (isActive) {
+          instance.proxy.cancelPlayerDestruction()
+          instance.proxy.restorePlayer()
+        } else {
+          instance.proxy.handleTabDeactivation()
+        }
+      })
+    }
+
+    return { t, currentLocale: locale, route, tabRouter, tabContext, setPageTitle }
   },
   data: function () {
     return {
@@ -117,6 +154,8 @@ export default defineComponent({
       firstLoad: true,
       useTheatreMode: false,
       videoPlayerLoaded: false,
+      // Set to false while the player of an inactive tab is not instantiated
+      playerMounted: true,
       isFamilyFriendly: false,
       isLive: false,
       liveChat: null,
@@ -173,6 +212,8 @@ export default defineComponent({
       oneTimeTimestamp: null,
       playNextTimeout: null,
       playNextCountDownIntervalId: null,
+      /** @type {ReturnType<typeof setTimeout> | null} */
+      playerDestructionTimeout: null,
       blockVideoAutoplay: false,
       autoplayInterruptionTimeout: null,
       playabilityStatus: '',
@@ -291,7 +332,7 @@ export default defineComponent({
       return JSON.parse(this.$store.getters.getForbiddenTitles.toLowerCase())
     },
     isUserPlaylistRequested: function () {
-      return this.$route.query.playlistType === 'user'
+      return this.route.query.playlistType === 'user'
     },
     userPlaylistsReady: function () {
       return this.$store.getters.getPlaylistsReady
@@ -348,15 +389,12 @@ export default defineComponent({
     }
   },
   watch: {
-    async $route() {
-      await this.reloadView()
-    },
     userPlaylistsReady() {
       this.onMountedDependOnLocalStateLoading()
     },
   },
   created: function () {
-    this.videoId = this.$route.params.id
+    this.videoId = this.route.params.id
     this.activeFormat = this.defaultVideoFormat
     // So that the value for this session remains unchanged even if setting changed
     this.autoplayNextRecommendedVideo = this.autoplayNextRecommendedVideoByDefault
@@ -364,6 +402,12 @@ export default defineComponent({
 
     this.checkIfTimestamp()
     this.currentPlaybackRate = this.$store.getters.getDefaultPlayback
+
+    // A tab that gets opened in the background does not instantiate the player,
+    // so that a video is not started before the tab is actually shown
+    if (!this.isTabActive()) {
+      this.playerMounted = false
+    }
   },
   mounted: function () {
     this.onMountedDependOnLocalStateLoading()
@@ -372,17 +416,25 @@ export default defineComponent({
     async reloadView() {
       await this.handleRouteChange()
 
+      this.cancelPlayerDestruction()
+
       if (this.$refs.player) {
         await this.destroyPlayer()
       }
 
       // react to route changes...
-      this.videoId = this.$route.params.id
+      this.videoId = this.route.params.id
       this.resetVideoState()
 
       this.firstLoad = true
       this.videoPlayerLoaded = false
+      this.playerMounted = this.isTabActive()
       this.activeFormat = this.defaultVideoFormat
+
+      if (this.tabContext !== null) {
+        // The tab shows the title of the video once it has been loaded
+        this.tabContext.title = ''
+      }
 
       this.checkIfTimestamp()
       this.checkIfPlaylist()
@@ -1373,13 +1425,13 @@ export default defineComponent({
     },
 
     checkIfPlaylist: function () {
-      if (this.$route.query == null) {
+      if (this.route.query == null) {
         this.watchingPlaylist = false
         return
       }
 
-      this.playlistId = this.$route.query.playlistId
-      this.playlistItemId = this.$route.query.playlistItemId
+      this.playlistId = this.route.query.playlistId
+      this.playlistItemId = this.route.query.playlistItemId
 
       if (this.playlistId == null || this.playlistId.length === 0) {
         this.playlistType = ''
@@ -1408,7 +1460,7 @@ export default defineComponent({
 
       // Still possible to be a user playlist from history
       // (but user playlist could be already removed)
-      this.playlistType = this.$route.query.playlistType
+      this.playlistType = this.route.query.playlistType
       if (this.playlistType !== 'user') {
         // Remote playlist
         this.playlistItemId = null
@@ -1428,10 +1480,10 @@ export default defineComponent({
     },
 
     checkIfTimestamp: function () {
-      const oneTimeTimestamp = parseInt(this.$route.query.oneTimeTimestamp)
+      const oneTimeTimestamp = parseInt(this.route.query.oneTimeTimestamp)
       this.oneTimeTimestamp = isNaN(oneTimeTimestamp) || oneTimeTimestamp < 0 ? null : oneTimeTimestamp
 
-      const timestamp = parseInt(this.$route.query.timestamp)
+      const timestamp = parseInt(this.route.query.timestamp)
       this.timestamp = isNaN(timestamp) || timestamp < 0 ? null : timestamp
     },
 
@@ -1532,7 +1584,7 @@ export default defineComponent({
           if (this.watchingPlaylist) {
             this.$refs.watchVideoPlaylist.playNextVideo()
           } else {
-            this.$router.push({
+            this.tabRouter.push({
               path: `/watch/${nextVideoId}`
             })
             showToast(this.t('Playing Next Video'))
@@ -1561,7 +1613,7 @@ export default defineComponent({
       if (this.watchingPlaylist) {
         this.$refs.watchVideoPlaylist?.playNextVideo()
       } else if (!this.hideRecommendedVideos && this.nextRecommendedVideo) {
-        this.$router.push({
+        this.tabRouter.push({
           path: `/watch/${this.nextRecommendedVideo.videoId}`
         })
         showToast(this.t('Playing Next Video'))
@@ -1925,6 +1977,74 @@ export default defineComponent({
       }
     },
 
+    removePlayerListeners: function () {
+      window.removeEventListener('beforeunload', this.handleWatchProgressAutoSave)
+      document.removeEventListener('keydown', this.resetAutoplayInterruptionTimeout)
+      document.removeEventListener('keydown', this.keyboardShortcutHandler)
+      document.removeEventListener('click', this.resetAutoplayInterruptionTimeout)
+    },
+
+    cancelPlayerDestruction: function () {
+      clearTimeout(this.playerDestructionTimeout)
+      this.playerDestructionTimeout = null
+    },
+
+    /**
+     * @returns {boolean} whether the tab of this page is the one that is shown
+     */
+    isTabActive: function () {
+      // A page that is not shown in a tab is always active
+      return this.tabContext === null || this.tabContext.isActive
+    },
+
+    /**
+     * Called when the tab of this page is no longer the active one.
+     * Playback is stopped right away, while the player itself is only
+     * released once the tab has been inactive for a while, so that
+     * switching back to the tab is cheap.
+     */
+    handleTabDeactivation: function () {
+      this.handleRouteChange()
+      this.pausePlayer()
+
+      this.cancelPlayerDestruction()
+      this.playerDestructionTimeout = setTimeout(
+        () => { this.destroyInactivePlayer() },
+        INACTIVE_PLAYER_LIFETIME
+      )
+    },
+
+    /**
+     * Releases the player of a tab that is not shown
+     */
+    destroyInactivePlayer: async function () {
+      this.playerDestructionTimeout = null
+
+      if (!this.playerMounted || !this.$refs.player) {
+        return
+      }
+
+      // Remember the position of the video before it gets released
+      const timestamp = this.getTimestamp()
+
+      await this.destroyPlayer()
+
+      this.videoPlayerLoaded = false
+      this.playerMounted = false
+
+      if (timestamp > 0) {
+        this.oneTimeTimestamp = timestamp
+      }
+    },
+
+    /**
+     * Instantiates the player again after it was released
+     * while the tab was not shown
+     */
+    restorePlayer: function () {
+      this.playerMounted = true
+    },
+
     getWatchedProgress: function () {
       const player = this.$refs.player
 
@@ -1945,7 +2065,8 @@ export default defineComponent({
     },
 
     updateTitle: function () {
-      this.setAppTitle(this.videoTitle)
+      // Inside of a tab this only sets the title of the tab itself
+      this.setPageTitle(this.videoTitle)
     },
 
     isHiddenVideo: function (forbiddenTitles, channelsHidden, video) {
@@ -2011,9 +2132,9 @@ export default defineComponent({
       if (timestamp > 0) {
         // Reload at the middle should restart at current timestamp
         try {
-          await this.$router.replace({
-            path: this.$route.path,
-            query: { ...this.$route.query, oneTimeTimestamp: timestamp },
+          await this.tabRouter.replace({
+            path: this.route.path,
+            query: { ...this.route.query, oneTimeTimestamp: timestamp },
           })
         } catch (failure) {
           if (isNavigationFailure(failure, NavigationFailureType.duplicated)) {
@@ -2041,7 +2162,6 @@ export default defineComponent({
     ]),
 
     ...mapMutations([
-      'setAppTitle'
     ])
   }
 })

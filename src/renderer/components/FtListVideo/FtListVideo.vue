@@ -25,7 +25,7 @@
       @dragstart="onDragStart"
     >
       <RouterLink
-        class="thumbnailLink"
+        class="thumbnailLink watchPageLink"
         tabindex="-1"
         :to="watchVideoRouterLink"
         @click="handleWatchPageLinkClick"
@@ -153,7 +153,7 @@
       @dragstart="onDragStart"
     >
       <RouterLink
-        class="title"
+        class="title watchPageLink"
         :to="watchVideoRouterLink"
         @click="handleWatchPageLinkClick"
       >

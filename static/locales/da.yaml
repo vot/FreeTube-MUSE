@@ -206,6 +206,8 @@ Settings:
   # On Settings Page
   Settings: 'Indstillinger'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Generel'
     Check for Updates: 'Søg efter opdateringer'
     Fallback to Non-Preferred Backend on Failure: 'Fallback til ikke-foretrukken backend ved fejl'
@@ -921,6 +923,9 @@ Canceled next video autoplay: 'Autoplay af næste video afbrudt'
 Yes: 'Ja'
 No: 'Nej'
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Denne video er utilgængelig på grund af manglende formater. Dette kan ske ved landbaseret utilgængelighed.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Når aktiveret, bruger FreeTube RSS i stedet for standardmetoden til at hente dit abonnementsfeed. RSS er hurtigere og forhindrer IP-blokering, men giver ikke visse oplysninger som videovarighed, live-status eller opslag
@@ -931,6 +936,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Mens markøren er over videoen, hold Ctrl-tasten (Command-tasten på Mac) nede, og rul musehjulet frem eller tilbage for at styre afspilningshastigheden. Hold Ctrl-tasten (Command-tasten på Mac) nede, og venstreklik for hurtigt at vende tilbage til standardafspilningshastigheden (1x, medmindre den er blevet ændret i indstillingerne).
     Skip by Scrolling Over Video Player: Brug rullehjulet til at springe gennem videoen i bedste MPV-stil.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Trendregionen lader dig vælge, hvilket lands trending videoer du vil have vist.
     Preferred API Backend: Vælg den backend, FreeTube skal bruge til at hente data. Den lokale API er en indbygget udtrækker. Invidious-API'en kræver forbindelse til en Invidious-server.
     Invidious Instance: Den Invidious-instans, som FreeTube forbinder til for API-opkald.

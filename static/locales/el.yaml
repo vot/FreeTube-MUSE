@@ -204,6 +204,8 @@ Settings:
   # On Settings Page
   Settings: 'Ρυθμίσεις'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Γενικά'
     Fallback to Non-Preferred Backend on Failure: 'Εναλλαγή σε μη προτιμώμενο σύστημα υποστήριξης σε περίπτωση αποτυχίας'
     Enable Search Suggestions: 'Ενεργοποίηση προτάσεων αναζήτησης'
@@ -943,6 +945,9 @@ No: 'Όχι'
 Download From Site: Κάντε λήψη από την Ιστοσελίδα
 Version {versionNumber} is now available!  Click for more details: Η έκδοση {versionNumber} είναι πλέον διαθέσιμη. Κάντε κλικ για περισσότερες λεπτομέρειες
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Αυτό το βίντεο δεν είναι διαθέσιμο λόγω έλλειψης μορφών. Αυτό μπορεί να συμβαίνει λόγω μη διαθεσιμότητας του βίντεο στη χώρα σας.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Όταν ενεργοποιηθεί, το FreeTube θα χρησιμοποιήσει RSS αντί για την προεπιλεγμένη μέθοδο για να αρπάξει τη ροή συνδρομής σας. Το RSS είναι ταχύτερο και αποτρέπει τον αποκλεισμό IP, αλλά δεν παρέχει ορισμένες πληροφορίες, όπως διάρκεια βίντεο, ζωντανή κατάσταση ή αναρτήσεις
@@ -953,6 +958,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Ενώ ο δρομέας βρίσκεται πάνω από το βίντεο, πατήστε και κρατήστε πατημένο το πλήκτρο Control (Command Key σε Mac) και μετακινηθείτε με τον τροχό του ποντικιού προς τα εμπρός ή προς τα πίσω για να ελέγξετε το ρυθμό αναπαραγωγής. Πατήστε παρατεταμένα το πλήκτρο Control (Command Key σε Mac) και κάντε αριστερό κλικ στο ποντίκι για να επιστρέψετε γρήγορα στον προεπιλεγμένο ρυθμό αναπαραγωγής (1x εκτός αν έχει αλλάξει στις ρυθμίσεις).
     Skip by Scrolling Over Video Player: Χρησιμοποιήστε τον τροχό κύλισης για να παρακάμψετε το βίντεο, στυλ MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Η περιοχή των τάσεων σας επιτρέπει να επιλέξετε τα δημοφιλή βίντεο της χώρας που θέλετε να εμφανίζονται.
     Thumbnail Preference: Όλες οι μικρογραφίες σε όλο το FreeTube θα αντικατασταθούν με ένα πλαίσιο του βίντεο, θολό ή κρυφό αντί για την προεπιλεγμένη μικρογραφία.
     Fallback to Non-Preferred Backend on Failure: Όταν το προτιμώμενο API αντιμετωπίζει πρόβλημα, το FreeTube θα προσπαθήσει να χρησιμοποιήσει το μη προτιμώμενο API ως εναλλακτική μέθοδο όταν ενεργοποιηθεί.

@@ -214,6 +214,8 @@ Settings:
   # On Settings Page
   Settings: 'Beállítások'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Általános'
     Check for Updates: 'Frissítések keresése'
     Fallback to Non-Preferred Backend on Failure: 'Nem előnyben részesített háttéralkalmazásra történő visszatérés hiba esetén'
@@ -986,8 +988,13 @@ Canceled next video autoplay: 'A következő videó automatikus lejátszásának
 
 Yes: 'Igen'
 No: 'Nem'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: Válassza ki a háttéralkalmazást, amelyet a FreeTube használ az adatok megszerzéséhez. A helyi API egy beépített kinyerő. Az Invidious API használatához Invidious-kiszolgáló szükséges.
     Region for Trending: A felkapottak régiója lehetővé teszi a választást, hogy melyik ország felkapott videóit szeretné megtekinteni.
     Invidious Instance: Az Invidious-példány, amelyhez a FreeTube API-hívások céljából kapcsolódik. A beállítás módosításai csak a jelenlegi ablakra vonatkoznak, kivéve, ha ezt a példányt alapértelmezettként állítja be.

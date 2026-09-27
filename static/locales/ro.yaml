@@ -209,6 +209,8 @@ Settings:
   # On Settings Page
   Settings: 'Setări'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Setări generale'
     Check for Updates: 'Căutați actualizări'
     Fallback to Non-Preferred Backend on Failure: 'Revenire la backend-ul nepreferat în caz de eroare'
@@ -950,6 +952,9 @@ Default Invidious instance has been cleared: Instanța implicită Invidious a fo
 Default Invidious instance has been set to {instance}: Instanța implicită Invidious a fost setată la {instance}
 Playing Next Video Interval: Se redară următorul videoclip în cel mai scurt timp. Faceți clic pentru a anula. | Se redă următorul videoclip în {nextVideoInterval} secundă. Faceți clic pentru a anula. | Se redă următorul videoclip în {nextVideoInterval} secunde. Faceți clic pentru a anula.
 Unknown YouTube url type, cannot be opened in app: Tip url YouTube necunoscut, nu poate fi deschis în aplicație
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Atunci când este activat, FreeTube va utiliza RSS în locul metodei implicite de preluare a fluxului dvs. de abonament. RSS este mai rapid și previne blocarea IP, dar nu oferă anumite informații, cum ar fi durata videoclipului, starea live sau postările
@@ -967,6 +972,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: În timp ce cursorul se află deasupra videoclipului, țineți apăsată tasta Control (tasta Command pe Mac) și derulați rotița mouse-ului înainte sau înapoi pentru a controla rata de redare. Țineți apăsată tasta Control (tasta Command pe Mac) și faceți clic cu butonul stâng al mouse-ului pentru a reveni rapid la rata de redare implicită (1x, cu excepția cazului în care aceasta a fost modificată în setări).
     Skip by Scrolling Over Video Player: Utilizați rotița de derulare pentru a trece prin videoclip, stil MPV.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     External Link Handling: "Alegeți comportamentul implicit atunci când faceți clic pe un link care nu poate fi deschis în FreeTube.\nÎn mod implicit, FreeTube va deschide linkul accesat în browserul dvs. implicit.\n"
     Region for Trending: Regiunea de tendințe vă permite să alegeți ce videoclipuri în tendințe din fiecare țară doriți să fie afișate.
     Invidious Instance: Instanța Invidious la care FreeTube se va conecta pentru apelurile API.

@@ -10,6 +10,12 @@
   min-block-size: 100%;
 }
 
+/* The side navigation is fixed to the side, so it has to be pushed down
+   by the height of the tab bar to make room for it */
+.app.hasTabBar {
+  --tab-bar-height: 40px;
+}
+
 .routerView {
   flex: 1 1 0%;
   margin-block: 18px;

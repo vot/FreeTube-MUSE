@@ -180,6 +180,8 @@ Settings:
   # On Settings Page
   Settings: 'Configuraciones'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'General'
     Fallback to Non-Preferred Backend on Failure: 'Usar una Alternativa en Caso de Problemas con la Opción Preferida'
     Enable Search Suggestions: 'Habilitar sugerencias de búsqueda'
@@ -546,7 +548,13 @@ Channels:
   Empty: Tu lista de canales está actualmente vacía.
   Count: '{number} canal(es) encontrado(s).'
 Preferences: Preferencias
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
+  General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
   Distraction Free Settings:
     Hide Subscriptions Live: Esta configuración se reemplaza por la configuración «{appWideSetting}» de toda la aplicación, en la sección «{subsection}» de «{settingsSection}»
 Go to page: Ir a {page}

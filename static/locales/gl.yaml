@@ -208,6 +208,8 @@ Settings:
   Settings: 'Axustes'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Queres reiniciar a aplicación para aplicar os cambios?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Xeral'
     Check for Updates: 'Comprobar actualizacións'
     Fallback to Non-Preferred Backend on Failure: 'Usar motor API non preferido en caso de falla'
@@ -925,10 +927,15 @@ Comments:
   There are no comments available for this post: Non hai comentarios dispoñibles para esta publicación
   Subscribed: Subscrito
 Up Next: 'Seguintes'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Escolle o back-end que FreeTube utiliza para obter os datos. A API local é un extractor incluído. A API de Invidious require un servidor Invidious ao que se conectar.'
     Fallback to Non-Preferred Backend on Failure: 'Cando a túa API preferida teña un problema, FreeTube tentará usar automaticamente a túa API non preferida como método alternativo cando estea activo.'
     Thumbnail Preference: 'Tódalas miniaturas de FreeTube substituiranse por un fotograma do vídeo, borroso ou oculto en lugar da miniatura predeterminada.'

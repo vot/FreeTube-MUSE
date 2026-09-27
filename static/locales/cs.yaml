@@ -213,6 +213,8 @@ Settings:
   Settings: 'Nastavení'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Aby se změny projevily, je třeba aplikaci restartovat. Restartovat a použít změny?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Obecné'
     Check for Updates: 'Kontrolovat aktualizace'
     Fallback to Non-Preferred Backend on Failure: 'Při chybě přepnout na nepreferovaný backend'
@@ -965,10 +967,15 @@ Comments:
   Loading replies: Načítání odpovědí…
   Comments are turned off: Komentáře jsou vypnuty
 Up Next: 'Další'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Vyberte backend, který FreeTube používá k získávání informací. Místní API má integrovaný extraktor. Invidious API vyžaduje připojení k server Invidious.'
     Fallback to Non-Preferred Backend on Failure: 'Pokud má vaše preferované API problém, FreeTube se automaticky pokusí použít vaše nepreferované API jako záložní metodu, pokud je povoleno.'
     Thumbnail Preference: 'Všechny miniatury v celém FreeTube budou nahrazeny snímkem z videa, rozmazány nebo skryty namísto výchozí miniatury.'

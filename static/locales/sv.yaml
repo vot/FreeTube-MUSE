@@ -210,6 +210,8 @@ Settings:
   # On Settings Page
   Settings: 'Inställningar'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Allmänt'
     Check for Updates: 'Sök efter uppdateringar'
     Fallback to Non-Preferred Backend on Failure: 'Använd en alternativ Backend vid fel'
@@ -966,6 +968,9 @@ Canceled next video autoplay: 'Automatisk uppspelning av nästa video avbröts'
 
 Yes: 'Ja'
 No: 'Nej'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: När alternativet är aktiverat använder FreeTube RSS i stället för den vanliga metoden för att hämta prenumerationsflödet. RSS är snabbare och minskar risken för IP-blockering, men saknar information som videolängd, direktsändningsstatus och inlägg
@@ -976,6 +981,8 @@ Tooltips:
     Skip by Scrolling Over Video Player: Använd mushjulet över videospelaren för att spola i videon, på samma sätt som i MPV.
     Scroll Playback Rate Over Video Player: När markören är över videon håller du ned Ctrl-tangenten (kommandotangenten på Mac) och rullar mushjulet framåt eller bakåt för att ändra uppspelningshastigheten. Håll ned Ctrl-tangenten (kommandotangenten på Mac) och vänsterklicka för att snabbt återgå till standardhastigheten (1× om den inte har ändrats i inställningarna).
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Region for Trending: Välj vilket lands trendande videor som ska visas.
     Invidious Instance: Invidious-instansen som FreeTube använder för API-anrop.
     Thumbnail Preference: Ersätt videornas vanliga miniatyrbilder med en bildruta från videon, en suddig bild eller en dold miniatyrbild.

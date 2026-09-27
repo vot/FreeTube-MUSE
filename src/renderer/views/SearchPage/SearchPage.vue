@@ -119,11 +119,14 @@ import {
   getLocalSearchResults
 } from '../../helpers/api/local'
 import { getInvidiousSearchResults } from '../../helpers/api/invidious'
+import { usePageTitle } from '../../composables/usePageTitle'
 import { SEARCH_CHAR_LIMIT } from '../../../constants'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
+
+const setPageTitle = usePageTitle()
 
 const isLoading = ref(false)
 const isNextPageLoading = ref(false)
@@ -185,13 +188,13 @@ watch(() => route.fullPath, () => {
 
   query.value = query_
 
-  store.commit('setAppTitle', processedQuery.value)
+  setPageTitle(processedQuery.value)
   checkSearchCache(payload)
 })
 
 onMounted(() => {
   query.value = route.params.query
-  store.commit('setAppTitle', processedQuery.value)
+  setPageTitle(processedQuery.value)
 
   const payload = {
     query: processedQuery.value,

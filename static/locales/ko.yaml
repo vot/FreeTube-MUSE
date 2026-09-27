@@ -129,6 +129,8 @@ Settings:
   Settings: '설정'
   The app needs to restart for changes to take effect. Restart and apply change?: '변경된 설정을 적용하려면 재실행해야합니다. 재실행하고 설정을 변경하시겠습니까?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: '일반 설정'
     Check for Updates: '업데이트 확인하기'
     Fallback to Non-Preferred Backend on Failure: '실패시 선호되지않는 백엔드로 대체하기'
@@ -598,10 +600,15 @@ Comments:
   View {replyCount} replies: '{replyCount}개의 답글 보기'
   Hide Replies: '답글 숨기기'
 Up Next: '다음 위로'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'FreeTube가 데이터를 얻기 위해 사용하는 백엔드를 선택하십시오. 로컬 API는 기본 제공 추출기입니다. Invidious API는 연결할 Invidious 서버가 필요합니다.'
     Fallback to Non-Preferred Backend on Failure: '선호하는 API에 문제가 있는 경우 FreeTube는 활성화될 때, 선호하지 않는 API를 대체 방법으로 사용하려고 자동으로 시도합니다.'
     Thumbnail Preference: 'FreeTube 전체의 모든 썸네일은 기본 썸네일 대신 비디오 프레임으로 대체됩니다.'

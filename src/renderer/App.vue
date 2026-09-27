@@ -6,12 +6,14 @@
       hideOutlines: outlinesHidden,
       isLocaleRightToLeft: isLocaleRightToLeft,
       isSideNavOpen: isSideNavOpen,
-      hideLabelsSideBar: hideLabelsSideBar && !isSideNavOpen
+      hideLabelsSideBar: hideLabelsSideBar && !isSideNavOpen,
+      hasTabBar: enableTabbedInterface
     }"
   >
     <TopNav
       :inert="isAnyPromptOpen"
     />
+    <TabBar v-if="enableTabbedInterface" />
     <SideNav
       :inert="isAnyPromptOpen"
     />
@@ -31,17 +33,14 @@
           @click="handleUpdateBannerClick"
         />
       </div>
-      <RouterView
-        v-slot="{ Component }"
-        class="routerView"
+      <div
+        v-for="tab in tabList"
+        v-show="tab.id === currentTabId"
+        :key="tab.id"
+        class="tabViewWrapper"
       >
-        <Transition
-          mode="out-in"
-          name="fade"
-        >
-          <component :is="Component" />
-        </Transition>
-      </RouterView>
+        <TabView :tab-id="tab.id" />
+      </div>
     </FtFlexBox>
     <FtPrompt
       v-if="showReleaseNotes"
@@ -102,12 +101,14 @@
 
 <script setup>
 import { marked } from 'marked'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute, useRouter } from 'vue-router'
+import { parseQuery, routeLocationKey, routerKey, useRoute, useRouter } from 'vue-router'
 
 import FtFlexBox from './components/ft-flex-box/ft-flex-box.vue'
 import TopNav from './components/TopNav/TopNav.vue'
+import TabBar from './components/TabBar/TabBar.vue'
+import TabView from './components/TabView/TabView.vue'
 import SideNav from './components/SideNav/SideNav.vue'
 import FtNotificationBanner from './components/FtNotificationBanner/FtNotificationBanner.vue'
 import FtPrompt from './components/FtPrompt/FtPrompt.vue'
@@ -122,8 +123,21 @@ import { vSaferHtml } from './directives/vSaferHtml.js'
 import store from './store/index'
 
 import packageDetails from '../../package.json'
-import { openExternalLink, openInternalPath, showToast } from './helpers/utils'
-import { translateWindowTitle } from './helpers/strings'
+import { isNewTabEvent, openExternalLink, openInternalPath, showToast } from './helpers/utils'
+import {
+  createTab,
+  getActiveTab,
+  getActiveTabId,
+  getTabAwareRoute,
+  getTabAwareRouter,
+  getTabs,
+  initTabs,
+  replaceActiveTabRoute,
+  setTabsEnabled,
+  setTabsFallbackPath,
+  stripTabIdFromPath
+} from './helpers/tabs'
+import { getTabTitle, translateWindowTitle } from './helpers/strings'
 import { loadLocale } from './i18n/index'
 import { getLocalClip } from './helpers/api/local.js'
 import { getClipInvidious } from './helpers/api/invidious.js'
@@ -131,6 +145,23 @@ import { getClipInvidious } from './helpers/api/invidious.js'
 const route = useRoute()
 const router = useRouter()
 const { locale, t } = useI18n()
+
+// Components that are not rendered inside of a tab, e.g. the side navigation,
+// have to navigate the tab that is shown instead of the app
+provide(routerKey, getTabAwareRouter())
+provide(routeLocationKey, getTabAwareRoute())
+
+/** @type {import('vue').ComputedRef<import('./helpers/tabs').Tab[]>} */
+const tabList = computed(() => getTabs())
+
+/** @type {import('vue').ComputedRef<string | null>} */
+const currentTabId = computed(() => getActiveTabId())
+
+/** @type {import('vue').ComputedRef<boolean>} */
+const enableTabbedInterface = computed(() => store.getters.getEnableTabbedInterface)
+
+/** @type {import('vue').ComputedRef<boolean>} */
+const openAllVideoLinksInNewTabs = computed(() => store.getters.getOpenAllVideoLinksInNewTabs)
 
 /** @type {import('vue').ComputedRef<'local' | 'invidious'>} */
 const backendPreference = computed(() => store.getters.getBackendPreference)
@@ -171,6 +202,9 @@ onMounted(async () => {
 
   updateTheme()
 
+  setTabsFallbackPath(landingPage.value)
+  await initTabs(router, { enabled: enableTabbedInterface.value })
+
   await store.dispatch('fetchInvidiousInstancesFromFile')
   if (defaultInvidiousInstance.value === '') {
     await store.dispatch('setRandomCurrentInvidiousInstance')
@@ -196,6 +230,9 @@ onMounted(async () => {
       store.dispatch('getExternalPlayerCmdArgumentsData')
     }
 
+    document.addEventListener('click', handleWatchPageLinkClick, true)
+    document.addEventListener('auxclick', handleWatchPageLinkClick, true)
+
     dataReady.value = true
 
     setTimeout(() => {
@@ -203,8 +240,8 @@ onMounted(async () => {
     }, 500)
   })
 
-  if (route.path === '/') {
-    router.replace({ path: landingPage.value })
+  if (stripTabIdFromPath(route.path) === '/') {
+    replaceActiveTabRoute({ path: landingPage.value })
   }
 
   setWindowTitle()
@@ -218,9 +255,67 @@ onBeforeUnmount(() => {
   document.removeEventListener('keydown', handleKeyboardShortcuts)
   document.removeEventListener('mousedown', handleMouseDown)
   document.removeEventListener('dragstart', handleDragStart)
+  document.removeEventListener('click', handleWatchPageLinkClick, true)
+  document.removeEventListener('auxclick', handleWatchPageLinkClick, true)
   document.removeEventListener('click', handleClick)
   document.removeEventListener('auxclick', handleAuxClick)
 })
+
+watch(enableTabbedInterface, (value) => {
+  setTabsEnabled(value)
+})
+
+/**
+ * Opens video links in a new background tab, either when the setting to do so
+ * is enabled or when a gesture for opening a link in a new tab is used
+ * @param {MouseEvent} event
+ */
+function handleWatchPageLinkClick(event) {
+  if (!enableTabbedInterface.value) {
+    return
+  }
+
+  const link = event.target?.closest?.('a.watchPageLink')
+
+  if (link === null || link === undefined) {
+    return
+  }
+
+  if (!openAllVideoLinksInNewTabs.value && !isNewTabEvent(event)) {
+    return
+  }
+
+  const { path, query } = parseInternalLinkHref(link.getAttribute('href'))
+
+  if (path === null) {
+    return
+  }
+
+  // Keeps the router of the current tab from handling the click
+  event.preventDefault()
+  event.stopPropagation()
+
+  void createTab({ path, query, activate: false })
+}
+
+/**
+ * @param {string | null} href
+ * @returns {{ path: string | null, query: import('vue-router').LocationQuery }}
+ */
+function parseInternalLinkHref(href) {
+  if (href == null) {
+    return { path: null, query: {} }
+  }
+
+  const [rawPath, search = ''] = new URL(href, window.location.href).hash.replace(/^#/, '').split('?')
+  const path = stripTabIdFromPath(rawPath)
+
+  if (!path.startsWith('/')) {
+    return { path: null, query: {} }
+  }
+
+  return { path, query: parseQuery(search) }
+}
 
 /** @type {import('vue').ComputedRef<string>} */
 const baseTheme = computed(() => store.getters.getBaseTheme)
@@ -542,8 +637,19 @@ function enableOpenUrl() {
   })
 }
 
+// The title of the window is the title of the tab that is currently shown,
+// which pages set for themselves while they are inside of a tab
 const windowTitle = computed(() => {
-  const routePath = route.path
+  const activeTab = getActiveTab()
+  if (activeTab !== null) {
+    const tabTitle = getTabTitle(activeTab)
+
+    if (tabTitle !== '') {
+      return tabTitle
+    }
+  }
+
+  const routePath = stripTabIdFromPath(route.path)
   if (
     !routePath.startsWith('/channel/') &&
     !routePath.startsWith('/watch/') &&
@@ -616,8 +722,8 @@ function handleDragStart(event) {
     return
   }
 
-  const [path, query] = originalUrl.hash.slice(2).split('?')
-  const pathParts = path.split('/')
+  const [rawPath, query] = originalUrl.hash.slice(1).split('?')
+  const pathParts = stripTabIdFromPath(rawPath).split('/').slice(1)
   const params = new URLSearchParams(query)
 
   let transformed = false

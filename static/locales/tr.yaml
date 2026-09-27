@@ -212,6 +212,8 @@ Settings:
   # On Settings Page
   Settings: 'Ayarlar'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Genel'
     Check for Updates: 'Güncellemeleri Denetle'
     Fallback to Non-Preferred Backend on Failure: 'Hata Durumunda Tercih Edilmeyen Arka Uca Geç'
@@ -984,6 +986,9 @@ Canceled next video autoplay: 'Sonraki video otomatik oynatımı iptal edildi'
 Yes: 'Evet'
 No: 'Hayır'
 This video is unavailable because of missing formats. This can happen due to country unavailability.: Eksik biçimler nedeniyle bu video kullanılamıyor. Bu durum, ülke kullanılamazlığı nedeniyle gerçekleşebilir.
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: Etkinleştirildiğinde, FreeTube abonelik akışınızı almak için varsayılan yöntemi yerine RSS kullanacaktır. RSS daha hızlıdır ve IP engellemesini önler, ancak video süresi, canlı durum veya gönderiler gibi belirli bilgileri sağlamaz
@@ -994,6 +999,8 @@ Tooltips:
     Scroll Playback Rate Over Video Player: Oynatma hızını denetlemek için, imleç videonun üzerindeyken Ctrl tuşunu (Mac'te Komut tuşu) basılı tutun ve oynatma hızını denetlemek için fare tekerleğini ileri veya geri kaydırın. Öntanımlı oynatma hızına (ayarlarda değiştirilmediği sürece 1x) hızlı bir şekilde dönmek için Ctrl tuşunu (Mac'te Komut tuşu) basılı tutun ve fareye sol tıklayın.
     Skip by Scrolling Over Video Player: MPV'deki gibi videoda atlamak için kaydırma tekerleğini kullanın.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Invidious Instance: FreeTube'un API çağrıları için bağlanacağı Invidious örneği. Bu ayardaki değişiklikler, bu örneği öntanımlı olarak belirlemediğiniz sürece yalnızca geçerli pencereye uygulanır.
     Thumbnail Preference: FreeTube'daki tüm küçük resimler, varsayılan küçük resim yerine videonun bir karesiyle, bulanık veya gizli şekilde değiştirilecektir.
     Fallback to Non-Preferred Backend on Failure: Etkinleştirildiğinde, tercih ettiğiniz API'de bir sorun olduğunda FreeTube otomatik olarak tercih edilmeyen API'nizi yedek yöntem olarak kullanmaya çalışır.

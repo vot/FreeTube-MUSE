@@ -202,6 +202,8 @@ Settings:
   Settings: 'Innstillingar'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Programmet må starte på nytt for at endringane skal tre i kraft. Start på nytt og ta i bruk endringane?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Generelle innstillingar'
     Check for Updates: 'Sjå etter oppdateringar'
     Fallback to Non-Preferred Backend on Failure: 'Tilbakefall til ikkje-føretrekte backend ved feil'
@@ -669,10 +671,15 @@ Comments:
   View {replyCount} replies: Vis {replyCount} svar
   Hide Replies: Skjul svar
 Up Next: 'Neste'
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 
 #Tooltips
 Tooltips:
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     Preferred API Backend: 'Vel metoden FreeTube bruker for å hente data. Det lokale API-et er ein innebygd utpakkar. Invidious-API-et krev ein Invidious-tenar å kople til.'
     Fallback to Non-Preferred Backend on Failure: 'Når ditt føretrekte API har eit problem, vil FreeTube prøve å automatisk bruke ditt ikkje-føretrekte API som ein tilbakefallingsmetode dersom det er aktivert.'
     Thumbnail Preference: 'Alle miniatyrbilete i FreeTube vil bli erstatta av eit bilete av videoen i staden for standardminiatyrbiletet'

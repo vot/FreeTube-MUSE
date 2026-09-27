@@ -213,6 +213,7 @@ import FtAutoLoadNextPageWrapper from '../../components/FtAutoLoadNextPageWrappe
 import AutoScrollWrapper from '../../components/AutoScrollWrapper/AutoScrollWrapper.vue'
 
 import store from '../../store/index'
+import { usePageTitle } from '../../composables/usePageTitle'
 
 import {
   extractLocalCacheablePlaylistContinuation,
@@ -233,6 +234,8 @@ import { getSortedPlaylistItems, videoDurationPresent, videoDurationWithFallback
 import { MOBILE_WIDTH_THRESHOLD, PLAYLIST_HEIGHT_FORCE_LIST_THRESHOLD } from '../../../constants'
 
 const { locale, t } = useI18n()
+
+const setPageTitle = usePageTitle()
 const route = useRoute()
 const router = useRouter()
 
@@ -1091,7 +1094,7 @@ function updatePageTitle() {
     }
   }
 
-  store.commit('setAppTitle', titleText)
+  setPageTitle(titleText)
 }
 
 /**

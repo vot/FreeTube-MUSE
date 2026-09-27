@@ -64,8 +64,11 @@ import { getHashtagLocal, parseLocalListVideo } from '../../helpers/api/local'
 import { copyToClipboard, showToast } from '../../helpers/utils'
 import { isNullOrEmpty } from '../../helpers/strings'
 import { getHashtagInvidious } from '../../helpers/api/invidious'
+import { usePageTitle } from '../../composables/usePageTitle'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
+
+const setPageTitle = usePageTitle()
 
 const route = useRoute()
 
@@ -116,7 +119,7 @@ async function getHashtag() {
   } else {
     await getInvidiousHashtag()
   }
-  store.commit('setAppTitle', `#${hashtag.value}`)
+  setPageTitle(`#${hashtag.value}`)
 }
 
 /**

@@ -12,7 +12,7 @@
 
 .topZone {
   /* top nav height manually inspected to be 60px */
-  --zone-height: calc(var(--usable-zone-height) + 60px + var(--zone-height-spacing-top-for-header));
+  --zone-height: calc(var(--usable-zone-height) + 60px + var(--tab-bar-height, 0px) + var(--zone-height-spacing-top-for-header));
 
   /* Must have `px` suffix or `calc()` won't work */
   --zone-height-spacing-top-for-header: 100px;

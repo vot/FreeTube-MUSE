@@ -208,6 +208,8 @@ Settings:
   Settings: 'Подешавања'
   The app needs to restart for changes to take effect. Restart and apply change?: 'Апликација се мора рестартовати да би се примениле промене. Рестартовати и применити промене?'
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     General Settings: 'Опште'
     Check for Updates: 'Провера ажурирања'
     Fallback to Non-Preferred Backend on Failure: 'Повратак на непреферирани бек-енд у случају неуспеха'
@@ -836,6 +838,9 @@ Video:
   DRMProtected: Видео снимци заштићени DRM не могу се репродуковати у FreeTube-у, јер захтевају власничке компоненте затвореног кода. Ако желите да гледате овај видео снимак, погледајте га на званичном сајту YouTube-а у веб-прегледачу с омогућеним DRM.
   Save Watched Progress: Сачувај напредак гледања
   Watched Progress Saved: Напредак гледања је сачуван
+Tabs:
+  New Tab: ''
+  Close Tab: ''
 Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: 'Када је омогућено, FreeTube ће користити RSS уместо свог подразумеваног метода за прикупљање вашег фида праћења. RSS је бржи и спречава блокирање IP адресе, али не пружа одређене информације као што су трајање видео снимка, статус уживо или објаве'
@@ -843,6 +848,8 @@ Tooltips:
 # Toast Messages
     Fetch Automatically: Када је омогућено, FreeTube ће аутоматски преузети ваш фид претплата при покретању и када се отвори нови прозор.
   General Settings:
+    Enable Tabbed Interface: ''
+    Open All Video Links In New Tabs: ''
     External Link Handling: "Изаберите подразумевано понашање када се кликне на линк који се не може отворити у FreeTube-у.\nПодразумевано, FreeTube ће отворити линк на који сте кликнули у вашем подразумеваном прегледачу.\n"
     Fallback to Non-Preferred Backend on Failure: Када ваш преферирани API има проблем, FreeTube ће аутоматски покушати да користи ваш непреферирани API као резервни метод, када је омогућено.
     Preferred API Backend: Изаберите бек-енд коју FreeTube користи за добијање података. Локални API је уграђени екстрактор. Invidious API захтева Invidious сервер за повезивање.

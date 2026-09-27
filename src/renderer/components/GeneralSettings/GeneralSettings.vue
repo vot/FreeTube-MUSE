@@ -42,6 +42,21 @@
           @change="updateOpenDeepLinksInNewWindow"
         />
         <FtToggleSwitch
+          :label="t('Settings.General Settings.Enable Tabbed Interface')"
+          :default-value="enableTabbedInterface"
+          :compact="true"
+          :tooltip="t('Tooltips.General Settings.Enable Tabbed Interface')"
+          @change="updateEnableTabbedInterface"
+        />
+        <FtToggleSwitch
+          v-if="enableTabbedInterface"
+          :label="t('Settings.General Settings.Open All Video Links In New Tabs')"
+          :default-value="openAllVideoLinksInNewTabs"
+          :compact="true"
+          :tooltip="t('Tooltips.General Settings.Open All Video Links In New Tabs')"
+          @change="updateOpenAllVideoLinksInNewTabs"
+        />
+        <FtToggleSwitch
           v-if="!IS_MAC && !isLinuxWayland && USING_ELECTRON"
           :label="t('Settings.General Settings.Minimize to system tray')"
           :default-value="hideToTrayOnMinimize"
@@ -198,6 +213,26 @@ const openDeepLinksInNewWindow = computed(() => store.getters.getOpenDeepLinksIn
  */
 function updateOpenDeepLinksInNewWindow(value) {
   store.dispatch('updateOpenDeepLinksInNewWindow', value)
+}
+
+/** @type {import('vue').ComputedRef<boolean>} */
+const enableTabbedInterface = computed(() => store.getters.getEnableTabbedInterface)
+
+/**
+ * @param {boolean} value
+ */
+function updateEnableTabbedInterface(value) {
+  store.dispatch('updateEnableTabbedInterface', value)
+}
+
+/** @type {import('vue').ComputedRef<boolean>} */
+const openAllVideoLinksInNewTabs = computed(() => store.getters.getOpenAllVideoLinksInNewTabs)
+
+/**
+ * @param {boolean} value
+ */
+function updateOpenAllVideoLinksInNewTabs(value) {
+  store.dispatch('updateOpenAllVideoLinksInNewTabs', value)
 }
 
 /** @type {import('vue').ComputedRef<'local' | 'invidious'>} */
