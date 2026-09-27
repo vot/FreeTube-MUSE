@@ -7,6 +7,10 @@ h2 {
   align-items: flex-start;
   gap: 15px;
   margin-block-start: 10px;
+
+  padding: 10px;
+  background: var(--search-bar-color);
+  border-radius: 15px;
 }
 
 .profileListColumn {
@@ -134,11 +138,6 @@ h2 {
 .subscriptionsColumn {
   flex: 1 1 0;
   min-inline-size: 0;
-}
-
-.subscriptionsColumn :deep(.card) {
-  inline-size: 100%;
-  margin: 0;
 }
 
 .editProfileCard {

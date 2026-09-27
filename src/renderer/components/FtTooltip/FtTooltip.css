@@ -8,8 +8,9 @@
 }
 
 .text {
-  background-color: color-mix(in srgb, var(--primary-text-color) 80%, transparent);
-  border-radius: 20px;
+  background-color: var(--secondary-text-color);
+  border-radius: 10px;
+  box-shadow: 0 0px 4px -2px var(--primary-shadow-color);
   color: var(--card-bg-color);
   font-size: 1rem;
   line-height: 120%;
@@ -22,7 +23,7 @@
   pointer-events: none;
   position: absolute;
   text-align: center;
-  transition-duration: 275ms;
+  transition-duration: 175ms;
   transition-property: opacity, transform, visibility;
   visibility: hidden;
   z-index: 2;

@@ -4,49 +4,20 @@
   margin-block-end: 10px;
 }
 
-.tabs {
-  inline-size: 90%;
-  margin-inline: auto;
-  margin-block-end: 10px;
-  color: var(--tertiary-text-color);
-}
-
-.selectedTab {
-  border-block-end: 3px solid var(--primary-color);
-  color: var(--primary-text-color);
-  font-weight: bold;
-  box-sizing: border-box;
-  margin-block-end: -3px;
-}
-
-.tab {
-  text-align: center;
-  padding: 15px;
-  font-size: 1.1em;
-  cursor: pointer;
-  align-self: flex-end;
-}
-
-.tab:hover {
-  font-weight: bold;
-}
-
-.tabIcon {
-  color: var(--primary-color);
-}
-
 .settingsPanel {
   inline-size: 90%;
   margin-inline: auto;
 }
 
-.section + .section {
-  margin-block-start: 20px;
-}
 
 @media only screen and (width <= 680px) {
   .tabs,
   .settingsPanel {
     inline-size: 90%;
   }
+}
+
+.settingsSection {
+  background-color: var(--card-bg-color);
+  margin-block-start: 20px;
 }

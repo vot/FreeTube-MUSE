@@ -1,6 +1,13 @@
 <template>
   <div class="settingsPage">
     <template v-if="unlocked">
+      <h2>
+        <FontAwesomeIcon
+          :icon="['fas', 'screwdriver-wrench']"
+          class="headingIcon"
+        />
+        {{ $t('Settings.Settings') }}
+      </h2>
       <div class="settingsToolbar">
         <FtButton
           v-if="USING_ELECTRON"
@@ -45,7 +52,7 @@
           :is="section.component"
           v-for="section in activeTabSections"
           :key="`${currentTab}-${section.type}`"
-          class="section"
+          class="ft-card"
         />
       </div>
     </template>

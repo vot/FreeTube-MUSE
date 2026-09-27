@@ -11,7 +11,7 @@
   align-content: center;
   align-items: center;
   background-color: var(--card-bg-color);
-  box-shadow: 0 1px 4px -1px var(--primary-shadow-color);
+  border-bottom: 1px solid var(--primary-shadow-color);
   display: flex;
   block-size: 60px;
   inset-inline: 0;

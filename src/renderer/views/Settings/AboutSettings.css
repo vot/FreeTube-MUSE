@@ -56,3 +56,7 @@
     grid-template-columns: 1fr;
   }
 }
+
+.ft-card {
+  background-color: var(--card-bg-color);
+}

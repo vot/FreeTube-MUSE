@@ -1,13 +1,12 @@
-.settingsSection {
-  margin-block: 0;
-  background-color: var(--card-bg-color);
-  border-radius: 10px;
-  box-shadow: 0 1px 4px -1px var(--primary-shadow-color);
-
-  @media only screen and (width <= 800px) {
-    inline-size: 100%;
-  }
-}
+// .settingsSection {
+//   margin-block: 0;
+//   background-color: var(--card-bg-color);
+//   border-radius: 10px;
+//
+//   @media only screen and (width <= 800px) {
+//     inline-size: 100%;
+//   }
+// }
 
 .sectionHeader {
   cursor: pointer;
@@ -15,22 +14,22 @@
   padding: 1px;
 }
 
-.sectionBody {
-  padding-block: 10px;
-
-  > :deep(div) {
-    box-sizing: border-box;
-    padding-block: 0;
-    padding-inline: 20px;
-    inline-size: 100%;
-  }
-
-  > :deep(div:not(:last-child, .ft-flex-box)) {
-    @media only screen and (width <= 800px) {
-      margin-block-end: 20px;
-    }
-  }
-}
+// .sectionBody {
+//   padding-block: 10px;
+//
+//   > :deep(div) {
+//     box-sizing: border-box;
+//     padding-block: 0;
+//     padding-inline: 20px;
+//     inline-size: 100%;
+//   }
+//
+//   > :deep(div:not(:last-child, .ft-flex-box)) {
+//     @media only screen and (width <= 800px) {
+//       margin-block-end: 20px;
+//     }
+//   }
+// }
 
 .sectionTitle {
   user-select: none;

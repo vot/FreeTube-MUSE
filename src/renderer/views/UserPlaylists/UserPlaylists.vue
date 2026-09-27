@@ -3,7 +3,7 @@
     <div class="main-content-container">
       <FtCard>
         <div class="heading">
-          <h2 class="headingText">
+          <h2>
             <FontAwesomeIcon
               :icon="['fas', 'list']"
               class="headingIcon"

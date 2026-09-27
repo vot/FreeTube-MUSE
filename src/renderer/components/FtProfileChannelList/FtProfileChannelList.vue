@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FtCard class="card">
+    <FtCard class="card card-bg">
       <h2>
         {{ $t("Profile.Subscription List") }}
       </h2>

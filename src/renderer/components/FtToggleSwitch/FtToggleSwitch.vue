@@ -63,7 +63,7 @@ const props = defineProps({
   },
   tooltipPosition: {
     type: String,
-    default: 'bottom-left'
+    default: 'bottom'
   },
   tooltipAllowNewlines: {
     type: Boolean,

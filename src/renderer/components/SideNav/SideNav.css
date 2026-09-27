@@ -10,7 +10,8 @@
   margin-block: 18px;
   margin-inline: 10px;
   border-radius: 10px;
-  box-shadow: 0 1px 4px -1px var(--primary-shadow-color);
+  /* box-shadow: 0 1px 4px -1px var(--primary-shadow-color); */
+  box-shadow: 0 0px 4px -2px var(--primary-shadow-color);
   background-color: var(--side-nav-color);
   transition-property: inline-size;
   transition-duration: 150ms;
