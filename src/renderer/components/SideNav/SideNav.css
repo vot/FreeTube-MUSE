@@ -11,7 +11,7 @@
   margin-inline: 10px;
   border-radius: 10px;
   /* box-shadow: 0 1px 4px -1px var(--primary-shadow-color); */
-  box-shadow: 0 0px 4px -2px var(--primary-shadow-color);
+  /* box-shadow: 0 0px 4px -2px var(--primary-shadow-color); */
   background-color: var(--side-nav-color);
   transition-property: inline-size;
   transition-duration: 150ms;
@@ -143,7 +143,7 @@
   /* stylelint-disable-next-line liberty/use-logical-spec */
   margin-left: 40px;
   overflow-wrap: break-word;
-  font-size: 12px;
+  /* font-size: 12px; */
 }
 
 /* stylelint-disable liberty/use-logical-spec */
@@ -250,9 +250,10 @@
   }
 
   .opened .navChannel .navLabel {
-    font-size: 12px;
+    /* font-size: 12px; */
     flex-grow: 1;
-    margin: 0;
+    margin: 0 0 0 4px;
+
   }
 
   .opened .thumbnailContainer {
