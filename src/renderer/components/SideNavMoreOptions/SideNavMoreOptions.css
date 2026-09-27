@@ -23,6 +23,16 @@
   transition: background 0.2s ease-in;
 }
 
+/* Keep the page that is currently open highlighted, like in the side navigation */
+.navOption.router-link-active {
+  background-color: var(--accent-color-opacity3);
+  color: var(--accent-color);
+}
+
+.navOption.router-link-active:hover {
+  background-color: var(--accent-color-opacity4);
+}
+
 .moreOptionContainer {
   position: fixed;
   background-color: var(--side-nav-color);

@@ -95,6 +95,21 @@
   transition: background 0.2s ease-in;
 }
 
+/*
+  The page or channel that is currently open stays highlighted,
+  so it is easy to tell where you are
+*/
+.navOption.router-link-active,
+.navChannel.router-link-active {
+  background-color: var(--accent-color-opacity3);
+  color: var(--accent-color);
+}
+
+.navOption.router-link-active:hover,
+.navChannel.router-link-active:hover {
+  background-color: var(--accent-color-opacity4);
+}
+
 .navIcon {
   block-size: 1em;
   inline-size: 100%;
