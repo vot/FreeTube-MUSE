@@ -1,3 +1,8 @@
+/* Marks the button when the search results are filtered */
+.activeFilters {
+  box-shadow: 0 0 10px var(--primary-color);
+}
+
 .getNextPage {
   background-color: var(--search-bar-color);
   inline-size: 100%;
@@ -12,8 +17,4 @@
 .getNextPage:focus {
   background-color: var(--side-nav-hover-color);
   color: var(--side-nav-hover-text-color);
-}
-
-.headingIcon {
-  color: var(--primary-color);
 }

@@ -1,6 +1,7 @@
 <template>
   <FtPrompt
     :label="$t('KeyboardShortcutPrompt.Keyboard Shortcuts')"
+    theme="wide"
     @click="hideKeyboardShortcutPrompt"
   >
     <template #label="{ labelId }">
@@ -26,14 +27,14 @@
         <div
           v-for="secondarySection in primarySection"
           :key="secondarySection.title"
-          class="secondarySection"
+          class="secondarySection ft-card"
         >
           <h3 class="center">
             {{ secondarySection.title }}
           </h3>
           <div class="labelsAndShortcuts">
             <div
-              v-for="[label, shortcut] in secondarySection.shortcutDictionary"
+              v-for="[label, shortcutAlternatives] in secondarySection.shortcutDictionary"
               :key="label"
               class="labelAndShortcut"
             >
@@ -43,7 +44,20 @@
                 {{ label }}
               </p>
               <p class="shortcut">
-                {{ shortcut }}
+                <template
+                  v-for="(keys, alternativeIndex) in shortcutAlternatives"
+                  :key="alternativeIndex"
+                >
+                  <span
+                    v-if="alternativeIndex > 0"
+                    class="alternativeSeparator"
+                  >{{ shortcutLabelSeparator }}</span>
+                  <kbd
+                    v-for="(key, keyIndex) in keys"
+                    :key="keyIndex"
+                    class="key"
+                  >{{ key }}</kbd>
+                </template>
               </p>
             </div>
           </div>
@@ -57,13 +71,15 @@
 
 import { computed } from 'vue'
 import { KeyboardShortcuts } from '../../../constants'
-import { getLocalizedShortcut } from '../../helpers/utils'
+import { getLocalizedShortcutKeys } from '../../helpers/utils'
 import FtPrompt from '../FtPrompt/FtPrompt.vue'
 import store from '../../store/index'
 import { useI18n } from 'vue-i18n'
 import FtIconButton from '../FtIconButton/FtIconButton.vue'
 
 const { t } = useI18n()
+
+const shortcutLabelSeparator = computed(() => t('shortcutLabelSeparator'))
 
 const generalPlayerShortcuts = computed(() =>
   getLocalizedShortcutNamesAndValues(KeyboardShortcuts.VIDEO_PLAYER.GENERAL)
@@ -173,15 +189,14 @@ function hideKeyboardShortcutPrompt() {
 
 function getLocalizedShortcutNamesAndValues(dictionary) {
   const shortcutNameToShortcutsMappings = localizedShortcutNameToShortcutsMappings.value
-  const shortcutLabelSeparator = t('shortcutLabelSeparator')
 
   return shortcutNameToShortcutsMappings
     .filter(([_localizedShortcutName, shortcutCodes]) =>
       shortcutCodes.some(shortcutCode => Object.hasOwn(dictionary, shortcutCode))
     )
     .map(([localizedShortcutName, shortcutCodes]) => {
-      const localizedShortcuts = shortcutCodes.map(code => getLocalizedShortcut(dictionary[code]))
-      return [localizedShortcutName, localizedShortcuts.join(shortcutLabelSeparator)]
+      const localizedShortcuts = shortcutCodes.map(code => getLocalizedShortcutKeys(dictionary[code]))
+      return [localizedShortcutName, localizedShortcuts]
     })
 }
 

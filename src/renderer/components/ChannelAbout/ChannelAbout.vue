@@ -82,10 +82,7 @@
             v-if="!hideSearchBar"
             class="aboutTagLink"
             :title="$t('Channel.About.Tags.Search for', { tag })"
-            :to="{
-              path: `/search/${encodeURIComponent(tag)}`,
-              query: searchSettings
-            }"
+            :to="`/search/${encodeURIComponent(tag)}`"
           >
             {{ tag }}
           </router-link>
@@ -168,11 +165,6 @@ const hideFeaturedChannels = computed(() => {
 /** @type {import('vue').ComputedRef<boolean>} */
 const hideSearchBar = computed(() => {
   return store.getters.getHideSearchBar
-})
-
-/** @type {import('vue').ComputedRef<{ sortBy: string, time: string, type: string, duration: string, features: string[] }>} */
-const searchSettings = computed(() => {
-  return store.getters.getSearchSettings
 })
 
 const formattedJoined = computed(() => {

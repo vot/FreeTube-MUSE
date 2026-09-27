@@ -8,13 +8,15 @@
       <ft-card
         v-else
       >
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'users']"
-            class="headingIcon"
-          />
-          {{ $t("Most Popular") }}
-        </h2>
+        <div class="heading">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'users']"
+              class="headingIcon"
+            />
+            {{ $t("Most Popular") }}
+          </h2>
+        </div>
         <ft-element-list
           :data="shownResults"
         />

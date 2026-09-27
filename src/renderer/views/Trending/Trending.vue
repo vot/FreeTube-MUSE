@@ -2,13 +2,15 @@
   <div>
     <div class="main-content-container">
       <FtCard>
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'fire']"
-            class="trendingIcon"
-          />
-          {{ $t("Trending.Trending") }}
-        </h2>
+        <div class="heading">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'fire']"
+              class="trendingIcon"
+            />
+            {{ $t("Trending.Trending") }}
+          </h2>
+        </div>
         <div
           class="tabs"
           role="tablist"

@@ -1,6 +1,7 @@
 <template>
   <FtPrompt
     :label="title"
+    theme="narrow"
     @click="hideCreatePlaylistPrompt"
   >
     <FtFlexBox>

@@ -516,6 +516,65 @@ export function formatDurationAsTimestamp(lengthSeconds) {
 }
 
 /**
+ * @typedef {object} SearchSettings
+ * @property {'relevance' | 'popularity'} prioritize
+ * @property {'' | 'today' | 'week' | 'month' | 'year'} time
+ * @property {'all' | 'video' | 'shorts' | 'channel' | 'playlist' | 'movie'} type
+ * @property {'' | 'under_three_mins' | 'three_to_twenty_mins' | 'over_twenty_mins'} duration
+ * @property {('hd' | 'subtitles' | 'creative_commons' | '3d' | 'live' | '4k' | '360' | 'location' | 'hdr' | 'vr180')[]} features
+ */
+
+/** @type {SearchSettings} */
+export const DEFAULT_SEARCH_SETTINGS = {
+  prioritize: 'relevance',
+  time: '',
+  type: 'all',
+  duration: '',
+  features: []
+}
+
+/**
+ * Search filters are optional query parameters, the missing ones fall back to the defaults
+ * @param {Record<string, string | string[] | undefined | null>} query
+ * @returns {SearchSettings}
+ */
+export function searchSettingsFromQuery(query) {
+  // A single feature is a string when the page gets refreshed
+  const features = Array.isArray(query?.features) ? query.features : (query?.features ? [query.features] : [])
+
+  return {
+    prioritize: (query?.prioritize || DEFAULT_SEARCH_SETTINGS.prioritize),
+    time: (query?.time || DEFAULT_SEARCH_SETTINGS.time),
+    type: (query?.type || DEFAULT_SEARCH_SETTINGS.type),
+    duration: (query?.duration || DEFAULT_SEARCH_SETTINGS.duration),
+    features
+  }
+}
+
+/**
+ * Only the filters that differ from the defaults end up in the query,
+ * so that an unfiltered search has a clean url
+ * @param {SearchSettings} searchSettings
+ * @returns {Record<string, string | string[]>}
+ */
+export function searchSettingsToQuery(searchSettings) {
+  /** @type {Record<string, string | string[]>} */
+  const query = {}
+
+  for (const filter of ['prioritize', 'time', 'type', 'duration']) {
+    if (searchSettings[filter] && searchSettings[filter] !== DEFAULT_SEARCH_SETTINGS[filter]) {
+      query[filter] = searchSettings[filter]
+    }
+  }
+
+  if (searchSettings.features.length > 0) {
+    query.features = [...searchSettings.features]
+  }
+
+  return query
+}
+
+/**
  * @param {{prioritize? : string, time?: string, duration?: string, features: string[]}?} filtersA
  * @param {{prioritize? : string, time?: string, duration?: string, features: string[]}?} filtersB
  * @returns {boolean}
@@ -1042,16 +1101,28 @@ function getMacIconForShortcut(shortcut) {
 
 /**
  * @param {string} shortcut
- * @returns {string} the localized and recombined shortcut
+ * @returns {string[]} the individual keys of a keyboard shortcut, localized
  */
-export function getLocalizedShortcut(shortcut) {
+export function getLocalizedShortcutKeys(shortcut) {
   const shortcuts = shortcut.split('+')
 
   if (process.platform === 'darwin') {
-    const shortcutsAsIcons = shortcuts.map(shortcut => getMacIconForShortcut(shortcut))
-    return shortcutsAsIcons.join('')
+    return shortcuts.map(shortcut => getMacIconForShortcut(shortcut))
   } else {
-    const localizedShortcuts = shortcuts.map((shortcut) => getIndividualLocalizedShortcut(shortcut))
+    return shortcuts.map((shortcut) => getIndividualLocalizedShortcut(shortcut))
+  }
+}
+
+/**
+ * @param {string} shortcut
+ * @returns {string} the localized and recombined shortcut
+ */
+export function getLocalizedShortcut(shortcut) {
+  const localizedShortcuts = getLocalizedShortcutKeys(shortcut)
+
+  if (process.platform === 'darwin') {
+    return localizedShortcuts.join('')
+  } else {
     const shortcutJoinOperator = i18n.global.t('shortcutJoinOperator')
     return localizedShortcuts.join(shortcutJoinOperator)
   }

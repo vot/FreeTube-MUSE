@@ -1,14 +1,17 @@
 
-
-.keyboardShortcutPrompt {
-  max-inline-size: 80%;
-}
-
 .titleAndCloseButton {
   display: flex;
   justify-content: space-between;
   margin-block: 20px;
   margin-inline-start: 10px;
+}
+
+/* Keeps the close button a round circle instead of letting flex squash it */
+.titleAndCloseButton :deep(.iconButton) {
+  block-size: 50px;
+  flex-shrink: 0;
+  inline-size: 50px;
+  padding: 0;
 }
 
 h2 {
@@ -43,13 +46,16 @@ h3 {
 }
 
 .secondarySection {
-  flex: 0 0 500px;
+  /* Two columns, each shrinking to 300px before they stack on top of each other */
+  flex: 1 1 300px;
+  background-color: var(--side-nav-hover-color);
 }
 
 .labelsAndShortcuts {
   display: table;
   table-layout: auto;
   border-collapse: collapse;
+  inline-size: 100%;
 }
 
 .labelAndShortcut {
@@ -68,33 +74,36 @@ h3 {
 
 .label {
   display: table-cell;
-  padding-inline-end: 2em;
-  inline-size: 300px;
-  min-inline-size: 300px;
+  padding-inline-end: 1em;
 }
 
 .shortcut {
-  font-family: monospace;
   display: table-cell;
+  inline-size: 120px;
   vertical-align: middle;
+}
+
+.alternativeSeparator {
+  color: var(--tertiary-text-color);
+  padding-inline: 0.25em;
+}
+
+.key {
+  background-color: var(--card-bg-color);
+  border: 1px solid var(--primary-shadow-color);
+  border-radius: 4px;
+  box-shadow: 0 1px 1px var(--primary-shadow-color);
+  display: inline-block;
+  font-family: monospace;
+  line-height: 1;
+  margin-inline: 0.1em;
+  min-inline-size: 1em;
+  padding-block: 0.2em;
+  padding-inline: 0.4em;
+  text-align: center;
   text-transform: capitalize;
 }
 
 :deep(.promptCard) {
   overflow-x: hidden;
-}
-
-@media only screen and (width <= 600px) {
-  .label {
-    min-inline-size: 200px;
-    inline-size: 200px;
-  }
-
-  .secondarySection {
-    flex: 0;
-  }
-
-  .primarySection {
-    justify-content: flex-start;
-  }
 }

@@ -24,21 +24,12 @@ const state = {
   showAddToPlaylistPrompt: false,
   showCreatePlaylistPrompt: false,
   isKeyboardShortcutPromptShown: false,
-  showSearchFilters: false,
-  searchFilterValueChanged: false,
   progressBarPercentage: 0,
   toBeAddedToPlaylistVideoList: [],
   newPlaylistDefaultProperties: {},
   newPlaylistVideoObject: [],
   regionNames: [],
   regionValues: [],
-  searchSettings: {
-    prioritize: 'relevance',
-    time: '',
-    type: 'all',
-    duration: '',
-    features: [],
-  },
   externalPlayerNames: [],
   externalPlayerValues: [],
   externalPlayerCmdArguments: {},
@@ -87,14 +78,6 @@ const getters = {
     return state.cachedPlaylist
   },
 
-  getSearchSettings(state) {
-    return state.searchSettings
-  },
-
-  getSearchFilterValueChanged(state) {
-    return state.searchFilterValueChanged
-  },
-
   getIsKeyboardShortcutPromptShown(state) {
     return state.isKeyboardShortcutPromptShown
   },
@@ -105,10 +88,6 @@ const getters = {
 
   getShowCreatePlaylistPrompt(state) {
     return state.showCreatePlaylistPrompt
-  },
-
-  getShowSearchFilters(state) {
-    return state.showSearchFilters
   },
 
   getToBeAddedToPlaylistVideoList(state) {
@@ -297,14 +276,6 @@ const actions = {
     commit('setIsKeyboardShortcutPromptShown', false)
   },
 
-  showSearchFilters ({ commit }) {
-    commit('setShowSearchFilters', true)
-  },
-
-  hideSearchFilters ({ commit }) {
-    commit('setShowSearchFilters', false)
-  },
-
   updateShowProgressBar ({ commit }, value) {
     commit('setShowProgressBar', value)
   },
@@ -320,7 +291,7 @@ const actions = {
     commit('setRegionValues', countries.codes)
   },
 
-  async getYoutubeUrlInfo({ rootState, state }, urlStr) {
+  async getYoutubeUrlInfo({ rootState }, urlStr) {
     // Returns
     // - urlType [String] `video`, `playlist`
     //
@@ -447,14 +418,9 @@ const actions = {
           return { urlType: 'unknown' }
         }
 
-        const searchSettings = state.searchSettings
-        const query = {
-          prioritize: searchSettings.prioritize,
-          time: searchSettings.time,
-          type: searchSettings.type,
-          duration: searchSettings.duration,
-          features: searchSettings.features
-        }
+        // Search filters are not carried over, they are only applied on the search results page
+        /** @type {Record<string, string>} */
+        const query = {}
 
         for (const [param, value] of url.searchParams) {
           query[param] = value
@@ -700,10 +666,6 @@ const mutations = {
     state.isKeyboardShortcutPromptShown = payload
   },
 
-  setShowSearchFilters (state, payload) {
-    state.showSearchFilters = payload
-  },
-
   setToBeAddedToPlaylistVideoList (state, payload) {
     state.toBeAddedToPlaylistVideoList = payload
   },
@@ -749,30 +711,6 @@ const mutations = {
 
   setCachedPlaylist(state, value) {
     state.cachedPlaylist = value
-  },
-
-  setSearchFilterValueChanged (state, value) {
-    state.searchFilterValueChanged = value
-  },
-
-  setSearchPrioritize (state, value) {
-    state.searchSettings.prioritize = value
-  },
-
-  setSearchTime (state, value) {
-    state.searchSettings.time = value
-  },
-
-  setSearchType (state, value) {
-    state.searchSettings.type = value
-  },
-
-  setSearchDuration (state, value) {
-    state.searchSettings.duration = value
-  },
-
-  setSearchFeatures (state, value) {
-    state.searchSettings.features = value
   },
 
   setRegionNames (state, value) {

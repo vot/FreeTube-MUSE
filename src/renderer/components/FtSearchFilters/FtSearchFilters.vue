@@ -1,7 +1,7 @@
 <template>
   <FtPrompt
     theme="slim"
-    @click="hideSearchFilters"
+    @click="close"
   >
     <template #label="{ labelId }">
       <div class="titleContainer">
@@ -62,12 +62,17 @@
         class="searchRadio"
       />
     </FtFlexBox>
-    <div class="searchFilterCloseButtonContainer">
+    <div class="searchFilterButtonsContainer">
+      <FtButton
+        :label="$t('Search Filters.Apply Filters')"
+        :icon="['fas', 'filter']"
+        @click="applyFilters"
+      />
       <FtButton
         :label="$t('Close')"
         background-color="null"
         text-color="null"
-        @click="hideSearchFilters"
+        @click="close"
       />
     </div>
   </FtPrompt>
@@ -83,7 +88,17 @@ import FtPrompt from '../FtPrompt/FtPrompt.vue'
 import FtButton from '../FtButton/FtButton.vue'
 import FtCheckboxList from '../FtCheckboxList/FtCheckboxList.vue'
 
-import store from '../../store/index'
+import { DEFAULT_SEARCH_SETTINGS, searchFiltersMatch } from '../../helpers/utils'
+
+const props = defineProps({
+  /** @type {import('vue').PropType<import('../../helpers/utils').SearchSettings>} */
+  searchSettings: {
+    type: Object,
+    default: () => ({ ...DEFAULT_SEARCH_SETTINGS })
+  }
+})
+
+const emit = defineEmits(['apply', 'close'])
 
 const { t } = useI18n()
 
@@ -180,24 +195,18 @@ const featureLabels = computed(() => [
   t('Search Filters.Features.Location'),
 ])
 
-const searchSettings = store.getters.getSearchSettings
+const searchSettings = props.searchSettings
 
 /** @type {import('vue').Ref<'relevance' | 'popularity'>} */
 const prioritizeValue = ref(searchSettings.prioritize)
-
-watch(prioritizeValue, (value) => {
-  store.commit('setSearchPrioritize', value)
-})
 
 /** @type {import('vue').Ref<'' | 'today' | 'week' | 'month' | 'year'>} */
 const timeValue = ref(searchSettings.time)
 
 watch(timeValue, (value) => {
-  if (timeValue.value !== '' && !isVideoOrMovieOrAll(typeValue.value)) {
+  if (value !== '' && !isVideoOrMovieOrAll(typeValue.value)) {
     typeValue.value = 'all'
   }
-
-  store.commit('setSearchTime', value)
 })
 
 /** @type {import('vue').Ref<'all' | 'video' | 'shorts' | 'channel' | 'playlist' | 'movie'>} */
@@ -217,8 +226,6 @@ watch(typeValue, (value) => {
       featuresValue.value = featuresValue.value.filter(e => !NOT_ALLOWED_FOR_MOVIES_FEATURES.includes(e))
     }
   }
-
-  store.commit('setSearchType', value)
 })
 
 /** @type {import('vue').Ref<'' | 'under_three_mins' | 'three_to_twenty_mins' | 'over_twenty_mins'>} */
@@ -228,8 +235,6 @@ watch(durationValue, (value) => {
   if (value !== '' && !isVideoOrMovieOrAll(typeValue.value)) {
     typeValue.value = 'all'
   }
-
-  store.commit('setSearchDuration', value)
 })
 
 /** @type {import('vue').Ref<('hd' | 'subtitles' | 'creative_commons' | '3d' | 'live' | '4k' | '360' | 'location' | 'hdr' | 'vr180')[]>} */
@@ -239,24 +244,27 @@ watch(featuresValue, (values) => {
   if (values.length > 0 && (!isVideoOrMovieOrAll(typeValue.value) || NOT_ALLOWED_FOR_MOVIES_FEATURES.some(item => values.includes(item)))) {
     typeValue.value = 'all'
   }
-
-  store.commit('setSearchFeatures', [...values])
 }, { deep: true })
 
+/** @type {import('vue').ComputedRef<import('../../helpers/utils').SearchSettings>} */
+const stagedSearchSettings = computed(() => ({
+  prioritize: prioritizeValue.value,
+  time: timeValue.value,
+  type: typeValue.value,
+  duration: durationValue.value,
+  features: featuresValue.value
+}))
+
 const searchFilterValueChanged = computed(() => {
-  return prioritizeValue.value !== PRIORITIZE_VALUES[0] ||
-    timeValue.value !== TIME_VALUES[0] ||
-    typeValue.value !== TYPE_VALUES[0] ||
-    durationValue.value !== DURATION_VALUES[0] ||
-    featuresValue.value.length > 0
+  return !searchFiltersMatch(stagedSearchSettings.value, DEFAULT_SEARCH_SETTINGS)
 })
 
-watch(searchFilterValueChanged, (value) => {
-  store.commit('setSearchFilterValueChanged', value)
-})
+function applyFilters() {
+  emit('apply', stagedSearchSettings.value)
+}
 
-function hideSearchFilters() {
-  store.dispatch('hideSearchFilters')
+function close() {
+  emit('close')
 }
 
 /**

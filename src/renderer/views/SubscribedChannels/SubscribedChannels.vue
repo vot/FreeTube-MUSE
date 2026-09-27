@@ -2,13 +2,15 @@
   <div>
     <div class="main-content-container">
       <ft-card>
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'user-check']"
-            class="headingIcon"
-          />
-          {{ $t('Channels.Title') }}
-        </h2>
+        <div class="heading">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'user-check']"
+              class="headingIcon"
+            />
+            {{ $t('Channels.Title') }}
+          </h2>
+        </div>
         <ft-input
           v-show="subscribedChannels.length > 1"
           ref="searchBarChannels"

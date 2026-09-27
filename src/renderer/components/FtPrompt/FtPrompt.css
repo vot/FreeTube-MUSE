@@ -62,8 +62,8 @@
 }
 
 .promptCard.wide {
-  inline-size: 75%;
-  max-inline-size: 75%;
+  inline-size: 80%;
+  max-inline-size: 80%;
   inset-inline: 0;
   margin-inline: auto;
 }

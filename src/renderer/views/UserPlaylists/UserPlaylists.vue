@@ -2,7 +2,7 @@
   <div>
     <div class="main-content-container">
       <FtCard>
-        <div class="heading">
+        <div class="headingWithAction">
           <h2>
             <FontAwesomeIcon
               :icon="['fas', 'list']"
@@ -10,48 +10,47 @@
             />
             {{ $t("User Playlists.Your Playlists") }}
           </h2>
-          <FtIconButton
-            :title="$t('User Playlists.Create New Playlist')"
+          <FtButton
+            class="headingAction"
+            :label="$t('User Playlists.Create New Playlist')"
             :icon="['fas', 'plus']"
-            theme="secondary"
-            class="newPlaylistButton"
             @click="createNewPlaylist"
           />
-          <div
-            v-if="fullData.length > 1"
-            class="searchInputsRow"
-          >
-            <FtInput
-              ref="searchBar"
-              :placeholder="$t('User Playlists.Search bar placeholder')"
-              :value="query"
-              :show-clear-text-button="true"
-              :show-action-button="false"
-              :maxlength="255"
-              @input="handleQueryChange"
-              @clear="() => handleQueryChange('')"
-            />
-          </div>
-          <div
-            v-if="fullData.length > 1"
-            class="optionsRow"
-          >
-            <FtToggleSwitch
-              :label="$t('User Playlists.Playlists with Matching Videos')"
-              :compact="true"
-              :default-value="doSearchPlaylistsWithMatchingVideos"
-              @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
-            />
-            <FtSelect
-              class="sortSelect"
-              :value="sortBy"
-              :select-names="sortByNames"
-              :select-values="SORT_BY_VALUES"
-              :placeholder="$t('Global.Sort By')"
-              :icon="sortByIcon"
-              @change="updateUserPlaylistsSortBy"
-            />
-          </div>
+        </div>
+        <div
+          v-if="fullData.length > 1"
+          class="searchInputsRow"
+        >
+          <FtInput
+            ref="searchBar"
+            :placeholder="$t('User Playlists.Search bar placeholder')"
+            :value="query"
+            :show-clear-text-button="true"
+            :show-action-button="false"
+            :maxlength="255"
+            @input="handleQueryChange"
+            @clear="() => handleQueryChange('')"
+          />
+        </div>
+        <div
+          v-if="fullData.length > 1"
+          class="optionsRow"
+        >
+          <FtToggleSwitch
+            :label="$t('User Playlists.Playlists with Matching Videos')"
+            :compact="true"
+            :default-value="doSearchPlaylistsWithMatchingVideos"
+            @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
+          />
+          <FtSelect
+            class="sortSelect"
+            :value="sortBy"
+            :select-names="sortByNames"
+            :select-values="SORT_BY_VALUES"
+            :placeholder="$t('Global.Sort By')"
+            :icon="sortByIcon"
+            @change="updateUserPlaylistsSortBy"
+          />
         </div>
         <FtFlexBox
           v-if="fullData.length === 0"
@@ -104,7 +103,6 @@ import FtButton from '../../components/FtButton/FtButton.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
-import FtIconButton from '../../components/FtIconButton/FtIconButton.vue'
 import FtInput from '../../components/FtInput/FtInput.vue'
 import FtSelect from '../../components/FtSelect/FtSelect.vue'
 import FtToggleSwitch from '../../components/FtToggleSwitch/FtToggleSwitch.vue'

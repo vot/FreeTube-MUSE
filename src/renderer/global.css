@@ -17,7 +17,71 @@ h2 {
   color: var(--primary-color);
 }
 
-.card-bg {
+/*
+  Wraps a page heading, and optionally an action button on the same line.
+  The height is set here instead of on the h2, so that every page heading
+  takes up the same space no matter whether it has an action button or not.
+*/
+.heading,
+.headingWithAction {
+  display: grid;
+  align-items: center;
+
+  /* Tall enough for an action button */
+  min-block-size: 42px;
+  padding-block-end: 10px;
+  margin-block-end: 0.8em;
+}
+
+.heading {
+  /* A single column, so a lone heading stays centered */
+  grid-template-columns: 1fr;
+}
+
+.headingWithAction {
+  /* The empty columns keep the heading centered next to the action */
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: 16px;
+}
+
+.heading > h2 {
+  margin: 0;
+  padding-block-end: 0;
+}
+
+.headingWithAction > h2 {
+  grid-column: 2;
+  margin: 0;
+  padding-block-end: 0;
+}
+
+.headingWithAction > .headingAction {
+  grid-column: 3;
+  justify-self: end;
+}
+
+/* A button's own margin would push it off the edge of the heading row */
+.headingWithAction .btn {
+  margin: 0;
+}
+
+@media only screen and (width <= 680px) {
+  /* A labeled action no longer fits next to the heading, so it goes below it */
+  .headingWithAction {
+    /* Switch to 2 rows from 2 columns */
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+  }
+
+  .headingWithAction > h2,
+  .headingWithAction > .headingAction {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: stretch;
+  }
+}
+
+.card-bg, .promptCard {
   background-color: var(--card-bg-color);
 }
 

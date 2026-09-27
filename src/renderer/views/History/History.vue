@@ -2,13 +2,15 @@
   <div>
     <div class="main-content-container">
       <FtCard>
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'history']"
-            class="headingIcon"
-          />
-          {{ t('History.History') }}
-        </h2>
+        <div class="heading">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'history']"
+              class="headingIcon"
+            />
+            {{ t('History.History') }}
+          </h2>
+        </div>
         <FtInput
           v-show="fullData.length > 1"
           ref="searchBar"

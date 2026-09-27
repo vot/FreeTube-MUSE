@@ -2,13 +2,15 @@
   <div>
     <div class="main-content-container">
       <FtCard>
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'rss']"
-            class="subscriptionIcon"
-          />
-          {{ $t("Subscriptions.Subscriptions") }}
-        </h2>
+        <div class="heading">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'rss']"
+              class="subscriptionIcon"
+            />
+            {{ $t("Subscriptions.Subscriptions") }}
+          </h2>
+        </div>
         <div
           class="tabs"
           role="tablist"

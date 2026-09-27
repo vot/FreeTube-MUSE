@@ -1,7 +1,15 @@
 <template>
   <div>
     <div class="main-content-container">
-      <h2>{{ $t("Profile.Profile Manager") }}</h2>
+      <div class="heading">
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'circle-user']"
+            class="headingIcon"
+          />
+          {{ $t("Profile.Profile Manager") }}
+        </h2>
+      </div>
       <div class="pageColumns">
         <div class="profileListColumn">
           <div
@@ -117,6 +125,7 @@
 </template>
 
 <script setup>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 

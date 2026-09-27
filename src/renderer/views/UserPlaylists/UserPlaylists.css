@@ -1,9 +1,3 @@
-.newPlaylistButton {
-  margin-inline-start: 0.5em;
-  display: inline-block;
-  vertical-align: middle;
-}
-
 .searchInputsRow {
   display: grid;
 
@@ -43,8 +37,4 @@
 
 .message {
   color: var(--tertiary-text-color);
-}
-
-.headingIcon {
-  color: var(--primary-color);
 }

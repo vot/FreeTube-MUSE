@@ -8,14 +8,16 @@
       <FtCard
         v-else
       >
-        <h2>
-          <font-awesome-icon
-            :icon="['fas', 'hashtag']"
-            aria-hidden="false"
-            class="headingIcon"
-          />
-          <bdi>{{ hashtag }}</bdi>
-        </h2>
+        <div class="heading">
+          <h2>
+            <font-awesome-icon
+              :icon="['fas', 'hashtag']"
+              aria-hidden="false"
+              class="headingIcon"
+            />
+            <bdi>{{ hashtag }}</bdi>
+          </h2>
+        </div>
         <FtElementList
           v-if="videos.length > 0"
           :data="videos"

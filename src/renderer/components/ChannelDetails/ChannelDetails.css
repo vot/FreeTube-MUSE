@@ -86,8 +86,8 @@
   flex: 0 1 66%;
 }
 
-.tab:hover:not(.selectedTab),
-.tab:focus-visible {
+.tab:focus-visible,
+.tab:hover:not(.selectedTab) {
   border-block-end: 3px solid var(--tertiary-text-color);
 }
 

@@ -84,9 +84,6 @@
       :option-values="EXTERNAL_LINK_OPENING_PROMPT_VALUES"
       @click="handleExternalLinkOpeningPromptAnswer"
     />
-    <FtSearchFilters
-      v-if="showSearchFilters"
-    />
     <FtKeyboardShortcutPrompt
       v-if="isKeyboardShortcutPromptShown"
     />
@@ -120,7 +117,6 @@ import FtProgressBar from './components/FtProgressBar/FtProgressBar.vue'
 import FtPlaylistAddVideoPrompt from './components/FtPlaylistAddVideoPrompt/FtPlaylistAddVideoPrompt.vue'
 import FtCreatePlaylistPrompt from './components/FtCreatePlaylistPrompt/FtCreatePlaylistPrompt.vue'
 import FtKeyboardShortcutPrompt from './components/FtKeyboardShortcutPrompt/FtKeyboardShortcutPrompt.vue'
-import FtSearchFilters from './components/FtSearchFilters/FtSearchFilters.vue'
 import { vSaferHtml } from './directives/vSaferHtml.js'
 
 import store from './store/index'
@@ -150,9 +146,6 @@ const hideLabelsSideBar = computed(() => store.getters.getHideLabelsSideBar)
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isAnyPromptOpen = computed(() => store.getters.isAnyPromptOpen)
-
-/** @type {import('vue').ComputedRef<boolean>} */
-const showSearchFilters = computed(() => store.getters.getShowSearchFilters)
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isKeyboardShortcutPromptShown = computed(() => store.getters.getIsKeyboardShortcutPromptShown)

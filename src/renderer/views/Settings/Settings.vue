@@ -1,16 +1,17 @@
 <template>
   <div class="settingsPage">
     <template v-if="unlocked">
-      <h2>
-        <FontAwesomeIcon
-          :icon="['fas', 'screwdriver-wrench']"
-          class="headingIcon"
-        />
-        {{ $t('Settings.Settings') }}
-      </h2>
-      <div class="settingsToolbar">
+      <div class="headingWithAction">
+        <h2>
+          <FontAwesomeIcon
+            :icon="['fas', 'screwdriver-wrench']"
+            class="headingIcon"
+          />
+          {{ $t('Settings.Settings') }}
+        </h2>
         <FtButton
           v-if="USING_ELECTRON"
+          class="headingAction"
           :label="t('KeyboardShortcutPrompt.Show Keyboard Shortcuts')"
           :icon="['fas', 'keyboard']"
           @click="showKeyboardShortcutPrompt"

@@ -8,13 +8,22 @@
       <FtCard
         v-else
       >
-        <h2>
-          <FontAwesomeIcon
-            :icon="['fas', 'search']"
-            class="headingIcon"
+        <div class="headingWithAction">
+          <h2>
+            <FontAwesomeIcon
+              :icon="['fas', 'search']"
+              class="headingIcon"
+            />
+            {{ t("Search Filters.Search Results") }}
+          </h2>
+          <FtButton
+            class="headingAction"
+            :label="t('Search Filters.Search Filters')"
+            :icon="['fas', 'filter']"
+            :class="{ activeFilters: hasActiveFilters }"
+            @click="showSearchFilters"
           />
-          {{ t("Search Filters.Search Results") }}
-        </h2>
+        </div>
         <FtElementList
           :data="shownResults"
         />
@@ -34,6 +43,12 @@
         </FtAutoLoadNextPageWrapper>
       </FtCard>
     </div>
+    <FtSearchFilters
+      v-if="isSearchFiltersShown"
+      :search-settings="appliedSearchSettings"
+      @apply="applySearchFilters"
+      @close="hideSearchFilters"
+    />
   </div>
 </template>
 
@@ -41,18 +56,23 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, onMounted, ref, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
+import FtButton from '../../components/FtButton/FtButton.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
+import FtSearchFilters from '../../components/FtSearchFilters/FtSearchFilters.vue'
 import FtAutoLoadNextPageWrapper from '../../components/FtAutoLoadNextPageWrapper.vue'
 
 import store from '../../store'
 
 import {
   copyToClipboard,
+  searchSettingsFromQuery,
+  searchSettingsToQuery,
   searchFiltersMatch,
+  DEFAULT_SEARCH_SETTINGS,
   showToast,
 } from '../../helpers/utils'
 import {
@@ -65,9 +85,11 @@ import { SEARCH_CHAR_LIMIT } from '../../../constants'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
 
 const isLoading = ref(false)
 const isNextPageLoading = ref(false)
+const isSearchFiltersShown = ref(false)
 const apiUsed = ref('local')
 const searchSettings = ref({})
 const searchPage = ref(1)
@@ -93,59 +115,67 @@ const showFamilyFriendlyOnly = computed(() => store.getters.getShowFamilyFriendl
 /** @type {import('vue').ComputedRef<boolean>} */
 const rememberSearchHistory = computed(() => store.getters.getRememberSearchHistory)
 
-watch(route, () => {
+// Re-runs the search when the query or the applied filters change
+watch(() => route.fullPath, () => {
   const query_ = route.params.query.trim()
-  let features = route.query.features
-  // if page gets refreshed and there's only one feature then it will be a string
-  if (typeof features === 'string') {
-    features = [features]
-  }
-  const searchSettings = {
-    prioritize: route.query.prioritize,
-    time: route.query.time,
-    type: route.query.type,
-    duration: route.query.duration,
-    features: features ?? [],
-  }
 
   const payload = {
     query: query_,
     options: {},
-    searchSettings: searchSettings
+    searchSettings: searchSettingsFromQuery(route.query)
   }
 
   query.value = query_
 
   store.commit('setAppTitle', processedQuery.value)
   checkSearchCache(payload)
-}, { deep: true })
+})
 
 onMounted(() => {
   query.value = route.params.query
   store.commit('setAppTitle', processedQuery.value)
 
-  let features = route.query.features
-  // if page gets refreshed and there's only one feature then it will be a string
-  if (typeof features === 'string') {
-    features = [features]
-  }
-
-  searchSettings.value = {
-    prioritize: route.query.prioritize,
-    time: route.query.time,
-    type: route.query.type,
-    duration: route.query.duration,
-    features: features ?? [],
-  }
-
   const payload = {
     query: processedQuery.value,
     options: {},
-    searchSettings: searchSettings.value
+    searchSettings: searchSettingsFromQuery(route.query)
   }
 
   checkSearchCache(payload)
 })
+
+/**
+ * Filters only ever live in the url, so that they are part of the search
+ * and a new search always starts without them
+ * @type {import('vue').ComputedRef<import('../../helpers/utils').SearchSettings>}
+ */
+const appliedSearchSettings = computed(() => searchSettingsFromQuery(route.query))
+
+const hasActiveFilters = computed(() => !searchFiltersMatch(appliedSearchSettings.value, DEFAULT_SEARCH_SETTINGS))
+
+function showSearchFilters() {
+  isSearchFiltersShown.value = true
+}
+
+function hideSearchFilters() {
+  isSearchFiltersShown.value = false
+}
+
+/**
+ * @param {import('../../helpers/utils').SearchSettings} newSearchSettings
+ */
+function applySearchFilters(newSearchSettings) {
+  hideSearchFilters()
+
+  if (searchFiltersMatch(appliedSearchSettings.value, newSearchSettings)) {
+    return
+  }
+
+  router.push({
+    path: route.path,
+    query: searchSettingsToQuery(newSearchSettings)
+  })
+}
 
 function updateSearchHistoryEntry() {
   const persistentSearchHistoryPayload = {

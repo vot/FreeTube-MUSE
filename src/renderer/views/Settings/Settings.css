@@ -1,9 +1,3 @@
-.settingsToolbar {
-  display: flex;
-  justify-content: flex-end;
-  margin-block-end: 10px;
-}
-
 .settingsPanel {
   inline-size: 90%;
   margin-inline: auto;

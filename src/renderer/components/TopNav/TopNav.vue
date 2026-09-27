@@ -97,18 +97,6 @@
           @clear="clearLastSuggestionQuery"
           @remove="removeSearchHistoryEntryInDbAndCache"
         />
-        <button
-          class="navFilterButton navButton"
-          :class="{ filterChanged: searchFilterValueChanged }"
-          :aria-label="t('Search Filters.Search Filters')"
-          :title="t('Search Filters.Search Filters')"
-          @click="showSearchFilters"
-        >
-          <FontAwesomeIcon
-            class="navIcon"
-            :icon="['fas', 'filter']"
-          />
-        </button>
       </div>
     </div>
     <div
@@ -375,18 +363,8 @@ function toggleSideNav() {
   store.commit('toggleSideNav')
 }
 
-/** @type {import('vue').ComputedRef<boolean>} */
-const searchFilterValueChanged = computed(() => store.getters.getSearchFilterValueChanged)
-
-function showSearchFilters() {
-  store.dispatch('showSearchFilters')
-}
-
 const searchContainer = useTemplateRef('searchContainer')
 const searchInput = useTemplateRef('searchInput')
-
-/** @type {import('vue').ComputedRef<any>} */
-const searchSettings = computed(() => store.getters.getSearchSettings)
 
 /**
  * @param {string} queryText
@@ -514,14 +492,6 @@ function goToSearch(queryText, { event }) {
       default: {
         openInternalPath({
           path: `/search/${encodeURIComponent(queryText)}`,
-          query: {
-            prioritize: searchSettings.value.prioritize,
-            time: searchSettings.value.time,
-            type: searchSettings.value.type,
-            duration: searchSettings.value.duration,
-            // Array proxy cannot be cloned during IPC call
-            features: [...searchSettings.value.features],
-          },
           doCreateNewWindow,
           searchQueryText: queryText,
         })
