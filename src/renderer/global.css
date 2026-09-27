@@ -1,5 +1,21 @@
 .main-content-container {
-  inline-size: 90%;
+  /* inline-size: 90%; */
   margin-block: 0 60px;
   margin-inline: auto;
 }
+
+.ft-card {
+  /* background-color: var(--card-bg-color); */
+  /* margin: 8px; */
+  /* padding-block: 3px 16px; */
+  /* padding-block: 16px; */
+  padding-inline: 16px;
+  /* border-radius: 10px; */
+  /* box-shadow: 0 1px 4px -1px var(--primary-shadow-color); */
+}
+
+.headingText {
+  display: inline-block;
+}
+
+h2 { margin: 0 0 0.8em; }

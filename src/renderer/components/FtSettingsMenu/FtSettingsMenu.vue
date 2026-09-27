@@ -4,7 +4,7 @@
   >
     <h2 class="header">
       <FontAwesomeIcon
-        :icon="['fas', 'sliders-h']"
+        :icon="['fas', 'screwdriver-wrench']"
         class="headingIcon"
       />
       {{ $t('Settings.Settings') }}

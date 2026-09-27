@@ -29,15 +29,3 @@ h2,
 .subscriptionActions {
   justify-content: space-between;
 }
-
-.card {
-  inline-size: 90%;
-  margin-block: 0 15px;
-  margin-inline: auto;
-}
-
-@media only screen and (width <= 680px) {
-  .card {
-    inline-size: 90%;
-  }
-}

@@ -96,6 +96,7 @@ import {
   faRss,
   faSatelliteDish,
   faSave,
+  faScrewdriverWrench,
   faSearch,
   faServer,
   faShareAlt,
@@ -129,7 +130,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {
   faBookmark as farBookmark,
-  faDotCircle as farDotCircle
+  faDotCircle as farDotCircle,
+  faWindowRestore as farWindowRestore
 } from '@fortawesome/free-regular-svg-icons'
 import {
   faBitcoin,
@@ -223,6 +225,7 @@ library.add(
   faRss,
   faSatelliteDish,
   faSave,
+  faScrewdriverWrench,
   faSearch,
   faServer,
   faShareAlt,
@@ -254,9 +257,10 @@ library.add(
   faWifi,
   faXmark,
 
-  // solid icons
+  // regular icons
   farBookmark,
   farDotCircle,
+  farWindowRestore,
 
   // brand icons
   faGithub,

@@ -64,9 +64,13 @@
         :title="newWindowText"
         @click="createNewWindow"
       >
-        <FontAwesomeIcon
+        <!-- <FontAwesomeIcon
           class="navIcon"
           :icon="['fas', 'clone']"
+        /> -->
+        <FontAwesomeIcon
+          class="navIcon"
+          :icon="['far', 'window-restore']"
         />
       </button>
       <FtRefreshWidget />
@@ -118,7 +122,7 @@
       >
         <FontAwesomeIcon
           class="navIcon"
-          :icon="['fas', 'sliders-h']"
+          :icon="['fas', 'screwdriver-wrench']"
         />
       </RouterLink>
       <FtProfileSelector />
