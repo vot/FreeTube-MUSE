@@ -37,12 +37,15 @@ h2 {
 
 
 
+/* Tabs share the whole width evenly, without gaps between them */
 .tabs {
-  inline-size: 90%;
-  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  inline-size: 100%;
   margin-block-end: 10px;
   color: var(--tertiary-text-color);
   border-block-end: 2px solid var(--instance-menu-color);
+  user-select: none;
 }
 
 .selectedTab {
@@ -58,10 +61,11 @@ h2 {
   padding: 15px;
   font-size: 1.1em;
   cursor: pointer;
-  align-self: flex-end;
+  align-self: end;
 }
 
-.tab:hover {
+.tab:hover,
+.tab:focus-visible {
   font-weight: bold;
 }
 

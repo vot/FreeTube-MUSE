@@ -16,7 +16,7 @@
           @click="showKeyboardShortcutPrompt"
         />
       </div>
-      <FtFlexBox
+      <div
         class="tabs"
         role="tablist"
         :aria-label="$t('Settings.Settings Tabs')"
@@ -42,7 +42,7 @@
           />
           {{ tab.title }}
         </div>
-      </FtFlexBox>
+      </div>
       <div
         :id="`${currentTab}SettingsPanel`"
         class="settingsPanel"
@@ -86,7 +86,6 @@ import ExperimentalSettings from '../../components/ExperimentalSettings/Experime
 import PasswordSettings from '../../components/PasswordSettings/PasswordSettings.vue'
 import PasswordDialog from '../../components/PasswordDialog/PasswordDialog.vue'
 import FtButton from '../../components/FtButton/FtButton.vue'
-import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import AboutSettings from './AboutSettings.vue'
 
 import store from '../../store/index'

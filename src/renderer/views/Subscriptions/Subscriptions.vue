@@ -9,7 +9,7 @@
           />
           {{ $t("Subscriptions.Subscriptions") }}
         </h2>
-        <FtFlexBox
+        <div
           class="tabs"
           role="tablist"
           :aria-label="$t('Subscriptions.Subscriptions Tabs')"
@@ -94,7 +94,7 @@
             />
             {{ $t("Global.Posts") }}
           </div>
-        </FtFlexBox>
+        </div>
         <SubscriptionsVideos
           v-if="currentTab === 'videos'"
           id="subscriptionsPanel"
@@ -131,7 +131,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed, ref, useTemplateRef, watch } from 'vue'
 
 import FtCard from '../../components/ft-card/ft-card.vue'
-import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import SubscriptionsVideos from '../../components/SubscriptionsVideos.vue'
 import SubscriptionsLive from '../../components/SubscriptionsLive.vue'
 import SubscriptionsShorts from '../../components/SubscriptionsShorts.vue'

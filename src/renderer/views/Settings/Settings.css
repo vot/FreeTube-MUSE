@@ -9,9 +9,13 @@
   margin-inline: auto;
 }
 
+.tabs {
+  inline-size: 90%;
+  margin-inline: auto;
+}
+
 
 @media only screen and (width <= 680px) {
-  .tabs,
   .settingsPanel {
     inline-size: 90%;
   }

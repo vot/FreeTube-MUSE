@@ -9,8 +9,8 @@
           />
           {{ $t("Trending.Trending") }}
         </h2>
-        <FtFlexBox
-          class="trendingInfoTabs"
+        <div
+          class="tabs"
           role="tablist"
           :aria-label="$t('Trending.Trending Tabs')"
         >
@@ -74,7 +74,7 @@
             />
             {{ t("Channel.Podcasts.Podcasts") }}
           </div>
-        </FtFlexBox>
+        </div>
         <div
           id="trendingPanel"
           role="tabpanel"
@@ -100,7 +100,6 @@ import { useI18n } from 'vue-i18n'
 import FtCard from '../../components/ft-card/ft-card.vue'
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
-import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 
 import { useFeedRefresh } from '../../composables/useFeedRefresh'
 
