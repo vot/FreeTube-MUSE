@@ -320,6 +320,7 @@ const state = {
   uiScale: 100,
   userPlaylistsSortBy: 'latest_played_first',
   userHistorySortBy: 'latest_played_first',
+  userChannelsSortBy: 'name_ascending',
 }
 
 const sideEffectHandlers = {

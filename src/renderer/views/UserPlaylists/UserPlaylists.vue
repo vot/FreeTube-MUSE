@@ -17,41 +17,52 @@
             @click="createNewPlaylist"
           />
         </div>
-        <div
-          v-if="fullData.length > 1"
-          class="searchInputsRow"
+        <FtCard
+          v-if="fullData.length > 0"
+          class="pageControls"
         >
-          <FtInput
-            ref="searchBar"
-            :placeholder="$t('User Playlists.Search bar placeholder')"
-            :value="query"
-            :show-clear-text-button="true"
-            :show-action-button="false"
-            :maxlength="255"
-            @input="handleQueryChange"
-            @clear="() => handleQueryChange('')"
-          />
-        </div>
-        <div
-          v-if="fullData.length > 1"
-          class="optionsRow"
-        >
-          <FtToggleSwitch
-            :label="$t('User Playlists.Playlists with Matching Videos')"
-            :compact="true"
-            :default-value="doSearchPlaylistsWithMatchingVideos"
-            @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
-          />
-          <FtSelect
-            class="sortSelect"
-            :value="sortBy"
-            :select-names="sortByNames"
-            :select-values="SORT_BY_VALUES"
-            :placeholder="$t('Global.Sort By')"
-            :icon="sortByIcon"
-            @change="updateUserPlaylistsSortBy"
-          />
-        </div>
+          <div class="pageControlsText">
+            <div>{{ $t('Global.Counts.Playlist Count', { count: formatResultCount(activeData.length, showLoadMoreButton) }, activeData.length) }}</div>
+          </div>
+          <div class="pageControlsInputs">
+            <FtInput
+              v-show="fullData.length > 1"
+              ref="searchBar"
+              :placeholder="$t('User Playlists.Search bar placeholder')"
+              :value="query"
+              :show-clear-text-button="true"
+              :show-action-button="false"
+              :maxlength="255"
+              @input="handleQueryChange"
+              @clear="() => handleQueryChange('')"
+            />
+            <FtToggleSwitch
+              v-if="fullData.length > 1"
+              :label="$t('User Playlists.Match video titles')"
+              :compact="true"
+              :default-value="doSearchPlaylistsWithMatchingVideos"
+              @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"
+            />
+          </div>
+          <div class="sortingBy">
+            <button
+              v-if="fullData.length > 1"
+              type="button"
+              class="textButton"
+              @click="isSortByPromptShown = true"
+            >
+              {{ $t('Global.Sorting By') }} {{ sortByName }}
+            </button>
+          </div>
+        </FtCard>
+        <FtSortByPrompt
+          v-if="isSortByPromptShown"
+          :selected-sort-by="sortBy"
+          :sort-by-names="sortByNames"
+          :sort-by-values="SORT_BY_VALUES"
+          @apply="applySortBy"
+          @close="isSortByPromptShown = false"
+        />
         <FtFlexBox
           v-if="fullData.length === 0"
         >
@@ -104,12 +115,12 @@ import FtCard from '../../components/ft-card/ft-card.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import FtInput from '../../components/FtInput/FtInput.vue'
-import FtSelect from '../../components/FtSelect/FtSelect.vue'
+import FtSortByPrompt from '../../components/FtSortByPrompt/FtSortByPrompt.vue'
 import FtToggleSwitch from '../../components/FtToggleSwitch/FtToggleSwitch.vue'
 
 import store from '../../store/index'
 
-import { ctrlFHandler, debounce, getIconForSortPreference } from '../../helpers/utils'
+import { ctrlFHandler, debounce, formatResultCount } from '../../helpers/utils'
 
 const { locale, t } = useI18n()
 
@@ -167,7 +178,10 @@ const sortByNames = computed(() => {
 /** @type {import('vue').ComputedRef<'name_ascending' | 'name_descending' | 'latest_created_first' | 'earliest_created_first' | 'latest_updated_first' | 'earliest_updated_first' | 'latest_played_first' | 'earliest_played_first'>} */
 const sortBy = computed(() => store.getters.getUserPlaylistsSortBy)
 
-const sortByIcon = computed(() => getIconForSortPreference(sortBy.value))
+const isSortByPromptShown = ref(false)
+
+/** @type {import('vue').ComputedRef<string>} */
+const sortByName = computed(() => sortByNames.value[SORT_BY_VALUES.indexOf(sortBy.value)])
 
 const cachedCollator = computed(() => new Intl.Collator([locale.value, 'en'], { sensitivity: 'base' }))
 
@@ -270,8 +284,9 @@ watch(fullData, (value) => {
 /**
  * @param {'name_ascending' | 'name_descending' | 'latest_created_first' | 'earliest_created_first' | 'latest_updated_first' | 'earliest_updated_first' | 'latest_played_first' | 'earliest_played_first'} value
  */
-function updateUserPlaylistsSortBy(value) {
+function applySortBy(value) {
   store.dispatch('updateUserPlaylistsSortBy', value)
+  isSortByPromptShown.value = false
 }
 
 /**

@@ -2,10 +2,6 @@
   color: var(--tertiary-text-color);
 }
 
-.count {
-  margin-block-start: 1rem;
-}
-
 .channels {
   inline-size: 100%;
   display: grid;
@@ -61,10 +57,6 @@
 
 .unsubscribeContainer .btn {
   block-size: 80%;
-}
-
-.headingIcon {
-  color: var(--primary-color);
 }
 
 @media only screen and (width <= 680px) {

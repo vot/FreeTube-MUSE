@@ -8,7 +8,7 @@
       <FtCard
         v-else
       >
-        <div class="headingWithAction">
+        <div class="heading">
           <h2>
             <FontAwesomeIcon
               :icon="['fas', 'search']"
@@ -16,14 +16,43 @@
             />
             {{ t("Search Filters.Search Results") }}
           </h2>
-          <FtButton
-            class="headingAction"
-            :label="t('Search Filters.Search Filters')"
-            :icon="['fas', 'filter']"
-            :class="{ activeFilters: hasActiveFilters }"
-            @click="showSearchFilters"
-          />
         </div>
+        <FtCard class="pageControls">
+          <div class="pageControlsText">
+            <div>
+              <strong>
+                <bdi>{{ t('Search Filters.Found Results For', { searchTerm: processedQuery, count: resultCount }, shownResults.length) }}</bdi>
+              </strong>
+            </div>
+            <div class="resultLinks">
+              <button
+                type="button"
+                class="textButton"
+                @click="showSearchFilters"
+              >
+                {{ filterLinkLabel }}
+              </button>
+              <button
+                v-if="activeFilterCount > 0"
+                type="button"
+                class="textButton"
+                @click="clearSearchFilters"
+              >
+                {{ t('Search Filters.Clear Filters') }}
+              </button>
+            </div>
+          </div>
+          <div class="sortingBy">
+            {{ t('Global.Sorting By') }}
+            <button
+              type="button"
+              class="textButton"
+              @click="isSortByPromptShown = true"
+            >
+              {{ sortByName }}
+            </button>
+          </div>
+        </FtCard>
         <FtElementList
           :data="shownResults"
         />
@@ -43,6 +72,14 @@
         </FtAutoLoadNextPageWrapper>
       </FtCard>
     </div>
+    <FtSortByPrompt
+      v-if="isSortByPromptShown"
+      :selected-sort-by="sortBy"
+      :sort-by-names="sortByNames"
+      :sort-by-values="SORT_BY_VALUES"
+      @apply="applySortBy"
+      @close="isSortByPromptShown = false"
+    />
     <FtSearchFilters
       v-if="isSearchFiltersShown"
       :search-settings="appliedSearchSettings"
@@ -60,9 +97,9 @@ import { useRoute, useRouter } from 'vue-router'
 
 import FtLoader from '../../components/FtLoader/FtLoader.vue'
 import FtCard from '../../components/ft-card/ft-card.vue'
-import FtButton from '../../components/FtButton/FtButton.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtSearchFilters from '../../components/FtSearchFilters/FtSearchFilters.vue'
+import FtSortByPrompt from '../../components/FtSortByPrompt/FtSortByPrompt.vue'
 import FtAutoLoadNextPageWrapper from '../../components/FtAutoLoadNextPageWrapper.vue'
 
 import store from '../../store'
@@ -73,6 +110,7 @@ import {
   searchSettingsToQuery,
   searchFiltersMatch,
   DEFAULT_SEARCH_SETTINGS,
+  formatResultCount,
   showToast,
 } from '../../helpers/utils'
 import {
@@ -99,6 +137,26 @@ const shownResults = shallowRef([])
 
 const query = ref('')
 const processedQuery = computed(() => query.value.trim())
+
+/*
+  The total amount of results is not known upfront,
+  so a "+" is shown when more results can still be fetched.
+  The local API tells us with its continuation, while the
+  Invidious API has no such indicator.
+*/
+/** @type {import('vue').ComputedRef<boolean>} */
+const hasMoreResults = computed(() => {
+  if (apiUsed.value === 'invidious') {
+    return shownResults.value.length > 0
+  }
+
+  return nextPageRef.value !== null
+})
+
+/** @type {import('vue').ComputedRef<string>} */
+const resultCount = computed(() => {
+  return formatResultCount(shownResults.value.length, hasMoreResults.value)
+})
 
 /** @type {import('vue').ComputedRef<any[]>} */
 const sessionSearchHistory = computed(() => store.getters.getSessionSearchHistory)
@@ -153,6 +211,40 @@ const appliedSearchSettings = computed(() => searchSettingsFromQuery(route.query
 
 const hasActiveFilters = computed(() => !searchFiltersMatch(appliedSearchSettings.value, DEFAULT_SEARCH_SETTINGS))
 
+const SORT_BY_VALUES = ['relevance', 'popularity']
+
+const sortByNames = computed(() => [
+  t('Search Filters.Prioritize.Most Relevant'),
+  t('Search Filters.Prioritize.Popularity')
+])
+
+/** @type {import('vue').ComputedRef<'relevance' | 'popularity'>} */
+const sortBy = computed(() => appliedSearchSettings.value.prioritize)
+
+/** @type {import('vue').ComputedRef<string>} */
+const sortByName = computed(() => sortByNames.value[SORT_BY_VALUES.indexOf(sortBy.value)])
+
+const isSortByPromptShown = ref(false)
+
+/** @type {import('vue').ComputedRef<number>} */
+const activeFilterCount = computed(() => {
+  const settings = appliedSearchSettings.value
+
+  return [
+    settings.time !== DEFAULT_SEARCH_SETTINGS.time,
+    settings.type !== DEFAULT_SEARCH_SETTINGS.type,
+    settings.duration !== DEFAULT_SEARCH_SETTINGS.duration,
+    settings.features.length > 0
+  ].filter(Boolean).length
+})
+
+/** @type {import('vue').ComputedRef<string>} */
+const filterLinkLabel = computed(() => {
+  return activeFilterCount.value > 0
+    ? t('Search Filters.Filters Applied', { count: activeFilterCount.value })
+    : t('Search Filters.Refine Results')
+})
+
 function showSearchFilters() {
   isSearchFiltersShown.value = true
 }
@@ -174,6 +266,31 @@ function applySearchFilters(newSearchSettings) {
   router.push({
     path: route.path,
     query: searchSettingsToQuery(newSearchSettings)
+  })
+}
+
+function applySortBy(value) {
+  isSortByPromptShown.value = false
+
+  if (value === sortBy.value) {
+    return
+  }
+
+  router.push({
+    path: route.path,
+    query: searchSettingsToQuery({ ...appliedSearchSettings.value, prioritize: value })
+  })
+}
+
+function clearSearchFilters() {
+  if (!hasActiveFilters.value) {
+    return
+  }
+
+  // The sort preference is not a filter, so it is kept
+  router.push({
+    path: route.path,
+    query: searchSettingsToQuery({ ...DEFAULT_SEARCH_SETTINGS, prioritize: sortBy.value })
   })
 }
 

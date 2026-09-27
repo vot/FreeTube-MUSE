@@ -637,7 +637,10 @@ const mutations = {
 
   addToSessionSearchHistory (state, payload) {
     const sameSearch = state.sessionSearchHistory.findIndex((search) => {
-      return search.query === payload.query && searchFiltersMatch(payload.searchSettings, search.searchSettings)
+      // The sort preference is not a filter, but it does change the results
+      return search.query === payload.query &&
+        payload.searchSettings.prioritize === search.searchSettings?.prioritize &&
+        searchFiltersMatch(payload.searchSettings, search.searchSettings)
     })
 
     if (sameSearch !== -1) {

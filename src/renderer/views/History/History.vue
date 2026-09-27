@@ -11,36 +11,44 @@
             {{ t('History.History') }}
           </h2>
         </div>
-        <FtInput
-          v-show="fullData.length > 1"
-          ref="searchBar"
-          :placeholder="t('History.Search bar placeholder')"
-          :show-clear-text-button="true"
-          :show-action-button="false"
-          :value="query"
-          @input="handleQueryChange"
-          @clear="() => handleQueryChange('')"
-        />
-        <div
-          v-if="fullData.length > 1"
-          class="optionsRow"
+        <FtCard
+          v-if="fullData.length > 0"
+          class="pageControls"
         >
-          <FtToggleSwitch
-            :label="t('History.Case Sensitive Search')"
-            :compact="true"
-            :default-value="doCaseSensitiveSearch"
-            @change="doCaseSensitiveSearch = !doCaseSensitiveSearch"
-          />
-          <FtSelect
-            class="sortSelect"
-            :placeholder="t('Global.Sort By')"
-            :value="sortBy"
-            :select-names="sortByNames"
-            :select-values="SORT_BY_VALUES"
-            :icon="sortByIcon"
-            @change="updateUserHistorySortBy"
-          />
-        </div>
+          <div class="pageControlsText">
+            <div>{{ t('Global.Counts.Video Count', { count: formatResultCount(activeData.length, showLoadMoreButton) }, activeData.length) }}</div>
+          </div>
+          <div class="pageControlsInputs">
+            <FtInput
+              v-show="fullData.length > 1"
+              ref="searchBar"
+              :placeholder="t('History.Search bar placeholder')"
+              :show-clear-text-button="true"
+              :show-action-button="false"
+              :value="query"
+              @input="handleQueryChange"
+              @clear="() => handleQueryChange('')"
+            />
+          </div>
+          <div class="sortingBy">
+            <button
+              v-if="fullData.length > 1"
+              type="button"
+              class="textButton"
+              @click="isSortByPromptShown = true"
+            >
+              {{ t('Global.Sorting By') }} {{ sortByName }}
+            </button>
+          </div>
+        </FtCard>
+        <FtSortByPrompt
+          v-if="isSortByPromptShown"
+          :selected-sort-by="sortBy"
+          :sort-by-names="sortByNames"
+          :sort-by-values="SORT_BY_VALUES"
+          @apply="applySortBy"
+          @close="isSortByPromptShown = false"
+        />
         <FtFlexBox
           v-if="fullData.length === 0"
         >
@@ -92,12 +100,10 @@ import FtCard from '../../components/ft-card/ft-card.vue'
 import FtElementList from '../../components/FtElementList/FtElementList.vue'
 import FtFlexBox from '../../components/ft-flex-box/ft-flex-box.vue'
 import FtInput from '../../components/FtInput/FtInput.vue'
-import FtSelect from '../../components/FtSelect/FtSelect.vue'
-import FtToggleSwitch from '../../components/FtToggleSwitch/FtToggleSwitch.vue'
-
+import FtSortByPrompt from '../../components/FtSortByPrompt/FtSortByPrompt.vue'
 import store from '../../store'
 
-import { ctrlFHandler, debounce, getIconForSortPreference } from '../../helpers/utils'
+import { ctrlFHandler, debounce, formatResultCount } from '../../helpers/utils'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -107,7 +113,6 @@ const oldDataLimit = sessionStorage.getItem('History/dataLimit')
 const dataLimit = ref(oldDataLimit !== null ? parseInt(oldDataLimit) : 100)
 
 const searchDataLimit = ref(100)
-const doCaseSensitiveSearch = ref(false)
 const showLoadMoreButton = ref(false)
 const query = ref('')
 const activeData = ref([])
@@ -127,13 +132,17 @@ const sortByNames = computed(() => [
 /** @type {import('vue').ComputedRef<'latest_played_first' | 'earliest_played_first'>} */
 const sortBy = computed(() => store.getters.getUserHistorySortBy)
 
-const sortByIcon = computed(() => getIconForSortPreference(sortBy.value))
+const isSortByPromptShown = ref(false)
+
+/** @type {import('vue').ComputedRef<string>} */
+const sortByName = computed(() => sortByNames.value[SORT_BY_VALUES.indexOf(sortBy.value)])
 
 /**
  * @param {'latest_played_first' | 'earliest_played_first'} value
  */
-function updateUserHistorySortBy(value) {
+function applySortBy(value) {
   store.dispatch('updateUserHistorySortBy', value)
+  isSortByPromptShown.value = false
 }
 
 const historyCacheSorted = computed(() => {
@@ -155,18 +164,12 @@ const fullData = computed(() => {
 })
 
 watch(fullData, filterHistory, { deep: true })
-watch(doCaseSensitiveSearch, () => {
-  filterHistory()
-  saveStateInRouter()
-})
-
 /**
  * @param {string} query_
  * @param {string} [limit]
- * @param {boolean} [doCaseSensitiveSearch_]
  * @param {boolean} [filterNow=false]
  */
-function handleQueryChange(query_, limit = undefined, doCaseSensitiveSearch_ = undefined, filterNow = false) {
+function handleQueryChange(query_, limit = undefined, filterNow = false) {
   query.value = query_
 
   let newLimit = 100
@@ -180,10 +183,6 @@ function handleQueryChange(query_, limit = undefined, doCaseSensitiveSearch_ = u
   }
 
   searchDataLimit.value = newLimit
-
-  if (doCaseSensitiveSearch_ !== undefined) {
-    doCaseSensitiveSearch.value = doCaseSensitiveSearch_
-  }
 
   saveStateInRouter()
 
@@ -211,15 +210,14 @@ function filterHistory() {
     return
   }
 
-  let filteredQuery
-  if (doCaseSensitiveSearch.value) {
-    filteredQuery = filterVideosWithQuery(historyCacheSorted.value, query.value)
-  } else {
-    filteredQuery = filterVideosWithQuery(historyCacheSorted.value, query.value.toLowerCase(), (s) => s.toLowerCase())
-  }
+  const filteredQuery = filterVideosWithQuery(
+    historyCacheSorted.value,
+    query.value.toLowerCase(),
+    (s) => s.toLowerCase()
+  )
 
+  showLoadMoreButton.value = filteredQuery.length > searchDataLimit.value
   activeData.value = filteredQuery.length < searchDataLimit.value ? filteredQuery : filteredQuery.slice(0, searchDataLimit.value)
-  showLoadMoreButton.value = activeData.value.length > searchDataLimit.value
 }
 
 const filterHistoryAsync = debounce(filterHistory, 500)
@@ -238,10 +236,6 @@ async function saveStateInRouter() {
         searchQueryText: query_,
         searchDataLimit: searchDataLimit.value.toFixed(0)
       }
-    }
-
-    if (doCaseSensitiveSearch.value) {
-      location.query.doCaseSensitiveSearch = 'true'
     }
   }
 
@@ -262,7 +256,6 @@ if (oldQuery != null && oldQuery !== '') {
   handleQueryChange(
     oldQuery,
     route.query.searchDataLimit,
-    route.query.doCaseSensitiveSearch === 'true',
     true
   )
 } else {

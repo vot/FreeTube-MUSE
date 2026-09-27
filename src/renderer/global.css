@@ -65,6 +65,81 @@ h2 {
   margin: 0;
 }
 
+/* Looks like a link, but is a button */
+.textButton {
+  background-color: transparent;
+  border-width: 0;
+  color: var(--text-with-accent-color);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: start;
+  text-decoration: underline;
+}
+
+/*
+  The controls under a page heading, in three columns:
+  a text summary, the search input and the toggles, then the sorting.
+  A column is left empty when a page does not need it.
+*/
+.pageControls {
+  display: grid;
+  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
+  gap: 8px 16px;
+  margin-block-end: 15px;
+}
+
+.pageControlsText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pageControlsInputs {
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 8px 16px;
+  justify-content: center;
+}
+
+/* The sorting goes in the last column, even without inputs to put before it */
+.sortingBy {
+  grid-column: 3;
+  justify-self: end;
+}
+
+.pageControls .ft-input-component {
+  inline-size: 220px;
+  max-inline-size: 100%;
+}
+
+/* The inputs here sit inside a grid cell, so drop the spacing below them */
+.pageControls .ft-input-component .ft-input {
+  margin-block-end: 0;
+}
+
+@media only screen and (width <= 800px) {
+  .pageControls {
+    /* Switch to 1 column from 3 columns */
+    grid-template-columns: auto;
+  }
+
+  .pageControlsInputs {
+    justify-content: flex-start;
+  }
+
+  .sortingBy {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .pageControls .ft-input-component {
+    inline-size: 100%;
+  }
+}
+
 @media only screen and (width <= 680px) {
   /* A labeled action no longer fits next to the heading, so it goes below it */
   .headingWithAction {
@@ -88,12 +163,18 @@ h2 {
 .ft-card {
   /* background-color: var(--card-bg-color); */
   /* margin: 8px; */
-  padding-block: 3px 16px;
+  padding-block: 16px;
   padding-inline: 16px;
   border-radius: 10px;
   /* box-shadow: 0 1px 4px -1px var(--primary-shadow-color); */
 }
 
+.ft-card.pageControls {
+  padding-block: 10px;
+  background-color: var(--secondary-card-bg-color);
+}
+
+.main-content-container > .ft-card {padding-block: 0;}
 
 .shadow {
   box-shadow: 0 0px 4px -2px var(--primary-shadow-color);

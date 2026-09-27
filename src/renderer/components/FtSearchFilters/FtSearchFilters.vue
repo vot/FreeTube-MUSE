@@ -54,13 +54,6 @@
         :values="FEATURE_VALUES"
         class="searchRadio"
       />
-      <FtRadioButton
-        v-model="prioritizeValue"
-        :title="$t('Search Filters.Prioritize.Prioritize')"
-        :labels="prioritizeLabels"
-        :values="PRIORITIZE_VALUES"
-        class="searchRadio"
-      />
     </FtFlexBox>
     <div class="searchFilterButtonsContainer">
       <FtButton
@@ -101,11 +94,6 @@ const props = defineProps({
 const emit = defineEmits(['apply', 'close'])
 
 const { t } = useI18n()
-
-const PRIORITIZE_VALUES = [
-  'relevance',
-  'popularity'
-]
 
 const TIME_VALUES = [
   '',
@@ -153,11 +141,6 @@ const NOT_ALLOWED_FOR_MOVIES_FEATURES = [
 
 const title = computed(() => t('Search Filters.Search Filters'))
 
-const prioritizeLabels = computed(() => [
-  t('Search Filters.Prioritize.Most Relevant'),
-  t('Search Filters.Prioritize.Popularity')
-])
-
 const timeLabels = computed(() => [
   t('Search Filters.Time.Any Time'),
   t('Search Filters.Time.Today'),
@@ -196,9 +179,6 @@ const featureLabels = computed(() => [
 ])
 
 const searchSettings = props.searchSettings
-
-/** @type {import('vue').Ref<'relevance' | 'popularity'>} */
-const prioritizeValue = ref(searchSettings.prioritize)
 
 /** @type {import('vue').Ref<'' | 'today' | 'week' | 'month' | 'year'>} */
 const timeValue = ref(searchSettings.time)
@@ -248,7 +228,8 @@ watch(featuresValue, (values) => {
 
 /** @type {import('vue').ComputedRef<import('../../helpers/utils').SearchSettings>} */
 const stagedSearchSettings = computed(() => ({
-  prioritize: prioritizeValue.value,
+  // Sorting is set outside of this prompt, so it is left as is
+  prioritize: searchSettings.prioritize,
   time: timeValue.value,
   type: typeValue.value,
   duration: durationValue.value,
@@ -275,7 +256,6 @@ function isVideoOrMovieOrAll(type) {
 }
 
 function clearFilters() {
-  prioritizeValue.value = PRIORITIZE_VALUES[0]
   timeValue.value = TIME_VALUES[0]
   typeValue.value = TYPE_VALUES[0]
   durationValue.value = DURATION_VALUES[0]

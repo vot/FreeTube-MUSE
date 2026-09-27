@@ -44,6 +44,7 @@ Global:
   Live: Live
   Posts: Posts
   Sort By: Sort By
+  Sorting By: Sorting by
   Counts:
     Video Count: 1 video | {count} videos
     Channel Count: 1 channel | {count} channels
@@ -52,6 +53,8 @@ Global:
     Like Count: 1 like | {count} likes
     Comment Count: 1 comment | {count} comments
     Watching Count: 1 watching | {count} watching
+    Playlist Count: 1 playlist | {count} playlists
+    Result Count: 1 result | {count} results
     Replies Remaining: "{' '}(1 remaining) | {' '}({count} remaining)"
 
 # Search Bar
@@ -119,6 +122,9 @@ Search Filters:
   There are no more results for this search: There are no more results for this search
   Clear Filters: Clear Filters
   Apply Filters: Apply Filters
+  Refine Results: Refine results
+  Found Results For: 'Found 1 result for "{searchTerm}" | Found {count} results for "{searchTerm}"'
+  Filters Applied: 1 filter applied | {count} filters applied
 # Sidebar
 Subscriptions:
     # On Subscriptions Page
@@ -144,6 +150,13 @@ Channels:
   Search bar placeholder: Search Channels
   Count: '{number} channel(s) found.'
   Empty: Your channel list is currently empty.
+
+  Sort By:
+    NameAscending: 'A-Z'
+    NameDescending: 'Z-A'
+
+    LatestSubscribedFirst: 'Date Subscribed (Newest)'
+    EarliestSubscribedFirst: 'Date Subscribed (Oldest)'
   Unsubscribe Prompt: Are you sure you want to unsubscribe from "{channelName}"?
 Trending:
   Trending: Trending
@@ -160,7 +173,7 @@ User Playlists:
   You have no playlists. Click on the create new playlist button to create a new one.: You have no playlists. Click on the create new playlist button to create a new one.
   Empty Search Message: There are no videos in this playlist that match your search
   Search bar placeholder: Search for Playlists
-  Playlists with Matching Videos: Playlists with Matching Videos
+  Match video titles: Match video titles
 
   This playlist currently has no videos.: This playlist currently has no videos.
 
@@ -266,7 +279,6 @@ History:
   Your history list is currently empty.: Your history list is currently empty.
   Empty Search Message: There are no videos in your history that match your search
   Search bar placeholder: "Search in History"
-  Case Sensitive Search: Case Sensitive Search
   DateOldestHistory: Date Watched (Oldest)
   DateNewestHistory: Date Watched (Newest)
 Settings:
@@ -1201,6 +1213,7 @@ Yes, Delete: Yes, Delete
 Yes, Restart: Yes, Restart
 Yes, Open Link: Yes, Open Link
 Cancel: Cancel
+Apply: Apply
 # symbol used to indicate that an item is correct
 checkmark: ✓
 # French is the only language that should change this (they have a space before the colon)

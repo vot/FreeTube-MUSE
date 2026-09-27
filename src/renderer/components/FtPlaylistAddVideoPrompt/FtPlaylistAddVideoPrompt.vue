@@ -34,7 +34,7 @@
         >
           <FtToggleSwitch
             class="matchingVideoToggle"
-            :label="t('User Playlists.Playlists with Matching Videos')"
+            :label="t('User Playlists.Match video titles')"
             :compact="true"
             :default-value="doSearchPlaylistsWithMatchingVideos"
             @change="doSearchPlaylistsWithMatchingVideos = !doSearchPlaylistsWithMatchingVideos"

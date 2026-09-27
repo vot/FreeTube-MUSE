@@ -1,6 +1,9 @@
-/* Marks the button when the search results are filtered */
-.activeFilters {
-  box-shadow: 0 0 10px var(--primary-color);
+/* The filter links under the result count */
+.resultLinks {
+  align-items: baseline;
+  column-gap: 8px;
+  display: flex;
+  flex-flow: row wrap;
 }
 
 .getNextPage {

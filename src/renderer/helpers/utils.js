@@ -575,13 +575,13 @@ export function searchSettingsToQuery(searchSettings) {
 }
 
 /**
- * @param {{prioritize? : string, time?: string, duration?: string, features: string[]}?} filtersA
- * @param {{prioritize? : string, time?: string, duration?: string, features: string[]}?} filtersB
+ * `prioritize` is a sort preference, not a filter, so it is not compared
+ * @param {{time?: string, duration?: string, features: string[]}?} filtersA
+ * @param {{time?: string, duration?: string, features: string[]}?} filtersB
  * @returns {boolean}
  */
 export function searchFiltersMatch(filtersA, filtersB) {
-  return filtersA?.prioritize === filtersB?.prioritize &&
-    filtersA?.time === filtersB?.time &&
+  return filtersA?.time === filtersB?.time &&
     filtersA?.type === filtersB?.type &&
     filtersA?.duration === filtersB?.duration &&
     filtersA?.features?.length === filtersB?.features?.length && filtersA?.features?.every((val, index) => val === filtersB?.features[index])
@@ -808,6 +808,25 @@ export function toDistractionFreeTitle(title, minUpperCase = 3) {
  */
 export function formatNumber(number, options = undefined) {
   return Intl.NumberFormat([i18n.global.locale.value, 'en'], options).format(number)
+}
+
+/**
+ * Formats a result count for a page controls summary.
+ * A "+" is appended when the shown results are only a part of the
+ * full result set, ex: when more results can still be loaded.
+ *
+ * The returned string is meant to be passed to a pluralized message as
+ * `count`, but vue-i18n only picks the correct plural form when it
+ * receives a number. Pass the raw count as an extra argument for that:
+ * `t('Key', { count: formatResultCount(5, true) }, 5)`
+ *
+ * @param {number} shown
+ * @param {boolean} [hasMoreResults]
+ * @returns {string}
+ */
+export function formatResultCount(shown, hasMoreResults = false) {
+  const count = formatNumber(shown)
+  return hasMoreResults ? `${count}+` : count
 }
 
 export function getTodayDateStrLocalTimezone() {

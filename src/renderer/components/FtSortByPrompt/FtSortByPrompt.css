@@ -1,0 +1,15 @@
+.sortRadioFlexBox {
+  margin-block: 0;
+  margin-inline: auto;
+}
+
+/* The prompt title already names the options, so the group needs no heading */
+.sortRadioFlexBox :deep(.radioTitle:empty) {
+  display: none;
+}
+
+.sortButtonsContainer {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
