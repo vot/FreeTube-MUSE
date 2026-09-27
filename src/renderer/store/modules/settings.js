@@ -166,7 +166,6 @@ const state = {
   checkForUpdates: true,
   baseTheme: 'system',
   mainColor: 'Red',
-  secColor: 'Blue',
   defaultAutoplayInterruptionIntervalHours: 3,
   defaultCaptionSettings: '{}',
   defaultInterval: 5,

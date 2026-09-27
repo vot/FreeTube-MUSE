@@ -72,16 +72,6 @@
         icon-color="var(--primary-color)"
         @change="updateMainColor"
       />
-      <FtSelect
-        :placeholder="$t('Settings.Theme Settings.Secondary Color Theme')"
-        :value="secColor"
-        :select-names="colorNames"
-        :select-values="COLOR_VALUES"
-        :disabled="!areColorThemesEnabled"
-        :icon="['fas', 'palette']"
-        icon-color="var(--accent-color)"
-        @change="updateSecColor"
-      />
     </FtFlexBox>
     <FtPrompt
       v-if="showRestartPrompt"
@@ -209,18 +199,6 @@ const mainColor = computed(() => {
  */
 function updateMainColor(value) {
   store.dispatch('updateMainColor', value)
-}
-
-/** @type {import('vue').ComputedRef<string>} */
-const secColor = computed(() => {
-  return store.getters.getSecColor
-})
-
-/**
- * @param {string} value
- */
-function updateSecColor(value) {
-  store.dispatch('updateSecColor', value)
 }
 
 /** @type {import('vue').ComputedRef<boolean>} */

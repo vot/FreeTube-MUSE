@@ -8,7 +8,26 @@ body {
     This works because CSS variables are just a find and replace and
     are replaced before the expressions are evaluated
   */
-  --accent-color: rgb(var(--accent-color-rgb));
+
+  /*
+    The accent color follows the main color, so there is only one color
+    to pick. The related shades are derived from it, since the
+    'sec<Color>' classes are still used for other purposes.
+
+    '--accent-color-rgb' is only the 'from <color> r g b' part, so that
+    the 'rgb()' around it is filled in by the consumer. This is what
+    allows the same declaration to be used with an alpha value, as in
+    'rgb(var(--accent-color-rgb) / 4%)' below. Wrapping the relative
+    color syntax in 'rgb()' here instead would make it invalid, as a
+    relative color cannot be nested inside another color function.
+  */
+  --accent-color-rgb: from var(--primary-color) r g b;
+  --accent-color: var(--primary-color);
+  --accent-color-hover: color-mix(in srgb, var(--primary-color) 88%, #000);
+  --accent-color-active: color-mix(in srgb, var(--primary-color) 75%, #000);
+  --accent-color-light: color-mix(in srgb, var(--primary-color) 40%, #fff);
+  --accent-color-visited: color-mix(in srgb, var(--primary-color) 75%, #000);
+  --text-with-accent-color: var(--text-with-main-color);
   --accent-color-opacity1: rgb(var(--accent-color-rgb) / 4%);
   --accent-color-opacity2: rgb(var(--accent-color-rgb) / 12%);
   --accent-color-opacity3: rgb(var(--accent-color-rgb) / 16%);

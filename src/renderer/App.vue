@@ -232,13 +232,8 @@ const mainColor = computed(() => store.getters.getMainColor)
 
 watch(mainColor, updateTheme)
 
-/** @type {import('vue').ComputedRef<string>} */
-const secColor = computed(() => store.getters.getSecColor)
-
-watch(secColor, updateTheme)
-
 function updateTheme() {
-  document.body.className = `${baseTheme.value || 'system'} main${mainColor.value || 'Red'} sec${secColor.value || 'Blue'}`
+  document.body.className = `${baseTheme.value || 'system'} main${mainColor.value || 'Red'}`
   document.body.dataset.systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
