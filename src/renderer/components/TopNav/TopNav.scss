@@ -21,9 +21,21 @@
   inline-size: 100%;
   z-index: 4;
 
-  @media only screen and (width >= 961px) {
+  /*
+    The search bar is shown inline from the width where the button that
+    opens it is hidden, so the row turns into a centered three column grid
+    at the same width instead of a much later one. As a flex row the two
+    sides do not grow, so the space that the search bar does not use ends
+    up behind them: the search bar would drift away from the center and the
+    right side would stop short of the edge of the window.
+
+    The middle column is allowed to give up its width first, so that a
+    narrow window makes the search bar smaller rather than pushing the
+    buttons next to it out of view.
+  */
+  @media only screen and (width >= 681px) {
     display: grid;
-    grid-template-columns: 1fr 440px 1fr;
+    grid-template-columns: 1fr minmax(0, 440px) 1fr;
   }
 
   @include top-nav-is-colored {
