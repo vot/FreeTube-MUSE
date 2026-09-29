@@ -6,7 +6,7 @@
       <section class="brand">
         <!-- <FtLogoFull class="logo" /> -->
         <h1>FreeTube-MUSE</h1>
-        <p>Modern Usability Slop Edition</p>
+        <p>Modern Usability, Slop Edition</p>
 
         <p>{{ versionNumber }} {{ t('About.Beta') }}</p>
 

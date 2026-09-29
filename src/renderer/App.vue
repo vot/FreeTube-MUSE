@@ -704,7 +704,7 @@ const windowTitle = computed(() => {
 /** @type {import('vue').ComputedRef<string>} */
 const appTitle = computed(() => store.getters.getAppTitle)
 
-const appName = `${packageDetails.productName}-MUSE`
+const appName = `${packageDetails.productName}`
 
 watch(appTitle, (value) => {
   if (value.length > 0) {
