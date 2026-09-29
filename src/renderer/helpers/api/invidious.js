@@ -965,8 +965,9 @@ export async function getClipInvidious(clipId) {
  * Generates a DASH manifest locally from Invidious' adaptive formats and manifest,
  * doing so allows us to support multiple audio tracks, which Invidious doesn't support yet
  * @param {import('youtubei.js').Misc.Format[]} formats
+ * @param {boolean} proxyVideos whether the stream URLs should be routed through Invidious
  */
-export async function generateInvidiousDashManifestLocally(formats) {
+export async function generateInvidiousDashManifestLocally(formats, proxyVideos = false) {
   // create a dummy player, as deciphering requires making requests to YouTube,
   // which we want to avoid when Invidious is selected as the backend
   const player = new Player()
@@ -974,7 +975,7 @@ export async function generateInvidiousDashManifestLocally(formats) {
 
   let urlTransformer
 
-  if (store.getters.getProxyVideos) {
+  if (proxyVideos) {
     /**
      * @param {URL} url
      */

@@ -350,7 +350,7 @@ async function getCommentDataLocal(more = false) {
     // endregion No comment detection
 
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -402,7 +402,7 @@ async function getCommentDataInvidious() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendFallback.value && backendPreference.value === 'invidious') {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       await getCommentDataLocal()
     } else {
       isLoading.value = false
@@ -439,7 +439,7 @@ async function getPostCommentsInvidious() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendFallback.value && backendPreference.value === 'invidious') {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       await getCommentDataLocal()
     } else {
       isLoading.value = false

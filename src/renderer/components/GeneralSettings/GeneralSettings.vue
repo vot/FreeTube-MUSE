@@ -11,14 +11,6 @@
           @change="updateCheckForUpdates"
         />
         <FtToggleSwitch
-          v-if="SUPPORTS_LOCAL_API"
-          :label="t('Settings.General Settings.Fallback to Non-Preferred Backend on Failure')"
-          :default-value="backendFallback"
-          :compact="true"
-          :tooltip="t('Tooltips.General Settings.Fallback to Non-Preferred Backend on Failure')"
-          @change="updateBackendFallback"
-        />
-        <FtToggleSwitch
           :label="t('Settings.General Settings.Auto Load Next Page.Label')"
           :default-value="generalAutoLoadMorePaginatedItemsEnabled"
           :compact="true"
@@ -123,7 +115,6 @@ import allLocales from '../../../../static/locales/activeLocales.json'
 import { translateWindowTitle } from '../../helpers/strings'
 
 const USING_ELECTRON = !!process.env.IS_ELECTRON
-const SUPPORTS_LOCAL_API = !!process.env.SUPPORTS_LOCAL_API
 const IS_MAC = process.platform === 'darwin'
 
 const { t } = useI18n()
@@ -150,13 +141,6 @@ function updateCheckForUpdates(value) {
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const backendFallback = computed(() => store.getters.getBackendFallback)
-
-/**
- * @param {boolean} value
- */
-function updateBackendFallback(value) {
-  store.dispatch('updateBackendFallback', value)
-}
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const generalAutoLoadMorePaginatedItemsEnabled = computed(() => {

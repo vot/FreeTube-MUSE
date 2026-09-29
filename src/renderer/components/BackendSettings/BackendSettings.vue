@@ -2,56 +2,89 @@
   <FtSettingsSection
     :title="t('Settings.Backend Settings.Backend Settings')"
   >
-    <div class="switchGrid">
-      <FtSelect
-        :placeholder="t('Settings.General Settings.Preferred API Backend.Preferred API Backend')"
-        :value="backendPreference"
-        :select-names="backendNames"
-        :select-values="BACKEND_VALUES"
-        :tooltip="t('Tooltips.General Settings.Preferred API Backend')"
-        :icon="['fas', 'server']"
-        @change="updateBackendPreference"
-      />
-    </div>
-    <div
-      v-if="backendPreference === 'invidious' || backendFallback"
-    >
-      <FtFlexBox class="settingsFlexStart460px">
+    <FtSettingsTable>
+      <FtSettingsTableRow
+        :label="t('Settings.Backend Settings.API Backend')"
+        :tooltip="t('Tooltips.Backend Settings.API Backend')"
+      >
+        <FtSelect
+          :placeholder="t('Settings.Backend Settings.API Backend')"
+          :value="backendPreference"
+          :select-names="apiBackendNames"
+          :select-values="BACKEND_VALUES"
+          :tooltip="t('Tooltips.Backend Settings.API Backend')"
+          :icon="['fas', 'server']"
+          @change="updateBackendPreference"
+        />
+        <FtToggleSwitch
+          v-if="showApiBackendFallback"
+          :label="t('Settings.Backend Settings.Allow Fallback to Direct YouTube for API')"
+          :default-value="backendFallback"
+          :compact="true"
+          :tooltip="t('Tooltips.Backend Settings.Allow Fallback to Direct YouTube for API')"
+          @change="updateBackendFallback"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="SUPPORTS_LOCAL_API"
+        :label="t('Settings.Backend Settings.Video Backend')"
+        :tooltip="t('Tooltips.Backend Settings.Video Backend')"
+      >
+        <FtSelect
+          :placeholder="t('Settings.Backend Settings.Video Backend')"
+          :value="videoBackendPreference"
+          :select-names="videoBackendNames"
+          :select-values="BACKEND_VALUES"
+          :tooltip="t('Tooltips.Backend Settings.Video Backend')"
+          :icon="['fas', 'circle-play']"
+          @change="updateVideoBackendPreference"
+        />
+        <FtToggleSwitch
+          v-if="showVideoBackendFallback"
+          :label="t('Settings.Backend Settings.Allow Fallback to Direct YouTube for Video')"
+          :default-value="videoBackendFallback"
+          :compact="true"
+          :tooltip="t('Tooltips.Backend Settings.Allow Fallback to Direct YouTube for Video')"
+          @change="updateVideoBackendFallback"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="usesInvidious"
+        :label="t('Settings.Backend Settings.Current Invidious Instance')"
+        :tooltip="t('Tooltips.General Settings.Invidious Instance')"
+      >
         <FtInput
           ref="currentInvidiousInstanceInput"
+          class="instanceInput"
           :placeholder="t('Settings.General Settings.Current Invidious Instance')"
           :show-action-button="false"
-          :show-label="true"
+          :show-label="false"
           :value="currentInvidiousInstance"
           :data-list="invidiousInstancesList"
-          :tooltip="t('Tooltips.General Settings.Invidious Instance')"
           @blur="handleInvidiousInstanceBlur"
         />
-      </FtFlexBox>
-      <FtFlexBox>
-        <div>
-          <a
-            href="https://api.invidious.io"
-          >
-            {{ t('Settings.General Settings.View all Invidious instance information') }}
-          </a>
-        </div>
-      </FtFlexBox>
-      <p
-        v-if="defaultInvidiousInstance !== ''"
-        class="center"
+        <a
+          class="instanceInfoLink"
+          href="https://api.invidious.io"
+        >
+          {{ t('Settings.General Settings.View all Invidious instance information') }}
+        </a>
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="usesInvidious"
+        :label="t('Settings.Backend Settings.Default Invidious Instance')"
       >
-        {{ t('Settings.General Settings.The currently set default instance is {instance}', { instance: defaultInvidiousInstance }) }}
-      </p>
-      <template v-else>
-        <p class="center">
-          {{ t('Settings.General Settings.No default instance has been set') }}
+        <p v-if="defaultInvidiousInstance !== ''">
+          {{ t('Settings.General Settings.The currently set default instance is {instance}', { instance: defaultInvidiousInstance }) }}
         </p>
-        <p class="center">
-          {{ t('Settings.General Settings.Current instance will be randomized on startup') }}
-        </p>
-      </template>
-      <FtFlexBox>
+        <template v-else>
+          <p>
+            {{ t('Settings.General Settings.No default instance has been set') }}
+          </p>
+          <p>
+            {{ t('Settings.General Settings.Current instance will be randomized on startup') }}
+          </p>
+        </template>
         <FtButton
           :label="t('Settings.General Settings.Set Current Instance as Default')"
           @click="handleSetDefaultInstanceClick"
@@ -60,8 +93,8 @@
           :label="t('Settings.General Settings.Clear Default Instance')"
           @click="handleClearDefaultInstanceClick"
         />
-      </FtFlexBox>
-    </div>
+      </FtSettingsTableRow>
+    </FtSettingsTable>
   </FtSettingsSection>
 </template>
 
@@ -70,10 +103,12 @@ import { computed, onBeforeUnmount, useTemplateRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
+import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
+import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
 import FtSelect from '../FtSelect/FtSelect.vue'
 import FtInput from '../FtInput/FtInput.vue'
-import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 import FtButton from '../FtButton/FtButton.vue'
+import FtToggleSwitch from '../FtToggleSwitch/FtToggleSwitch.vue'
 
 import store from '../../store/index'
 
@@ -83,15 +118,18 @@ const currentInvidiousInstanceInputRef = useTemplateRef('currentInvidiousInstanc
 
 const { t } = useI18n()
 
+const SUPPORTS_LOCAL_API = !!process.env.SUPPORTS_LOCAL_API
+
 const BACKEND_VALUES = process.env.SUPPORTS_LOCAL_API
   ? ['invidious', 'local']
   : ['invidious']
 
-const backendNames = computed(() => {
+/** @type {import('vue').ComputedRef<string[]>} */
+const apiBackendNames = computed(() => {
   if (process.env.SUPPORTS_LOCAL_API) {
     return [
       t('Settings.General Settings.Preferred API Backend.Invidious API'),
-      t('Settings.General Settings.Preferred API Backend.Local API')
+      t('Settings.General Settings.Preferred API Backend.Direct YouTube')
     ]
   } else {
     return [
@@ -99,6 +137,9 @@ const backendNames = computed(() => {
     ]
   }
 })
+
+/** @type {import('vue').ComputedRef<string[]>} */
+const videoBackendNames = computed(() => apiBackendNames.value)
 
 /** @type {import('vue').ComputedRef<'local' | 'invidious'>} */
 const backendPreference = computed(() => store.getters.getBackendPreference)
@@ -112,6 +153,59 @@ function updateBackendPreference(value) {
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const backendFallback = computed(() => store.getters.getBackendFallback)
+
+/**
+ * The fallback is only consulted when Invidious is the API backend, so there is
+ * nothing to fall back from once the local API is preferred
+ * @type {import('vue').ComputedRef<boolean>}
+ */
+const showApiBackendFallback = computed(() => backendPreference.value === 'invidious')
+
+/**
+ * @param {boolean} value
+ */
+function updateBackendFallback(value) {
+  store.dispatch('updateBackendFallback', value)
+}
+
+/** @type {import('vue').ComputedRef<'local' | 'invidious'>} */
+const videoBackendPreference = computed(() => store.getters.getVideoBackendPreference)
+
+/**
+ * @param {'local' | 'invidious'} value
+ */
+function updateVideoBackendPreference(value) {
+  store.dispatch('updateVideoBackendPreference', value)
+}
+
+/** @type {import('vue').ComputedRef<boolean>} */
+const videoBackendFallback = computed(() => store.getters.getVideoBackendFallback)
+
+/**
+ * Same as above, but for the video backend: with the local API selected there is
+ * no Invidious request left to fall back from
+ * @type {import('vue').ComputedRef<boolean>}
+ */
+const showVideoBackendFallback = computed(() => videoBackendPreference.value === 'invidious')
+
+/**
+ * @param {boolean} value
+ */
+function updateVideoBackendFallback(value) {
+  store.dispatch('updateVideoBackendFallback', value)
+}
+
+/**
+ * The Invidious instance is shared by both backends, so it has to stay visible
+ * whenever either of them, or either fallback, could end up talking to Invidious
+ * @type {import('vue').ComputedRef<boolean>}
+ */
+const usesInvidious = computed(() => {
+  return backendPreference.value === 'invidious' ||
+    backendFallback.value ||
+    videoBackendPreference.value === 'invidious' ||
+    videoBackendFallback.value
+})
 
 /** @type {import('vue').ComputedRef<string[]>} */
 const invidiousInstancesList = computed(() => store.getters.getInvidiousInstancesList)

@@ -697,7 +697,7 @@ async function getPlaylistInformationLocal() {
     isLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -735,7 +735,7 @@ async function getPlaylistInformationInvidious() {
       copyToClipboard(err)
     })
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getPlaylistInformationLocal()
     } else {
       isLoading.value = false

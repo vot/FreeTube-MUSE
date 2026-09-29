@@ -257,7 +257,7 @@ async function getChannelShortsLocal(channel, failedAttempts = 0) {
     return await parseYouTubeRSSFeed(await response.text(), channel.id)
   } catch (error) {
     console.error(error)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${error}`, 10000, () => {
       copyToClipboard(error)
     })
@@ -313,7 +313,7 @@ async function getChannelShortsInvidious(channel, failedAttempts = 0) {
     switch (failedAttempts) {
       case 0:
         if (process.env.SUPPORTS_LOCAL_API && backendFallback.value) {
-          showToast(t('Falling back to Local API'))
+          showToast(t('Falling back to Direct YouTube'))
           return await getChannelShortsLocal(channel, failedAttempts + 1)
         } else {
           return {

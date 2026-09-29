@@ -351,7 +351,7 @@ async function getCommentRepliesLocal() {
     showReplies.value = true
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })

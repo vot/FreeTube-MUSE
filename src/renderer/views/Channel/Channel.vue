@@ -846,7 +846,7 @@ async function getChannelLocal() {
     isLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -890,7 +890,7 @@ async function getChannelAboutLocal() {
     }
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -950,7 +950,7 @@ function getChannelHomeLocal() {
     isElementListLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1054,7 +1054,7 @@ async function getChannelInfoInvidious() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getChannelLocal()
     } else {
       isLoading.value = false
@@ -1159,7 +1159,7 @@ async function getChannelVideosLocal() {
     }
 
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1191,7 +1191,7 @@ async function getChannelVideosLocalMore() {
     }
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1300,7 +1300,7 @@ async function getChannelShortsLocal() {
     }
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1332,7 +1332,7 @@ async function getChannelShortsLocalMore() {
     shortContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1443,7 +1443,7 @@ async function getChannelLiveLocal() {
     }
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1467,7 +1467,7 @@ async function getChannelLiveLocalMore() {
     liveContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1575,7 +1575,7 @@ async function getChannelPlaylistsLocal() {
     isElementListLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1600,7 +1600,7 @@ async function getChannelPlaylistsLocalMore() {
     playlistContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1622,7 +1622,7 @@ async function getPlaylistsInvidious() {
       copyToClipboard(err)
     })
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getChannelPlaylistsLocal()
     } else {
       isLoading.value = false
@@ -1679,7 +1679,7 @@ async function getChannelReleasesLocal() {
   } catch (err) {
     console.error(err)
 
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1716,7 +1716,7 @@ async function getChannelReleasesLocalMore() {
     }
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1738,7 +1738,7 @@ async function channelInvidiousReleases() {
       copyToClipboard(err)
     })
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getChannelReleasesLocal()
     } else {
       isLoading.value = false
@@ -1782,7 +1782,7 @@ async function getChannelPodcastsLocal() {
     isElementListLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1807,7 +1807,7 @@ async function getChannelPodcastsLocalMore() {
     podcastContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1831,7 +1831,7 @@ async function channelInvidiousPodcasts() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getChannelPodcastsLocal()
     } else {
       isLoading.value = false
@@ -1876,7 +1876,7 @@ async function getChannelCoursesLocal() {
   } catch (err) {
     console.error(err)
 
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1902,7 +1902,7 @@ async function getChannelCoursesLocalMore() {
     coursesContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -1926,7 +1926,7 @@ async function channelInvidiousCourses() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getChannelCoursesLocal()
     } else {
       isLoading.value = false
@@ -1987,7 +1987,7 @@ async function getCommunityPostsLocal() {
   } catch (err) {
     console.error(err)
 
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -2020,7 +2020,7 @@ async function getCommunityPostsLocalMore() {
     communityContinuationData.value = continuation.has_continuation ? continuation : null
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -2054,7 +2054,7 @@ async function getCommunityPostsInvidious() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       getCommunityPostsLocal()
     }
   }
@@ -2109,7 +2109,7 @@ async function searchChannelLocal() {
     isSearchTabLoading.value = false
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
 
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
@@ -2147,7 +2147,7 @@ async function searchChannelInvidious() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       searchChannelLocal()
     } else {
       isLoading.value = false

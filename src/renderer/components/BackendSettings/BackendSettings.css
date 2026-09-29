@@ -1,4 +1,14 @@
-.switchGrid {
-  gap: 10px;
-  margin-block-end: 12px;
+.instanceInput {
+  inline-size: 460px;
+  max-inline-size: 100%;
+}
+
+.instanceInfoLink {
+  white-space: nowrap;
+}
+
+@media only screen and (width <= 680px) {
+  .instanceInput {
+    inline-size: 100%;
+  }
 }

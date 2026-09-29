@@ -371,7 +371,7 @@ async function performSearchLocal(payload) {
   } catch (err) {
     console.error(err)
 
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -412,7 +412,7 @@ async function getNextpageLocal(payload) {
   } catch (err) {
     console.error(err)
 
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -473,7 +473,7 @@ async function performSearchInvidious(payload, options = { resetSearchPage: fals
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       await performSearchLocal(payload)
     } else {
       isLoading.value = false

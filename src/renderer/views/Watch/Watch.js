@@ -258,11 +258,17 @@ export default defineComponent({
     backendFallback: function () {
       return this.$store.getters.getBackendFallback
     },
+    videoBackendPreference: function () {
+      return this.$store.getters.getVideoBackendPreference
+    },
+    videoBackendFallback: function () {
+      return this.$store.getters.getVideoBackendFallback
+    },
+    proxyVideoStreams: function () {
+      return this.videoBackendPreference === 'invidious'
+    },
     currentInvidiousInstanceUrl: function () {
       return this.$store.getters.getCurrentInvidiousInstanceUrl
-    },
-    proxyVideos: function () {
-      return this.$store.getters.getProxyVideos
     },
     defaultAutoplayInterruptionIntervalHours: function () {
       return this.$store.getters.getDefaultAutoplayInterruptionIntervalHours
@@ -1027,12 +1033,19 @@ export default defineComponent({
         }
 
         console.log('[FTDBG] local done', JSON.stringify({ vid: this.videoId, af: this.activeFormat, mime: this.manifestMimeType, src: this.manifestSrc === null ? null : String(this.manifestSrc).slice(0, 40), srcLen: this.manifestSrc === null ? null : this.manifestSrc.length, legacy: this.legacyFormats.length, isLive: this.isLive, isPostLiveDvr: this.isPostLiveDvr, sabr: !!result.streaming_data?.server_abr_streaming_url, ustreamer: !!videoInfo.info.player_config.media_common_config.media_ustreamer_request_config }))
+
+        // The video backend can differ from the API backend, in which case the
+        // stream has to be re-resolved from the video backend's source
+        if (this.proxyVideoStreams) {
+          await this.applyInvidiousProxiedVideoStream()
+        }
+
         this.isLoading = false
         this.updateTitle()
       } catch (err) {
         console.error(err)
         if (this.backendPreference === 'local' && this.backendFallback && !err.toString().includes('private') && !err.toString().includes('unavailable')) {
-          const errorMessage = this.t('Local API Error (Click to copy)')
+          const errorMessage = this.t('Direct YouTube Error (Click to copy)')
           showToast(`${errorMessage}: ${err}`, 10000, () => {
             copyToClipboard(err)
           })
@@ -1155,65 +1168,18 @@ export default defineComponent({
           this.videoChapters = chapters
           this.videoChaptersKind = 'chapters'
 
-          if (this.isLive || this.isPostLiveDvr) {
-            // The live DASH manifest is currently unusable as it returns 403s after 1 minute of playback
-            // so we have to use the HLS one for now.
-            // Leaving the code here commented out in case we can use it again in the future
-            // const url = `${this.currentInvidiousInstanceUrl}/api/manifest/dash/id/${this.videoId}`
-
-            // // Proxying doesn't work for live or post live DVR DASH, so use HLS instead
-            // // https://github.com/iv-org/invidious/pull/4589
-            // if (this.proxyVideos) {
-
-            this.streamingDataExpiryDate = this.extractExpiryDateFromStreamingUrl(result.adaptiveFormats[0].url)
-
-            let hlsManifestUrl = result.hlsUrl
-
-            if (this.proxyVideos) {
-              const url = new URL(hlsManifestUrl)
-              url.searchParams.set('local', 'true')
-              hlsManifestUrl = url.toString()
+          try {
+            await this.applyInvidiousVideoStream(result, this.proxyVideoStreams)
+          } catch (err) {
+            // The same response also carries native YouTube stream URLs, so
+            // falling back to direct YouTube costs no extra request
+            if (!this.proxyVideoStreams || !this.videoBackendFallback) {
+              throw err
             }
 
-            this.manifestSrc = hlsManifestUrl
-            this.manifestMimeType = MANIFEST_TYPE_HLS
-
-            // The HLS manifests only contain combined audio+video streams, so we can't do audio only
-            if (this.activeFormat === 'audio') {
-              this.activeFormat = 'dash'
-            }
-            // } else {
-            //   this.manifestSrc = url
-            //   this.manifestMimeType = MANIFEST_TYPE_DASH
-            // }
-
-            this.legacyFormats = []
-
-            if (this.activeFormat === 'legacy') {
-              this.activeFormat = 'dash'
-            }
-          } else {
-            this.videoLengthSeconds = result.lengthSeconds
-
-            this.streamingDataExpiryDate = this.extractExpiryDateFromStreamingUrl(result.adaptiveFormats[0].url)
-
-            this.legacyFormats = result.formatStreams.map(mapInvidiousLegacyFormat)
-
-            if (!process.env.SUPPORTS_LOCAL_API || this.proxyVideos) {
-              this.legacyFormats.forEach(format => {
-                format.url = getProxyUrl(format.url)
-              })
-            }
-
-            this.vrProjection = result.adaptiveFormats
-              .find(stream => {
-                return typeof stream.projectionType === 'string' &&
-                  stream.projectionType !== 'RECTANGULAR'
-              })
-              ?.projectionType ?? null
-
-            this.manifestSrc = await this.createInvidiousDashManifest(result)
-            this.manifestMimeType = MANIFEST_TYPE_DASH
+            console.error(err)
+            showToast(this.t('Falling back to Direct YouTube'))
+            await this.applyInvidiousVideoStream(result, false)
           }
 
           this.updateTitle()
@@ -1228,7 +1194,7 @@ export default defineComponent({
             showToast(`${errorMessage}: ${err}`, 10000, () => {
               copyToClipboard(err)
             })
-            showToast(this.t('Falling back to Local API'))
+            showToast(this.t('Falling back to Direct YouTube'))
             this.getVideoInformationLocal()
           } else {
             this.isLoading = false
@@ -1239,6 +1205,118 @@ export default defineComponent({
             this.errorMessage = err.message || err.toString()
           }
         })
+    },
+
+    /**
+     * Applies the playback state from an Invidious video information response.
+     *
+     * This is separate from the metadata so that the video backend can differ from
+     * the API backend: when they disagree, the metadata is taken from the API
+     * backend and only the stream is resolved here, from Invidious.
+     *
+     * @param {object} result the result of `invidiousGetVideoInformation`
+     * @param {boolean} proxyVideos whether the stream URLs should be routed through Invidious
+     */
+    applyInvidiousVideoStream: async function (result, proxyVideos) {
+      // SABR is a direct YouTube mechanism, it can't survive being replaced by an Invidious stream
+      this.sabrData = null
+
+      if (this.isLive || this.isPostLiveDvr) {
+        // The live DASH manifest is currently unusable as it returns 403s after 1 minute of playback
+        // so we have to use the HLS one for now.
+        // Leaving the code here commented out in case we can use it again in the future
+        // const url = `${this.currentInvidiousInstanceUrl}/api/manifest/dash/id/${this.videoId}`
+
+        // // Proxying doesn't work for live or post live DVR DASH, so use HLS instead
+        // // https://github.com/iv-org/invidious/pull/4589
+        // if (proxyVideos) {
+
+        this.streamingDataExpiryDate = this.extractExpiryDateFromStreamingUrl(result.adaptiveFormats[0].url)
+
+        let hlsManifestUrl = result.hlsUrl
+
+        if (proxyVideos) {
+          const url = new URL(hlsManifestUrl)
+          url.searchParams.set('local', 'true')
+          hlsManifestUrl = url.toString()
+        }
+
+        this.manifestSrc = hlsManifestUrl
+        this.manifestMimeType = MANIFEST_TYPE_HLS
+
+        // The HLS manifests only contain combined audio+video streams, so we can't do audio only
+        if (this.activeFormat === 'audio') {
+          this.activeFormat = 'dash'
+        }
+        // } else {
+        //   this.manifestSrc = url
+        //   this.manifestMimeType = MANIFEST_TYPE_DASH
+        // }
+
+        this.legacyFormats = []
+
+        if (this.activeFormat === 'legacy') {
+          this.activeFormat = 'dash'
+        }
+      } else {
+        this.videoLengthSeconds = result.lengthSeconds
+
+        this.streamingDataExpiryDate = this.extractExpiryDateFromStreamingUrl(result.adaptiveFormats[0].url)
+
+        this.legacyFormats = result.formatStreams.map(mapInvidiousLegacyFormat)
+
+        if (!process.env.SUPPORTS_LOCAL_API || proxyVideos) {
+          this.legacyFormats.forEach(format => {
+            format.url = getProxyUrl(format.url)
+          })
+        }
+
+        this.vrProjection = result.adaptiveFormats
+          .find(stream => {
+            return typeof stream.projectionType === 'string' &&
+              stream.projectionType !== 'RECTANGULAR'
+          })
+          ?.projectionType ?? null
+
+        this.manifestSrc = await this.createInvidiousDashManifest(result, proxyVideos)
+        this.manifestMimeType = MANIFEST_TYPE_DASH
+      }
+    },
+
+    /**
+     * Resolves the stream through Invidious when the video backend is Invidious but
+     * the API backend isn't. Invidious' response always carries native YouTube stream
+     * URLs, so when the video backend is direct YouTube the same response is reused
+     * as-is and no extra request is needed.
+     */
+    applyInvidiousProxiedVideoStream: async function () {
+      try {
+        const result = await invidiousGetVideoInformation(this.videoId)
+
+        if (result.error) {
+          throw new Error(result.error)
+        }
+
+        await this.applyInvidiousVideoStream(result, true)
+      } catch (err) {
+        console.error(err)
+
+        if (!this.videoBackendFallback) {
+          this.isLoading = false
+
+          if (!this.thumbnail) {
+            this.thumbnail = this.getUnavailableVideoThumbnail()
+          }
+          this.errorMessage = err.message || err.toString()
+          return
+        }
+
+        const errorMessage = this.t('Invidious API Error (Click to copy)')
+        showToast(`${errorMessage}: ${err}`, 10000, () => {
+          copyToClipboard(err)
+        })
+        showToast(this.t('Falling back to Direct YouTube'))
+      }
     },
 
     extractExpiryDateFromStreamingUrl: function (url) {
@@ -1804,7 +1882,11 @@ export default defineComponent({
       return `data:${MANIFEST_TYPE_SABR},${encodeURIComponent(JSON.stringify(sabrManifest))}`
     },
 
-    createInvidiousDashManifest: async function (result) {
+    /**
+     * @param {object} result the result of `invidiousGetVideoInformation`
+     * @param {boolean} proxyVideos whether the stream URLs should be routed through Invidious
+     */
+    createInvidiousDashManifest: async function (result, proxyVideos) {
       let url = `${this.currentInvidiousInstanceUrl}/api/manifest/dash/id/${this.videoId}`
 
       // If we are in Electron,
@@ -1843,10 +1925,10 @@ export default defineComponent({
           }
         }
 
-        const manifest = await generateInvidiousDashManifestLocally(formats)
+        const manifest = await generateInvidiousDashManifestLocally(formats, proxyVideos)
 
         url = `data:application/dash+xml;charset=UTF-8,${encodeURIComponent(manifest)}`
-      } else if (this.proxyVideos) {
+      } else if (proxyVideos) {
         url += '?local=true'
       }
 

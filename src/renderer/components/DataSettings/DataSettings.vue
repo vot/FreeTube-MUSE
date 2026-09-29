@@ -2,87 +2,79 @@
   <FtSettingsSection
     :title="$t('Settings.Data Settings.Data Settings')"
   >
-    <h4 class="groupTitle">
-      {{ $t('Subscriptions.Subscriptions') }}
-    </h4>
-    <FtFlexBox class="box">
-      <FtButton
-        :label="$t('Settings.Data Settings.Import Subscriptions')"
-        @click="importSubscriptions"
-      />
-      <FtButton
-        :label="$t('Settings.Data Settings.Manage Subscriptions')"
-        @click="openProfileSettings"
-      />
-      <FtButton
-        :label="$t('Settings.Data Settings.Export Subscriptions')"
-        @click="showExportSubscriptionsPrompt = true"
-      />
-    </FtFlexBox>
-    <FtFlexBox>
-      <p>
-        <a href="https://docs.freetubeapp.io/usage/importing-subscriptions/">
+    <FtSettingsTable>
+      <FtSettingsTableRow
+        :label="$t('Subscriptions.Subscriptions')"
+      >
+        <FtButton
+          :label="$t('Settings.Data Settings.Import Subscriptions')"
+          @click="importSubscriptions"
+        />
+        <FtButton
+          :label="$t('Settings.Data Settings.Manage Subscriptions')"
+          @click="openProfileSettings"
+        />
+        <FtButton
+          :label="$t('Settings.Data Settings.Export Subscriptions')"
+          @click="showExportSubscriptionsPrompt = true"
+        />
+        <a
+          class="helpLink"
+          href="https://docs.freetubeapp.io/usage/importing-subscriptions/"
+        >
           {{ $t("Settings.Data Settings.How do I import my subscriptions?") }}
         </a>
-      </p>
-    </FtFlexBox>
-    <h4 class="groupTitle">
-      {{ $t('History.History') }}
-    </h4>
-    <FtFlexBox class="box">
-      <FtButton
-        :label="$t('Settings.Data Settings.Import History')"
-        @click="importWatchHistory"
-      />
-      <FtButton
-        :label="$t('Settings.Data Settings.Export History')"
-        @click="showExportWatchHistoryPrompt = true"
-      />
-    </FtFlexBox>
-    <h4 class="groupTitle">
-      {{ $t('Playlists') }}
-    </h4>
-    <FtFlexBox class="box">
-      <FtButton
-        :label="$t('Settings.Data Settings.Import Playlists')"
-        @click="importPlaylists"
-      />
-      <FtButton
-        :label="$t('Settings.Data Settings.Export Playlists')"
-        @click="exportPlaylists"
-      />
-    </FtFlexBox>
-    <h4 class="groupTitle">
-      {{ t('Settings.Data Settings.Search history') }}
-    </h4>
-    <FtFlexBox class="box">
-      <FtButton
-        :label="t('Settings.Data Settings.Import search history')"
-        @click="importSearchHistory"
-      />
-      <FtButton
-        :label="t('Settings.Data Settings.Export search history')"
-        @click="showExportSearchHistoryPrompt = true"
-      />
-    </FtFlexBox>
-    <h4 class="groupTitle">
-      {{ t('Settings.Settings') }}
-      <FtTooltip
-        class="selectTooltip"
-        position="top"
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        :label="$t('History.History')"
+      >
+        <FtButton
+          :label="$t('Settings.Data Settings.Import History')"
+          @click="importWatchHistory"
+        />
+        <FtButton
+          :label="$t('Settings.Data Settings.Export History')"
+          @click="showExportWatchHistoryPrompt = true"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        :label="$t('Playlists')"
+      >
+        <FtButton
+          :label="$t('Settings.Data Settings.Import Playlists')"
+          @click="importPlaylists"
+        />
+        <FtButton
+          :label="$t('Settings.Data Settings.Export Playlists')"
+          @click="exportPlaylists"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        :label="t('Settings.Data Settings.Search history')"
+      >
+        <FtButton
+          :label="t('Settings.Data Settings.Import search history')"
+          @click="importSearchHistory"
+        />
+        <FtButton
+          :label="t('Settings.Data Settings.Export search history')"
+          @click="showExportSearchHistoryPrompt = true"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        :label="t('Settings.Settings')"
         :tooltip="t('Settings.Data Settings.Settings Tooltip')"
-      />
-    </h4>
-    <FtFlexBox class="box">
-      <FtButton
-        :label="t('Settings.Data Settings.Import Settings')"
-        @click="importSettings"
-      />
-      <FtButton
-        :label="t('Settings.Data Settings.Export Settings')"
-        @click="exportSettings"
-      />
-    </FtFlexBox>
+      >
+        <FtButton
+          :label="t('Settings.Data Settings.Import Settings')"
+          @click="importSettings"
+        />
+        <FtButton
+          :label="t('Settings.Data Settings.Export Settings')"
+          @click="exportSettings"
+        />
+      </FtSettingsTableRow>
+    </FtSettingsTable>
     <FtPrompt
       v-if="showExportSubscriptionsPrompt"
       :label="$t('Settings.Data Settings.Select Export Type')"
@@ -113,10 +105,10 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import FtButton from '../FtButton/FtButton.vue'
-import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 import FtPrompt from '../FtPrompt/FtPrompt.vue'
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
-import FtTooltip from '../FtTooltip/FtTooltip.vue'
+import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
+import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
 
 import store from '../../store/index'
 import { defaultUpdaterId, NON_TRANSFERABLE_SETTINGS } from '../../store/modules/settings'

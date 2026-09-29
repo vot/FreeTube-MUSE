@@ -274,7 +274,7 @@ async function getChannelLiveLocal(channel, failedAttempts = 0) {
     return result
   } catch (err) {
     console.error(err)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${err}`, 10000, () => {
       copyToClipboard(err)
     })
@@ -334,7 +334,7 @@ async function getChannelLiveLocalRSS(channel, failedAttempts = 0) {
     return await parseYouTubeRSSFeed(await response.text(), channel.id)
   } catch (error) {
     console.error(error)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${error}`, 10000, () => {
       copyToClipboard(error)
     })
@@ -387,7 +387,7 @@ async function getChannelLiveInvidious(channel, failedAttempts = 0) {
         return await getChannelLiveInvidiousRSS(channel, failedAttempts + 1)
       case 1:
         if (process.env.SUPPORTS_LOCAL_API && backendFallback.value) {
-          showToast(t('Falling back to Local API'))
+          showToast(t('Falling back to Direct YouTube'))
           return await getChannelLiveLocal(channel, failedAttempts + 1)
         } else {
           return {
@@ -441,7 +441,7 @@ async function getChannelLiveInvidiousRSS(channel, failedAttempts = 0) {
         return await getChannelLiveInvidious(channel, failedAttempts + 1)
       case 1:
         if (process.env.SUPPORTS_LOCAL_API && backendFallback.value) {
-          showToast(t('Falling back to Local API'))
+          showToast(t('Falling back to Direct YouTube'))
           return await getChannelLiveLocalRSS(channel, failedAttempts + 1)
         } else {
           return {

@@ -155,15 +155,15 @@ const settingsTabs = computed(() => [
     title: t('Settings.Tabs.Data'),
     icon: ['fas', 'database'],
     sections: [
-      { type: 'data', component: DataSettings },
       { type: 'backend', component: BackendSettings },
-      { type: 'privacy', component: PrivacySettings },
       ...(process.env.IS_ELECTRON
         ? [{
             type: 'proxy',
             component: ProxySettings
           }]
-        : [])
+        : []),
+      { type: 'privacy', component: PrivacySettings },
+      { type: 'data', component: DataSettings }
     ]
   },
   {

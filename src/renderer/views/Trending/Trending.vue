@@ -187,7 +187,7 @@ async function getTrendingInfoLocal() {
     })
   } catch (error) {
     console.error(error)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${error}`, 10000, () => {
       copyToClipboard(error)
     })

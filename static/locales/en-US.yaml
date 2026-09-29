@@ -305,6 +305,12 @@ Settings:
   Return to Settings Menu: Return to Settings Menu
   Backend Settings:
     Backend Settings: Backend
+    API Backend: API backend
+    Video Backend: Video backend
+    Current Invidious Instance: Current Invidious Instance
+    Default Invidious Instance: Default Invidious Instance
+    Allow Fallback to Direct YouTube for API: Allow fallback to direct YouTube
+    Allow Fallback to Direct YouTube for Video: Allow fallback to direct YouTube
   Hide Content Settings:
     Hide Content Settings: Hide content
   Screenshot Settings:
@@ -329,7 +335,7 @@ Settings:
     System Default: System Default
     Preferred API Backend:
       Preferred API Backend: Preferred API Backend
-      Local API: Local API
+      Direct YouTube: Direct YouTube
       Invidious API: Invidious API
     Video View Type:
       Video View Type: Video View Type
@@ -642,7 +648,7 @@ Settings:
     Add: Add
     Remove: Remove
   Data Settings:
-    Data Settings: Data
+    Data Settings: User data
     Select Export Type: Select Export Type
     Import Subscriptions: Import Subscriptions
     Subscription File: Subscription File
@@ -1127,12 +1133,6 @@ Tooltips:
   General Settings:
     Enable Tabbed Interface: Show multiple pages as tabs. Players of tabs that are not shown are paused and released after a while to save memory.
     Open All Video Links In New Tabs: Open video links in a new background tab. Middle-click or Ctrl-click (Cmd-click on macOS) opens a video link in a new tab regardless of this setting.
-    Preferred API Backend: Choose the backend that FreeTube uses to obtain data. The
-      local API is a built-in extractor. The Invidious API requires an Invidious server
-      to connect to.
-    Fallback to Non-Preferred Backend on Failure: When your preferred API has a problem,
-      FreeTube will automatically attempt to use your non-preferred API as a fallback
-      method when enabled.
     Thumbnail Preference: All thumbnails throughout FreeTube will be replaced with
       a frame of the video, blurred or hidden instead of the default thumbnail.
     Invidious Instance: The Invidious instance that FreeTube will connect to for API
@@ -1144,9 +1144,21 @@ Tooltips:
       By default FreeTube will open the clicked link in your default browser.
     Open Deep Links In New Window: URLs passed to FreeTube, such as by redirect
       browser extensions or command line arguments, are opened in a new window.
+  Backend Settings:
+    API Backend: Choose the backend that FreeTube uses to obtain data. Direct YouTube
+      is a built-in extractor. The Invidious API requires an Invidious server to connect
+      to.
+    Video Backend: Choose where video playback is streamed from. This is independent
+      of the API backend, so you can get data from one source and play video from another.
+      Direct YouTube streams straight from YouTube, while Invidious routes the video
+      through your Invidious instance.
+    Allow Fallback to Direct YouTube for API: When your API backend has a problem,
+      FreeTube will automatically attempt to use a direct YouTube connection as a fallback
+      method when enabled.
+    Allow Fallback to Direct YouTube for Video: When your video backend has a problem,
+      FreeTube will automatically attempt to play through a direct YouTube connection as
+      a fallback method when enabled.
   Player Settings:
-    Proxy Videos Through Invidious: Will connect to Invidious to serve videos instead
-      of making a direct connection to YouTube.
     Subtitles Size: Subtitles are sized to match the video, so this scales them up or
       down everywhere you watch.
     Default Video Format: Set the formats used when a video plays. DASH formats can
@@ -1190,10 +1202,10 @@ Tooltips:
     UseDeArrowThumbnails: Replace video thumbnails with thumbnails from DeArrow.
 
 # Toast Messages
-Local API Error (Click to copy): Local API Error (Click to copy)
+Direct YouTube Error (Click to copy): Direct YouTube Error (Click to copy)
 Invidious API Error (Click to copy): Invidious API Error (Click to copy)
 Falling back to Invidious API: Falling back to Invidious API
-Falling back to Local API: Falling back to Local API
+Falling back to Direct YouTube: Falling back to Direct YouTube
 This video is unavailable because of missing formats. This can happen due to country unavailability.: This
   video is unavailable because of missing formats. This can happen due to country
   unavailability.

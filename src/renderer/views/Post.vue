@@ -105,7 +105,7 @@ async function loadDataLocalAsync() {
     updateTitleAndRoute()
   } catch (error) {
     console.error(error)
-    const errorMessage = t('Local API Error (Click to copy)')
+    const errorMessage = t('Direct YouTube Error (Click to copy)')
     showToast(`${errorMessage}: ${error}`, 10000, () => {
       copyToClipboard(error)
     })
@@ -131,7 +131,7 @@ async function loadDataInvidiousAsync() {
     })
 
     if (process.env.SUPPORTS_LOCAL_API && backendPreference.value === 'invidious' && backendFallback.value) {
-      showToast(t('Falling back to Local API'))
+      showToast(t('Falling back to Direct YouTube'))
       await loadDataLocalAsync()
     } else {
       isLoading.value = false

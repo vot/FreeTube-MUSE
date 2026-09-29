@@ -1,0 +1,53 @@
+.settingsTableRow {
+  vertical-align: top;
+
+  > th,
+  > td {
+    padding-block: 8px;
+    padding-inline-end: 16px;
+    text-align: start;
+  }
+
+  > th {
+    /*
+     * The value column holds the controls, so the label column only needs
+     * enough room for the longest label before the values start wrapping
+     */
+    inline-size: 30%;
+    font-weight: bold;
+  }
+
+  > td {
+    /*
+     * FtSelect floats its label above the control, so the first row needs
+     * extra room to keep it from colliding with the row above
+     */
+    padding-block-start: 20px;
+  }
+
+  &:not(:last-child) > th,
+  &:not(:last-child) > td {
+    border-block-end: 1px solid var(--scrollbar-color);
+  }
+}
+
+.rowLabel {
+  display: flex;
+  column-gap: 6px;
+  align-items: center;
+}
+
+.rowValue {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 10px;
+  align-items: center;
+}
+
+@media only screen and (width <= 680px) {
+  .settingsTableRow {
+    > th {
+      inline-size: auto;
+    }
+  }
+}

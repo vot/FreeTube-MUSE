@@ -162,6 +162,8 @@ const state = {
   autoplayVideos: true,
   backendFallback: false,
   backendPreference: !process.env.SUPPORTS_LOCAL_API ? 'invidious' : 'local',
+  videoBackendFallback: false,
+  videoBackendPreference: !process.env.SUPPORTS_LOCAL_API ? 'invidious' : 'local',
   barColor: false,
   checkForUpdates: true,
   baseTheme: 'system',
@@ -244,7 +246,6 @@ const state = {
   proxyUsername: '',
   proxyPassword: '',
   proxyProtocol: 'socks5',
-  proxyVideos: !process.env.SUPPORTS_LOCAL_API,
   region: 'US',
   rememberHistory: true,
   rememberSearchHistory: true,
@@ -452,7 +453,8 @@ export const NON_TRANSFERABLE_SETTINGS = new Set([
   /* Depends on process.env.SUPPORTS_LOCAL_API */
   'backendFallback',
   'backendPreference',
-  'proxyVideos',
+  'videoBackendFallback',
+  'videoBackendPreference',
 ])
 
 const customState = {
