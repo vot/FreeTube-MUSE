@@ -121,18 +121,18 @@
 .commentText {
   white-space: pre-wrap;
   font-size: 14px;
-  /* stylelint-disable-next-line liberty/use-logical-spec */
+  /* stylelint-disable-next-line csstools/use-logical */
   margin-left: -10px;
   margin-inline-start: calc(var(--comment-thumb-size) + 10px);
   overflow-wrap: break-word;
 }
 
-/* stylelint-disable liberty/use-logical-spec */
+/* stylelint-disable csstools/use-logical */
 :global(body[dir='rtl'] .commentText) {
   margin-left: initial;
   margin-right: -10px;
 }
-/* stylelint-enable liberty/use-logical-spec */
+/* stylelint-enable csstools/use-logical */
 
 .commentPinned {
   font-weight: normal;

@@ -85,34 +85,12 @@ jobs:
       uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 #v7.0.0
       with:
         node-version: ${{ matrix.node-version }}
-        package-manager-cache: false
+        cache: npm
+        cache-dependency-path: package-lock.json
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 #v6.1.0
-      with:
-        version: 11
-        cache: false
-
-    - name: Get pnpm cache directory
-      id: cache_dir
+    - run: npm ci
       shell: bash
-      run: |
-        {
-          echo 'cache_dir<<EOF'
-          pnpm store path
-          echo EOF
-        } >> "$GITHUB_OUTPUT"
-
-    - name: Restore pnpm cache
-      id: restore_cache
-      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
-      with:
-        key: ${{ format('node-cache-{0}-{1}-pnpm-{2}', runner.os, runner.arch, hashFiles('pnpm-lock.yaml')) }}
-        path: ${{ steps.cache_dir.outputs.cache_dir }}
-
-    - run: pnpm install --frozen-lockfile
-      shell: bash
-    - run: pnpm run lint
+    - run: npm run lint
       shell: bash
     - name: Set version number
       id: versionNumber
@@ -144,17 +122,17 @@ jobs:
     - name: Build x64 with Node.js ${{ matrix.node-version}}
       if: contains(matrix.runtime, 'x64')
       shell: bash
-      run: pnpm run build
+      run: npm run build
 
     - name: Build ARMv7l with Node.js ${{ matrix.node-version}}
       if: startsWith(matrix.os, 'ubuntu') && startsWith(matrix.runtime, 'linux-armv7l')
       shell: bash
-      run: pnpm run build:arm32
+      run: npm run build:arm32
 
     - name: Build ARM64 with Node.js ${{ matrix.node-version}}
       if: contains(matrix.runtime, 'arm64')
       shell: bash
-      run: pnpm run build:arm64
+      run: npm run build:arm64
 
     - name: Upload Linux .zip x64 Artifact
       uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
@@ -360,11 +338,3 @@ jobs:
       with:
         name: freetube-${{ steps.versionNumber.outputs.version }}-mac-arm64.7z
         path: build/freetube-${{ steps.versionNumber.outputs.version }}-arm64-mac.7z
-
-    - name: Save pnpm cache
-      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 #v6.1.0
-      # Only save the cache if we weren't able to restore an existing one above
-      if: steps.restore_cache.outputs.cache-primary-key != steps.restore_cache.outputs.cache-matched-key
-      with:
-        key: ${{ steps.restore_cache.outputs.cache-primary-key }}
-        path: ${{ steps.cache_dir.outputs.cache_dir }}

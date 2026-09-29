@@ -140,18 +140,18 @@
 
 .navChannel .navLabel {
   overflow: hidden;
-  /* stylelint-disable-next-line liberty/use-logical-spec */
+  /* stylelint-disable-next-line csstools/use-logical */
   margin-left: 40px;
   overflow-wrap: break-word;
   /* font-size: 12px; */
 }
 
-/* stylelint-disable liberty/use-logical-spec */
+/* stylelint-disable csstools/use-logical */
 :global(body[dir='rtl'] .navChannel .navLabel) {
   margin-left: initial;
   margin-right: 40px;
 }
-/* stylelint-enable liberty/use-logical-spec */
+/* stylelint-enable csstools/use-logical */
 
 .thumbnailContainer {
   inline-size: 35px;

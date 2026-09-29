@@ -7,12 +7,12 @@ pre-commit:
       # Only runs when any file with filename
       # matching the glob is being committed
       glob: "*.{js,vue}"
-      run: pnpm exec eslint --no-color {staged_files}
+      run: npx eslint --no-color {staged_files}
       skip:
         - rebase
     stylelint:
       glob: "*.{css,scss}"
-      run: pnpm exec stylelint --no-color --allow-empty-input {staged_files}
+      run: npx stylelint --no-color --allow-empty-input {staged_files}
       skip:
         - rebase
 
@@ -22,7 +22,7 @@ pre-commit:
 #   commands:
 #     packages-audit:
 #       tags: frontend security
-#       run: pnpm audit
+#       run: npm audit
 #     gems-audit:
 #       tags: backend security
 #       run: bundle audit
@@ -32,7 +32,7 @@ pre-commit:
 #   commands:
 #     eslint:
 #       glob: "*.{js,ts}"
-#       run: pnpm eslint {staged_files}
+#       run: npx eslint {staged_files}
 #     rubocop:
 #       tags: backend style
 #       glob: "*.rb"

@@ -3,7 +3,7 @@
   display: none !important;
 }
 
-/* stylelint-disable liberty/use-logical-spec */
+/* stylelint-disable csstools/use-logical */
 .ftVideoPlayer {
   display: flex;
   position: relative;
@@ -279,4 +279,4 @@
   }
 }
 
-/* stylelint-enable liberty/use-logical-spec */
+/* stylelint-enable csstools/use-logical */
