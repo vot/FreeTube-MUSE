@@ -43,6 +43,12 @@ export function useFeedRefresh({ title, lastRefreshTimestamp, disableRefresh = n
     feedRefreshState.refreshAction = null
   }
 
+  // This has to wait for the first render. A page that is written with the
+  // options API does not have its data while `setup` is running, so reading a
+  // data property through `instance.proxy` at that point makes Vue cache it as
+  // an unknown property instead of as a data property. Every later read of it
+  // then returns `undefined`, as the fallback to the data of the render context
+  // only exists in development builds.
   const stopPublishing = watchEffect(() => {
     // Reading the active tab makes this effect run again on every switch
     const isShownTab = tabContext === null || tabContext.id === getActiveTabId()
@@ -56,7 +62,7 @@ export function useFeedRefresh({ title, lastRefreshTimestamp, disableRefresh = n
       // This tab is being hidden and is the one that is published
       clearState()
     }
-  })
+  }, { flush: 'post' })
 
   onBeforeUnmount(() => {
     stopPublishing()
