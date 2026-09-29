@@ -56,6 +56,16 @@ Global:
     Playlist Count: 1 playlist | {count} playlists
     Result Count: 1 result | {count} results
     Replies Remaining: "{' '}(1 remaining) | {' '}({count} remaining)"
+  Errors:
+    Invidious Html Response Received: The Invidious instance sent an HTML page instead
+      of a response. It may be trying to block FreeTube, so the page was opened in
+      a new window.
+
+Instance Challenge:
+  Title: Invidious Instance Challenge
+  Description: "{instanceUrl} is asking to prove that you are not a bot. Complete
+    the challenge below to continue using this instance."
+  Close: Close
 
 # Search Bar
 Search / Go to URL: Search / Go to URL

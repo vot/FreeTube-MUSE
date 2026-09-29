@@ -105,11 +105,9 @@ const mutations = {
     state.currentInvidiousInstanceUrl = instanceUrl
 
     if (process.env.IS_ELECTRON) {
-      if (authorization) {
-        window.ftElectron.setInvidiousAuthorization(authorization, instanceUrl)
-      } else {
-        window.ftElectron.clearInvidiousAuthorization()
-      }
+      // the instance is always sent, as the main process needs it to know which
+      // requests were meant for the instance, even when it doesn't need credentials
+      window.ftElectron.setInvidiousAuthorization(authorization, instanceUrl)
     }
   },
 

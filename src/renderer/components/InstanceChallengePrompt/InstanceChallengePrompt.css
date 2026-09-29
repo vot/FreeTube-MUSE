@@ -1,0 +1,49 @@
+.prompt {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  background-color: rgb(0 0 0 / 70%);
+  z-index: 201;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.promptCard {
+  box-sizing: border-box;
+  margin-inline: auto;
+  inset-inline: 0;
+  inline-size: 40em;
+  max-inline-size: 95%;
+  max-block-size: 95%;
+  overflow-y: auto;
+}
+
+.center {
+  text-align: center;
+}
+
+.iframeWrapper {
+  display: flex;
+  justify-content: center;
+  margin-block: 15px 20px;
+}
+
+.challengeFrame {
+  inline-size: 100%;
+  block-size: 500px;
+  max-block-size: 60vh;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--main-background-color);
+}
+
+@media only screen and (width <= 680px) {
+  .challengeFrame {
+    block-size: 400px;
+  }
+}

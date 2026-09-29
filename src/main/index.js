@@ -29,9 +29,12 @@ import contextMenu from 'electron-context-menu'
 import packageDetails from '../../package.json'
 import { handleOpenInExternalPlayer } from './externalPlayer'
 import { generatePoToken } from './poTokenGenerator'
-import { isFreeTubeUrl } from './utils'
+import { isFreeTubeUrl, getFirstHeaderValue, isHtmlContentType } from './utils'
 
 const brotliDecompressAsync = promisify(brotliDecompress)
+
+// A 1x1 transparent GIF, used in place of images that the server refused to send
+const TRANSPARENT_GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', 'base64')
 
 if (process.argv.includes('--version')) {
   console.log(`v${packageDetails.version} Beta`) // eslint-disable-line no-console
@@ -584,7 +587,12 @@ function runApp() {
 
     const onBeforeSendHeadersRequestFilter = {
       urls: ['https://*/*', 'http://*/*'],
-      types: ['xhr', 'media', 'image']
+      // `mainFrame`, `subFrame`, `script` and `stylesheet` are needed for the
+      // pages that Invidious instances serve when they block a request, as those
+      // have to be authorized in the same way as the rest of the app
+      // `other` isn't a valid type, so requests that fall into that category
+      // (e.g. favicons) can't be authorized
+      types: ['xhr', 'media', 'image', 'mainFrame', 'subFrame', 'script', 'stylesheet']
     }
     session.defaultSession.webRequest.onBeforeSendHeaders(onBeforeSendHeadersRequestFilter, ({ requestHeaders, url, webContents }, callback) => {
       const urlObj = new URL(url)
@@ -644,16 +652,29 @@ function runApp() {
     })
 
     // when we create a real session on the watch page, youtube returns tracking cookies, which we definitely don't want
-    const trackingCookieRequestFilter = {
-      urls: [
-        'https://www.youtube.com/sw.js_data',
-        'https://www.youtube.com/iframe_api',
-        'https://www.youtube.com/watch?*'
-      ]
+    const trackingCookieUrls = [
+      'https://www.youtube.com/sw.js_data',
+      'https://www.youtube.com/iframe_api',
+      'https://www.youtube.com/watch?'
+    ]
+
+    // Invidious instances block requests by responding with an HTML page instead of
+    // the requested content, which has to be detected from the main process as the
+    // renderer isn't able to see the responses of things like images.
+    // Only one listener per event can be used, so both are handled here.
+    const onHeadersReceivedRequestFilter = {
+      urls: ['https://*/*', 'http://*/*']
     }
 
-    session.defaultSession.webRequest.onHeadersReceived(trackingCookieRequestFilter, ({ responseHeaders }, callback) => {
-      if (responseHeaders) {
+    session.defaultSession.webRequest.onHeadersReceived(onHeadersReceivedRequestFilter, ({ url, webContentsId, responseHeaders }, callback) => {
+      const contentType = getFirstHeaderValue(responseHeaders, 'content-type')
+      const isInstanceRequest = isInvidiousInstanceUrl(url, webContentsId)
+
+      if (contentType && isInstanceRequest && isHtmlContentType(contentType)) {
+        notifyInstanceChallenge(webContentsId, url)
+      }
+
+      if (responseHeaders && trackingCookieUrls.some(trackingCookieUrl => url.startsWith(trackingCookieUrl))) {
         delete responseHeaders['set-cookie']
         delete responseHeaders['content-security-policy']
         delete responseHeaders['cross-origin-opener-policy']
@@ -685,9 +706,10 @@ function runApp() {
           }
 
           let headers
+          const webContentsId = rawWebContentsId ? parseInt(rawWebContentsId) : undefined
 
-          if (rawWebContentsId) {
-            const invidiousAuthorization = invidiousAuthorizations.get(parseInt(rawWebContentsId))
+          if (webContentsId !== undefined) {
+            const invidiousAuthorization = invidiousAuthorizations.get(webContentsId)
 
             if (invidiousAuthorization && url.startsWith(invidiousAuthorization.url)) {
               headers = {
@@ -714,6 +736,23 @@ function runApp() {
           }
 
           newRequest.on('response', (response) => {
+            const mimeType = response.headers['content-type']
+
+            // The image requests of this handler don't show up in the
+            // onHeadersReceived listener of the session, as they are made with
+            // net.request, so blocking has to be detected here as well
+            if (isHtmlContentType(mimeType) && isInvidiousInstanceUrl(url, webContentsId)) {
+              notifyInstanceChallenge(webContentsId, url)
+
+              // Serve a placeholder instead of the html page, as the html page
+              // can't be displayed as an image and shouldn't be cached
+              resolve(new Response(TRANSPARENT_GIF, {
+                headers: { 'content-type': 'image/gif' }
+              }))
+              response.destroy()
+              return
+            }
+
             const chunks = []
             response.on('data', (chunk) => {
               chunks.push(chunk)
@@ -723,7 +762,6 @@ function runApp() {
               const data = Buffer.concat(chunks)
 
               const expiryTimestamp = extractExpiryTimestamp(response.headers)
-              const mimeType = response.headers['content-type']
 
               imageCache.add(url, mimeType, data, expiryTimestamp)
 
@@ -1579,6 +1617,98 @@ function runApp() {
     })
   })
 
+  // Invidious instances can respond to any request with an HTML page instead of
+  // the requested content, usually to throttle bots (e.g. with Anubis). The
+  // renderer shows that page in a modal, which lets the user complete any
+  // challenge. The challenge has to happen inside the app instead of the system
+  // browser, as a challenge completed in the system browser wouldn't help the app
+  // at all.
+  //
+  // An instance that blocks every request would otherwise flood the renderer with
+  // notifications, so the same url is only sent once and an instance that blocks
+  // a burst of requests is only reported again after a delay. Reloading the
+  // challenge page while one is in progress makes Anubis hand out a second
+  // challenge for the same verification cookie and reject the second one as a
+  // double spend, so in-flight challenges must not be restarted.
+  const lastNotifiedChallengeUrl = new Map()
+  const instanceChallengeNotifyDelay = 2000
+
+  /**
+   * @param {string} url
+   * @param {number | undefined} webContentsId
+   * @returns {boolean}
+   */
+  function isInvidiousInstanceUrl(url, webContentsId) {
+    if (typeof webContentsId !== 'number') {
+      return false
+    }
+
+    const instanceUrl = invidiousInstances.get(webContentsId)
+
+    if (typeof instanceUrl !== 'string') {
+      return false
+    }
+
+    // the url has to be followed by a delimiter, otherwise a host such as
+    // `invidious.example.com.evil.com` would be treated as the instance
+    return url === instanceUrl ||
+      url.startsWith(`${instanceUrl}/`) ||
+      url.startsWith(`${instanceUrl}?`) ||
+      url.startsWith(`${instanceUrl}#`)
+  }
+
+  /**
+   * @param {number | undefined} webContentsId the id of the window that made the blocked request
+   * @param {string} url the url that the Invidious instance refused to serve
+   */
+  function notifyInstanceChallenge(webContentsId, url) {
+    let parsedUrl
+
+    try {
+      parsedUrl = new URL(url)
+    } catch {
+      return
+    }
+
+    if (parsedUrl.protocol !== 'https:' && parsedUrl.protocol !== 'http:') {
+      return
+    }
+
+    if (typeof webContentsId !== 'number') {
+      return
+    }
+
+    const lastNotifiedAt = lastNotifiedChallengeUrl.get(parsedUrl.origin)
+
+    // A burst of blocked requests all resolve to the same challenge page, so
+    // reporting every one of them would just make the modal flicker
+    if (lastNotifiedAt !== undefined && Date.now() - lastNotifiedAt < instanceChallengeNotifyDelay) {
+      return
+    }
+
+    lastNotifiedChallengeUrl.set(parsedUrl.origin, Date.now())
+
+    const webContents = webContentsFromId(webContentsId)
+
+    if (!webContents || webContents.isDestroyed()) {
+      return
+    }
+
+    webContents.send(IpcChannels.INSTANCE_CHALLENGE_REQUIRED, url)
+  }
+
+  /**
+   * @param {number} id
+   * @returns {Electron.WebContents | undefined}
+   */
+  function webContentsFromId(id) {
+    for (const window of BrowserWindow.getAllWindows()) {
+      if (window.webContents.id === id && !window.isDestroyed()) {
+        return window.webContents
+      }
+    }
+  }
+
   ipcMain.on(IpcChannels.OPEN_IN_EXTERNAL_PLAYER, handleOpenInExternalPlayer)
 
   ipcMain.handle(IpcChannels.GET_REPLACE_HTTP_CACHE, (event) => {
@@ -1668,18 +1798,36 @@ function runApp() {
     await asyncFs.writeFile(filePath, new Uint8Array(value))
   })
 
-  /** @type {Map<number, { url: string, authorization: string }>} */
+  /**
+   * @type {Map<number, { url: string, authorization: string }>}
+   */
   const invidiousAuthorizations = new Map()
+
+  /**
+   * The Invidious instance url of each window. Unlike `invidiousAuthorizations`,
+   * this is populated for every window, as it is also needed for instances that
+   * don't require authorization.
+   * @type {Map<number, string>}
+   */
+  const invidiousInstances = new Map()
 
   ipcMain.on(IpcChannels.SET_INVIDIOUS_AUTHORIZATION, (event, authorization, url) => {
     if (!isFreeTubeUrl(event.senderFrame.url)) {
       return
     }
 
-    if (!authorization) {
+    if (typeof url !== 'string' || url.length === 0) {
+      invidiousInstances.delete(event.sender.id)
       invidiousAuthorizations.delete(event.sender.id)
-    } else if (typeof authorization === 'string' && typeof url === 'string') {
-      invidiousAuthorizations.set(event.sender.id, { authorization, url })
+    } else {
+      // trailing slashes are removed so that urls can be compared against it
+      invidiousInstances.set(event.sender.id, url.replace(/\/+$/, ''))
+
+      if (typeof authorization === 'string') {
+        invidiousAuthorizations.set(event.sender.id, { authorization, url })
+      } else {
+        invidiousAuthorizations.delete(event.sender.id)
+      }
     }
   })
 
@@ -2305,6 +2453,7 @@ function runApp() {
   app.on('web-contents-created', (_, webContents) => {
     webContents.once('destroyed', () => {
       invidiousAuthorizations.delete(webContents.id)
+      invidiousInstances.delete(webContents.id)
     })
   })
 

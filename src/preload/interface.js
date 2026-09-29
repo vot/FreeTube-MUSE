@@ -47,6 +47,18 @@ export default {
   },
 
   /**
+   * Subscribes to urls that an Invidious instance refused to serve, so that a
+   * challenge page can be shown for them.
+   * @param {(url: string) => void} callback
+   * @returns {() => void} an unsubscribe function
+   */
+  onInstanceChallengeRequired: (callback) => {
+    const listener = (_event, url) => { callback(url) }
+    ipcRenderer.on(IpcChannels.INSTANCE_CHALLENGE_REQUIRED, listener)
+    return () => { ipcRenderer.removeListener(IpcChannels.INSTANCE_CHALLENGE_REQUIRED, listener) }
+  },
+
+  /**
    * @param {string} url
    */
   enableProxy: (url) => {

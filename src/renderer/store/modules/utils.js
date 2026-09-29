@@ -46,7 +46,10 @@ const state = {
     posts: false,
   },
   appTitle: '',
-  openPrompts: new Set()
+  openPrompts: new Set(),
+  // The url an Invidious instance refused to serve, which has to be completed
+  // in a challenge page before the app can talk to the instance again
+  instanceChallengeUrl: ''
 }
 
 const getters = {
@@ -155,6 +158,9 @@ const getters = {
   },
   isAnyPromptOpen(state) {
     return state.openPrompts.size > 0
+  },
+  getInstanceChallengeUrl(state) {
+    return state.instanceChallengeUrl
   }
 }
 
@@ -747,6 +753,10 @@ const mutations = {
 
   removeOpenPrompt(state, id) {
     state.openPrompts.delete(id)
+  },
+
+  setInstanceChallengeUrl (state, value) {
+    state.instanceChallengeUrl = value
   },
 
   setSubscriptionForVideosFirstAutoFetchRun (state) {

@@ -1,5 +1,6 @@
 import store from '../../store/index'
-import { calculatePublishedDate, getRelativeTimeFromDate } from '../utils'
+import i18n from '../../i18n/index'
+import { calculatePublishedDate, getRelativeTimeFromDate, openExternalLink } from '../utils'
 import { isNullOrEmpty } from '../strings'
 import autolinker from 'autolinker'
 import { FormatUtils, Misc, Player } from 'youtubei.js'
@@ -44,10 +45,14 @@ export function invidiousFetch(url) {
     return fetch(url, {
       headers: {
         Authorization: authorization
-      }
+      },
+      ...(process.env.IS_ELECTRON ? { credentials: 'include' } : {})
     })
   } else {
-    return fetch(url)
+    // `fetch` doesn't send cookies to other origins by default, but instances
+    // that use bot protection (e.g. Anubis) hand out a cookie that has to be
+    // sent for the requests to keep working after a challenge is completed
+    return fetch(url, process.env.IS_ELECTRON ? { credentials: 'include' } : undefined)
   }
 }
 
@@ -55,7 +60,15 @@ function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, s
   return new Promise((resolve, reject) => {
     const requestUrl = getCurrentInstanceUrl() + '/api/v1/' + resource + '/' + id + (!isNullOrEmpty(subResource) ? `/${subResource}` : '') + '?' + new URLSearchParams(params).toString()
     invidiousFetch(requestUrl)
-      .then((response) => response.json())
+      .then((response) => response.text())
+      .then((body) => {
+        if (isHtmlResponse(body)) {
+          openBlockedResource(requestUrl)
+          throw new Error(i18n.global.t('Global.Errors.Invidious Html Response Received'))
+        }
+
+        return JSON.parse(body)
+      })
       .then((json) => {
         if (json.error !== undefined) {
           // community is empty, no need to display error.
@@ -75,6 +88,34 @@ function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, s
         reject(error)
       })
   })
+}
+
+/**
+ * Invidious instances can respond to API requests with an HTML page instead of
+ * JSON, usually to throttle bots. JSON never starts with an angle bracket.
+ * @param {string} body
+ * @returns {boolean}
+ */
+function isHtmlResponse(body) {
+  return /^\s*</.test(body)
+}
+
+/**
+ * Shows the page that an Invidious instance served instead of the content, so
+ * that bot protection challenges are able to be completed.
+ *
+ * The challenge has to be completed inside the app, as the cookie that instances
+ * using bot protection hand out is scoped to the page that obtained it, and a
+ * challenge completed in the system browser wouldn't help the app at all.
+ * @param {string} url
+ */
+export function openBlockedResource(url) {
+  if (process.env.IS_ELECTRON) {
+    store.commit('setInstanceChallengeUrl', url)
+  } else {
+    // there is no way to complete a challenge in a way that helps a web build
+    openExternalLink(url)
+  }
 }
 
 async function resolveUrl(url) {

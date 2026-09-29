@@ -86,6 +86,11 @@
     <FtKeyboardShortcutPrompt
       v-if="isKeyboardShortcutPromptShown"
     />
+    <InstanceChallengePrompt
+      v-if="instanceChallengeUrl"
+      :url="instanceChallengeUrl"
+      @close="closeInstanceChallenge"
+    />
     <FtPlaylistAddVideoPrompt
       v-if="showAddToPlaylistPrompt"
     />
@@ -118,6 +123,7 @@ import FtProgressBar from './components/FtProgressBar/FtProgressBar.vue'
 import FtPlaylistAddVideoPrompt from './components/FtPlaylistAddVideoPrompt/FtPlaylistAddVideoPrompt.vue'
 import FtCreatePlaylistPrompt from './components/FtCreatePlaylistPrompt/FtCreatePlaylistPrompt.vue'
 import FtKeyboardShortcutPrompt from './components/FtKeyboardShortcutPrompt/FtKeyboardShortcutPrompt.vue'
+import InstanceChallengePrompt from './components/InstanceChallengePrompt/InstanceChallengePrompt.vue'
 import { vSaferHtml } from './directives/vSaferHtml.js'
 
 import store from './store/index'
@@ -190,12 +196,35 @@ const showCreatePlaylistPrompt = computed(() => store.getters.getShowCreatePlayl
 /** @type {import('vue').ComputedRef<boolean>} */
 const showProgressBar = computed(() => store.getters.getShowProgressBar)
 
+/** @type {import('vue').ComputedRef<string>} */
+const instanceChallengeUrl = computed(() => store.getters.getInstanceChallengeUrl)
+
 const landingPage = computed(() => '/' + store.getters.getLandingPage)
 
 /** @type {import('vue').ComputedRef<string>} */
 const defaultInvidiousInstance = computed(() => store.getters.getDefaultInvidiousInstance)
 
 const dataReady = ref(false)
+
+/** @type {(() => void) | undefined} */
+let removeInstanceChallengeListener = null
+
+/**
+ * Closes the challenge prompt and reloads the app.
+ *
+ * Requests that the instance refused to serve aren't retried by the browser on
+ * their own, so everything has to be requested again for the cookie of the
+ * completed challenge to be of any use. A reload also covers the things that
+ * aren't visible in the current view, e.g. the images of other tabs.
+ */
+function closeInstanceChallenge() {
+  // Not in a web build, as a challenge completed there can't help the app
+  if (process.env.IS_ELECTRON) {
+    window.location.reload()
+  }
+
+  store.commit('setInstanceChallengeUrl', '')
+}
 
 onMounted(async () => {
   await store.dispatch('grabUserSettings')
@@ -249,9 +278,18 @@ onMounted(async () => {
   document.addEventListener('keydown', handleKeyboardShortcuts)
   document.addEventListener('mousedown', handleMouseDown)
   document.addEventListener('dragstart', handleDragStart)
+
+  // Responses of things like images can't be seen by the renderer, so the main
+  // process reports the urls that instances refused to serve
+  if (process.env.IS_ELECTRON) {
+    removeInstanceChallengeListener = window.ftElectron.onInstanceChallengeRequired((url) => {
+      store.commit('setInstanceChallengeUrl', url)
+    })
+  }
 })
 
 onBeforeUnmount(() => {
+  removeInstanceChallengeListener?.()
   document.removeEventListener('keydown', handleKeyboardShortcuts)
   document.removeEventListener('mousedown', handleMouseDown)
   document.removeEventListener('dragstart', handleDragStart)
