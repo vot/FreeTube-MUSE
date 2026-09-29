@@ -2952,6 +2952,7 @@ export default defineComponent({
 
       if (props.format === 'dash' || props.format === 'audio') {
         try {
+          console.log('[FTDBG] player.load', JSON.stringify({ videoId: props.videoId, format: props.format, mime: props.manifestMimeType, src: props.manifestSrc === null ? null : String(props.manifestSrc).slice(0, 60), srcLen: props.manifestSrc === null ? null : props.manifestSrc.length, protocol: location.protocol, legacy: props.legacyFormats.length }))
           await player.load(props.manifestSrc, props.startTime, props.manifestMimeType)
 
           if (defaultQuality.value !== 'auto') {

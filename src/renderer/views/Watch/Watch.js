@@ -392,8 +392,12 @@ export default defineComponent({
     userPlaylistsReady() {
       this.onMountedDependOnLocalStateLoading()
     },
+    isLoading(value) {
+      console.log('[FTDBG] isLoading -> ' + value + ' ' + new Error().stack)
+    },
   },
   created: function () {
+    console.log('[FTDBG] watch created isLoading=' + this.isLoading + ' dataLen=' + Object.keys(this.$data).length + ' hasIsLoadingKey=' + ('isLoading' in this.$data) + ' raw=' + JSON.stringify(this.$data.isLoading) + ' keys=' + Object.keys(this.$data).join(','))
     this.videoId = this.route.params.id
     this.activeFormat = this.defaultVideoFormat
     // So that the value for this session remains unchanged even if setting changed
@@ -410,6 +414,7 @@ export default defineComponent({
     }
   },
   mounted: function () {
+    console.log('[FTDBG] watch mounted isLoading=' + this.isLoading + ' src=' + this.manifestSrc + ' af=' + this.activeFormat + ' pm=' + this.playerMounted)
     this.onMountedDependOnLocalStateLoading()
   },
   methods: {
@@ -497,6 +502,7 @@ export default defineComponent({
     },
 
     onMountedDependOnLocalStateLoading() {
+      console.log('[FTDBG] onMountedDependOnLocalStateLoading isLoading=' + this.isLoading)
       // Prevent running twice
       if (this.onMountedRun) { return }
       // Stuff that require user playlists to be ready
@@ -565,6 +571,7 @@ export default defineComponent({
     },
 
     getVideoInformationLocal: async function () {
+      console.log('[FTDBG] getVideoInformationLocal start firstLoad=' + this.firstLoad + ' isLoading=' + this.isLoading)
       if (this.firstLoad) {
         this.isLoading = true
       }
@@ -1019,6 +1026,7 @@ export default defineComponent({
           this.handleActiveFormatUnavailable()
         }
 
+        console.log('[FTDBG] local done', JSON.stringify({ vid: this.videoId, af: this.activeFormat, mime: this.manifestMimeType, src: this.manifestSrc === null ? null : String(this.manifestSrc).slice(0, 40), srcLen: this.manifestSrc === null ? null : this.manifestSrc.length, legacy: this.legacyFormats.length, isLive: this.isLive, isPostLiveDvr: this.isPostLiveDvr, sabr: !!result.streaming_data?.server_abr_streaming_url, ustreamer: !!videoInfo.info.player_config.media_common_config.media_ustreamer_request_config }))
         this.isLoading = false
         this.updateTitle()
       } catch (err) {
@@ -1210,6 +1218,7 @@ export default defineComponent({
 
           this.updateTitle()
 
+          console.log('[FTDBG] invidious done', JSON.stringify({ vid: this.videoId, af: this.activeFormat, mime: this.manifestMimeType, src: this.manifestSrc === null ? null : String(this.manifestSrc).slice(0, 40), legacy: this.legacyFormats.length }))
           this.isLoading = false
         })
         .catch(err => {
