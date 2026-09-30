@@ -14,7 +14,7 @@
       :placeholder="tagNamePlaceholder"
       :label="label"
       :min-input-length="minInputLength"
-      :show-label="true"
+      :show-label="showLabel"
       :tooltip="tooltip"
       :show-action-button="true"
       :select-on-focus="true"
@@ -122,6 +122,10 @@ const props = defineProps({
   minInputLength: {
     type: Number,
     default: 1
+  },
+  showLabel: {
+    type: Boolean,
+    default: true
   },
   showTags: {
     type: Boolean,

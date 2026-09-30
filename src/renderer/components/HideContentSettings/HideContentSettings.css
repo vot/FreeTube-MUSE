@@ -1,3 +1,12 @@
-.containingTextFlexBox {
-  margin-block-end: 2em;
+/*
+  Each tags input fills the row's value cell instead of being a fixed width box,
+  since the label now comes from the row itself. The tag list floats, so the
+  cell also needs its own block formatting context to not collapse onto the
+  divider below it.
+*/
+.ft-input-tags-component {
+  display: flow-root;
+  padding: 0;
+  background-color: transparent;
+  inline-size: 100%;
 }

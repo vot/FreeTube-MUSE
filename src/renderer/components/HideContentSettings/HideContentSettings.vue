@@ -2,37 +2,45 @@
   <FtSettingsSection
     :title="t('Settings.Hide Content Settings.Hide Content Settings')"
   >
-    <FtFlexBox>
-      <FtInputTags
-        :disabled="channelHiderDisabled"
-        :disabled-msg="t('Settings.Distraction Free Settings.Hide Channels Disabled Message')"
+    <FtSettingsTable>
+      <FtSettingsTableRow
         :label="t('Settings.Distraction Free Settings.Hide Channels')"
-        :tag-name-placeholder="t('Settings.Distraction Free Settings.Hide Channels Placeholder')"
-        :tag-list="channelsHidden"
         :tooltip="t('Tooltips.Distraction Free Settings.Hide Channels')"
-        :validate-tag-name="checkYoutubeChannelId"
-        :find-tag-info="findChannelTagInfoWrapper"
-        :are-channel-tags="true"
-        :show-tags="showAddedChannelsHidden"
-        @invalid-name="handleInvalidChannel"
-        @error-find-tag-info="handleChannelAPIError"
-        @change="handleChannelsHidden"
-        @already-exists="handleChannelsExists"
-        @toggle-show-tags="handleAddedChannelsHidden"
-      />
-    </FtFlexBox>
-    <FtFlexBox class="containingTextFlexBox">
-      <FtInputTags
+      >
+        <FtInputTags
+          :disabled="channelHiderDisabled"
+          :disabled-msg="t('Settings.Distraction Free Settings.Hide Channels Disabled Message')"
+          :label="t('Settings.Distraction Free Settings.Hide Channels')"
+          :show-label="false"
+          :tag-name-placeholder="t('Settings.Distraction Free Settings.Hide Channels Placeholder')"
+          :tag-list="channelsHidden"
+          :validate-tag-name="checkYoutubeChannelId"
+          :find-tag-info="findChannelTagInfoWrapper"
+          :are-channel-tags="true"
+          :show-tags="showAddedChannelsHidden"
+          @invalid-name="handleInvalidChannel"
+          @error-find-tag-info="handleChannelAPIError"
+          @change="handleChannelsHidden"
+          @already-exists="handleChannelsExists"
+          @toggle-show-tags="handleAddedChannelsHidden"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
         :label="t('Settings.Distraction Free Settings.Hide Videos, Playlists and Channels Containing Text')"
-        :tag-name-placeholder="t('Settings.Distraction Free Settings.Hide Videos, Playlists and Channels Containing Text Placeholder')"
-        :show-tags="showAddedForbiddenTitles"
-        :tag-list="forbiddenTitles"
-        :min-input-length="1"
         :tooltip="t('Tooltips.Distraction Free Settings.Hide Videos, Playlists and Channels Containing Text')"
-        @change="handleForbiddenTitles"
-        @toggle-show-tags="handleAddedForbiddenTitles"
-      />
-    </FtFlexBox>
+      >
+        <FtInputTags
+          :label="t('Settings.Distraction Free Settings.Hide Videos, Playlists and Channels Containing Text')"
+          :show-label="false"
+          :tag-name-placeholder="t('Settings.Distraction Free Settings.Hide Videos, Playlists and Channels Containing Text Placeholder')"
+          :show-tags="showAddedForbiddenTitles"
+          :tag-list="forbiddenTitles"
+          :min-input-length="1"
+          @change="handleForbiddenTitles"
+          @toggle-show-tags="handleAddedForbiddenTitles"
+        />
+      </FtSettingsTableRow>
+    </FtSettingsTable>
   </FtSettingsSection>
 </template>
 
@@ -41,8 +49,9 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
+import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
+import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
 import FtInputTags from '../FtInputTags/FtInputTags.vue'
-import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 
 import store from '../../store/index'
 
