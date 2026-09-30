@@ -27,7 +27,7 @@
 
 .result {
   display: grid;
-  grid-template-columns: 20px min-content 1fr;
+  grid-template-columns: 20px 1fr;
   column-gap: 8px;
   align-items: baseline;
   padding-block: 3px;
@@ -50,11 +50,17 @@
   font-weight: bold;
 }
 
+/* Vue drops the newline between the text and the link, so the gap is ours */
+.detailsButton {
+  margin-inline-start: 6px;
+}
+
 /*
   The challenge button is the only content that is worth its own line, as it sits
-  below an explanation of why the button is there at all
+  below an explanation of why it is there at all.
 */
 .challengeButton {
-  grid-column: 3;
+  grid-column: 2;
   justify-self: start;
+  margin-block-end: 3px;
 }

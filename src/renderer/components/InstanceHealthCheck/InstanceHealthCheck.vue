@@ -33,8 +33,17 @@
           :icon="statusIcon(result)"
           :spin="result.id === 'reachable' && isRunning"
         />
-        <span class="resultLabel">{{ resultLabel(result.id) }}</span>
-        <span class="resultDetail">{{ result.detail }}</span>
+        <span class="resultLabel">
+          {{ resultLabel(result) }}
+          <button
+            v-if="result.hasResponse"
+            type="button"
+            class="textButton detailsButton"
+            @click="showDetails(result)"
+          >
+            {{ t('Settings.Backend Settings.Health Check.Details') }}
+          </button>
+        </span>
         <FtButton
           v-if="result.challengeUrl"
           class="challengeButton"
@@ -43,6 +52,13 @@
         />
       </li>
     </ul>
+
+    <InstanceHealthDetailsPrompt
+      v-if="detailsResult"
+      :body="detailsResult.responseBody"
+      :check-label="resultName(detailsResult.id)"
+      @close="detailsResult = null"
+    />
   </div>
 </template>
 
@@ -53,6 +69,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import FtButton from '../FtButton/FtButton.vue'
 
+import InstanceHealthDetailsPrompt from '../InstanceHealthDetailsPrompt/InstanceHealthDetailsPrompt.vue'
+
 import { runInvidiousHealthCheck } from '../../helpers/api/invidiousHealthCheck'
 import { openBlockedResource } from '../../helpers/api/invidious'
 
@@ -60,10 +78,6 @@ const props = defineProps({
   instance: {
     type: String,
     required: true
-  },
-  proxiesVideos: {
-    type: Boolean,
-    default: false
   }
 })
 
@@ -73,6 +87,9 @@ const { t } = useI18n()
 const results = ref([])
 const isRunning = ref(false)
 const isExpanded = ref(false)
+
+/** @type {import('vue').Ref<import('../../helpers/api/invidiousHealthCheck').HealthCheckResult | null>} */
+const detailsResult = ref(null)
 
 /**
  * The instance that the most recent run was started for, so that a run that
@@ -88,19 +105,66 @@ const STATUS_ICONS = {
 }
 
 /**
+ * The name a check is known by on its own, for places that talk about the check
+ * rather than about what it found
  * @param {import('../../helpers/api/invidiousHealthCheck').HealthCheckId} id
  * @returns {string}
  */
-function resultLabel(id) {
+function resultName(id) {
   switch (id) {
     case 'reachable':
-      return t('Settings.Backend Settings.Health Check.Reachable')
+      return t('Settings.Backend Settings.Health Check.Instance')
     case 'api':
       return t('Settings.Backend Settings.Health Check.Api')
     case 'cors':
       return t('Settings.Backend Settings.Health Check.Cors')
     default:
       return t('Settings.Backend Settings.Health Check.Video')
+  }
+}
+
+/**
+ * What a check found, in a form that reads as the name of the check followed by
+ * its outcome and then the latency it took, so that a row is a single sentence
+ * @param {import('../../helpers/api/invidiousHealthCheck').HealthCheckResult} result
+ * @returns {string}
+ */
+function resultLabel(result) {
+  const outcome = resultOutcome(result)
+  return result.detail === '' ? outcome : `${outcome} ${result.detail}`
+}
+
+/**
+ * The name of a check followed by what it found, without the detail explaining
+ * the outcome any further
+ * @param {import('../../helpers/api/invidiousHealthCheck').HealthCheckResult} result
+ * @returns {string}
+ */
+function resultOutcome(result) {
+  switch (result.id) {
+    case 'reachable':
+      if (result.status === 'ok') {
+        return t('Settings.Backend Settings.Health Check.Instance Reachable')
+      }
+      return result.status === 'warning'
+        ? resultName(result.id)
+        : t('Settings.Backend Settings.Health Check.Instance Unreachable')
+    case 'api':
+      if (result.status === 'ok') {
+        return t('Settings.Backend Settings.Health Check.Api Enabled')
+      }
+      return result.status === 'warning'
+        ? resultName(result.id)
+        : t('Settings.Backend Settings.Health Check.Api Unavailable')
+    case 'cors':
+      if (result.status === 'ok') {
+        return t('Settings.Backend Settings.Health Check.Cors Enabled')
+      }
+      return result.status === 'warning'
+        ? t('Settings.Backend Settings.Health Check.Cors Unverifiable')
+        : t('Settings.Backend Settings.Health Check.Cors Unavailable')
+    default:
+      return resultName(result.id)
   }
 }
 
@@ -150,11 +214,10 @@ async function startCheck() {
   checkedInstance = instance
   isRunning.value = true
   results.value = []
+  detailsResult.value = null
 
   try {
-    const checkResults = await runInvidiousHealthCheck(instance, {
-      proxiesVideos: props.proxiesVideos
-    })
+    const checkResults = await runInvidiousHealthCheck(instance)
 
     if (checkedInstance !== instance) {
       return
@@ -183,6 +246,16 @@ async function startCheck() {
  */
 function passChallenge(url) {
   openBlockedResource(url)
+}
+
+/**
+ * Opens the response of a failed check in a prompt, as a message like "not JSON"
+ * or "HTTP 403" doesn't say anything about what the instance answered instead
+ * @param {import('../../helpers/api/invidiousHealthCheck').HealthCheckResult} result
+ * @returns {void}
+ */
+function showDetails(result) {
+  detailsResult.value = result
 }
 
 // The instance is only committed to the store once the input loses focus, so

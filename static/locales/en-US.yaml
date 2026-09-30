@@ -318,31 +318,38 @@ Settings:
       All Checks Passed: All checks passed
       Problems Found: "{count} problem(s) found"
       Warnings Found: "{count} warning(s) found"
-      Reachable: Reachable
+      Instance: Instance
+      Instance Reachable: Instance reachable
+      Instance Unreachable: Instance unreachable
       Api: API
+      Api Enabled: API enabled
+      Api Unavailable: API unavailable
       Cors: CORS
+      Cors Enabled: CORS enabled
+      Cors Unavailable: CORS unavailable
+      Cors Unverifiable: CORS unverifiable
       Video: Video
-      Responded In: Responded in {milliseconds} ms
-      Responds With Json: Responds with JSON in {milliseconds} ms
-      Stream Reachable: Serves video streams ({milliseconds} ms)
-      Allows Cross Origin Requests: Allows cross origin requests
+      Responded In: "({milliseconds}ms)"
+      Stream Reachable: Serves video streams ({milliseconds}ms)
       Cors Header Missing: The instance does not allow cross origin requests, so
         FreeTube would be unable to read its API responses
-      Cors Unverifiable: The browser would not let FreeTube read the headers of this
-        instance, so this could not be verified
-      Unreachable: Could not be reached ({error})
+      Cors Unverifiable Reason: The browser would not let FreeTube read the headers
+        of this instance, so this could not be verified
       Timed Out: The instance did not respond in time
       Http Error: Responded with HTTP {status}
-      Invalid Json: Responded with something that is not JSON
+      Invalid Json: Responded with invalid content
       Bot Challenge Required: The instance sent an HTML page instead of a response,
         so it is asking to prove that you are not a bot. Pass the challenge to continue
         using this instance
       Pass Challenge: Pass challenge
       No Instance: No instance has been entered yet
       No Streams: The test video has no streams that the instance could proxy
-      Video Not Proxied: Videos play straight from YouTube with the current settings,
-        so the instance is never asked to serve them
       Skipped: Not checked, as the instance could not be reached
+      Details: Details
+      Details Title: Instance Response
+      Details Description: "This is what the {check} check received from the instance."
+      Details Close: Close
+      Details Empty Response: The instance sent a response with an empty body
   Hide Content Settings:
     Hide Content Settings: Hide content
   Screenshot Settings:

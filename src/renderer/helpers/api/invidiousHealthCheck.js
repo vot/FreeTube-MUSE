@@ -5,7 +5,7 @@ import { HEALTH_CHECK_REQUEST_HEADER } from '../../../constants'
 /**
  * @typedef {'ok' | 'warning' | 'error'} HealthCheckStatus
  * @typedef {'reachable' | 'api' | 'cors' | 'video'} HealthCheckId
- * @typedef {{ id: HealthCheckId, status: HealthCheckStatus, detail: string, latencyMs: number | null, challengeUrl?: string }} HealthCheckResult
+ * @typedef {{ id: HealthCheckId, status: HealthCheckStatus, detail: string, latencyMs: number | null, challengeUrl?: string, hasResponse?: boolean, responseBody?: string }} HealthCheckResult
  */
 
 /**
@@ -92,8 +92,13 @@ function fetchWithTimeout(url, init = {}) {
  * `challengeUrl` is the url that has to be passed in the challenge page, or an
  * empty string when there was no challenge. It is only reported, never opened,
  * as opening it reloads the app and would make these checks run again.
+ *
+ * `hasResponse` tells whether there is a response worth showing at all, as a
+ * failure like "not JSON" says nothing about what came back instead. It is a
+ * separate flag from `responseBody`, as an empty body is both a real answer and
+ * the very thing that makes a "not JSON" verdict impossible to interpret.
  * @param {string} url
- * @returns {Promise<{ status: HealthCheckStatus, detail: string, latencyMs: number, allowOrigin: string, data: any, challengeUrl: string }>}
+ * @returns {Promise<{ status: HealthCheckStatus, detail: string, latencyMs: number, allowOrigin: string, data: any, challengeUrl: string, hasResponse: boolean, responseBody: string }>}
  */
 async function requestApiJson(url) {
   const start = performance.now()
@@ -105,11 +110,13 @@ async function requestApiJson(url) {
   } catch (err) {
     return {
       status: 'error',
-      detail: i18n.global.t('Settings.Backend Settings.Health Check.Unreachable', { error: errorMessage(err) }),
+      detail: errorMessage(err),
       latencyMs: Math.round(performance.now() - start),
       allowOrigin: '',
       data: null,
-      challengeUrl: ''
+      challengeUrl: '',
+      hasResponse: false,
+      responseBody: ''
     }
   }
 
@@ -134,7 +141,9 @@ async function requestApiJson(url) {
       latencyMs,
       allowOrigin,
       data: null,
-      challengeUrl: url
+      challengeUrl: url,
+      responseBody: body,
+      hasResponse: true
     }
   }
 
@@ -145,12 +154,14 @@ async function requestApiJson(url) {
       latencyMs,
       allowOrigin,
       data: null,
-      challengeUrl: ''
+      challengeUrl: '',
+      hasResponse: true,
+      responseBody: body
     }
   }
 
   try {
-    return { status: 'ok', detail: '', latencyMs, allowOrigin, data: JSON.parse(body), challengeUrl: '' }
+    return { status: 'ok', detail: '', latencyMs, allowOrigin, data: JSON.parse(body), challengeUrl: '', hasResponse: false, responseBody: '' }
   } catch {
     return {
       status: 'error',
@@ -158,7 +169,9 @@ async function requestApiJson(url) {
       latencyMs,
       allowOrigin,
       data: null,
-      challengeUrl: ''
+      challengeUrl: '',
+      hasResponse: true,
+      responseBody: body
     }
   }
 }
@@ -187,14 +200,14 @@ async function checkReachable(instanceUrl) {
     return {
       id: 'reachable',
       status: 'error',
-      detail: i18n.global.t('Settings.Backend Settings.Health Check.Unreachable', { error: errorMessage(err) }),
+      detail: errorMessage(err),
       latencyMs: null
     }
   }
 }
 
 /**
- * @param {{ status: HealthCheckStatus, detail: string, latencyMs: number, challengeUrl: string }} probe
+ * @param {{ status: HealthCheckStatus, detail: string, latencyMs: number, challengeUrl: string, hasResponse: boolean, responseBody: string }} probe
  * @returns {HealthCheckResult}
  */
 function apiResult(probe) {
@@ -202,10 +215,12 @@ function apiResult(probe) {
     id: 'api',
     status: probe.status,
     detail: probe.status === 'ok'
-      ? i18n.global.t('Settings.Backend Settings.Health Check.Responds With Json', { milliseconds: probe.latencyMs })
+      ? i18n.global.t('Settings.Backend Settings.Health Check.Responded In', { milliseconds: probe.latencyMs })
       : probe.detail,
     latencyMs: probe.latencyMs,
-    challengeUrl: probe.challengeUrl
+    challengeUrl: probe.challengeUrl,
+    hasResponse: probe.hasResponse,
+    responseBody: probe.responseBody
   }
 }
 
@@ -235,7 +250,7 @@ function corsResult(probe) {
     return {
       id: 'cors',
       status: 'ok',
-      detail: i18n.global.t('Settings.Backend Settings.Health Check.Allows Cross Origin Requests'),
+      detail: '',
       latencyMs: probe.latencyMs
     }
   }
@@ -252,7 +267,7 @@ function corsResult(probe) {
   return {
     id: 'cors',
     status: 'warning',
-    detail: i18n.global.t('Settings.Backend Settings.Health Check.Cors Unverifiable'),
+    detail: i18n.global.t('Settings.Backend Settings.Health Check.Cors Unverifiable Reason'),
     latencyMs: probe.latencyMs
   }
 }
@@ -322,18 +337,29 @@ async function probeStream(url) {
       instead of a partial response. As in `requestApiJson`, the url is only
       reported so that the user can choose to open the challenge page.
     */
-    if (isHtmlResponse(await response.text().catch(() => ''))) {
+    const body = await response.text().catch(() => '')
+
+    if (isHtmlResponse(body)) {
       return {
         id: 'video',
         status: 'error',
         detail: i18n.global.t('Settings.Backend Settings.Health Check.Bot Challenge Required'),
         latencyMs,
-        challengeUrl: url
+        challengeUrl: url,
+        hasResponse: true,
+        responseBody: body
       }
     }
 
     if (!response.ok) {
-      return { id: 'video', status: 'error', detail: i18n.global.t('Settings.Backend Settings.Health Check.Http Error', { status: response.status }), latencyMs }
+      return {
+        id: 'video',
+        status: 'error',
+        detail: i18n.global.t('Settings.Backend Settings.Health Check.Http Error', { status: response.status }),
+        latencyMs,
+        hasResponse: true,
+        responseBody: body
+      }
     }
 
     return {
@@ -346,27 +372,22 @@ async function probeStream(url) {
     return {
       id: 'video',
       status: 'error',
-      detail: i18n.global.t('Settings.Backend Settings.Health Check.Unreachable', { error: errorMessage(err) }),
+      detail: errorMessage(err),
       latencyMs: null
     }
   }
 }
 
 /**
+ * Asks the instance whether it can serve video at all.
+ *
+ * This runs even when videos play straight from YouTube, as the point of the
+ * check is to show what the instance is capable of rather than whether it is
+ * used, which is what the selected video backend says.
  * @param {string} instanceUrl
- * @param {boolean} proxiesVideos whether Invidious is the video backend
  * @returns {Promise<HealthCheckResult>}
  */
-async function checkVideo(instanceUrl, proxiesVideos) {
-  if (!proxiesVideos) {
-    return {
-      id: 'video',
-      status: 'warning',
-      detail: i18n.global.t('Settings.Backend Settings.Health Check.Video Not Proxied'),
-      latencyMs: null
-    }
-  }
-
+async function checkVideo(instanceUrl) {
   const info = await requestApiJson(`${instanceUrl}/api/v1/videos/${HEALTH_CHECK_VIDEO_ID}`)
 
   if (info.status === 'error') {
@@ -375,7 +396,9 @@ async function checkVideo(instanceUrl, proxiesVideos) {
       status: info.status,
       detail: info.detail,
       latencyMs: info.latencyMs,
-      challengeUrl: info.challengeUrl
+      challengeUrl: info.challengeUrl,
+      hasResponse: info.hasResponse,
+      responseBody: info.responseBody
     }
   }
 
@@ -395,10 +418,9 @@ async function checkVideo(instanceUrl, proxiesVideos) {
  * The checks run one after another instead of all at once, as a burst of
  * requests is a common reason for an instance to start refusing them.
  * @param {string} instanceUrl an instance url, with or without a trailing slash
- * @param {{ proxiesVideos: boolean }} options
  * @returns {Promise<HealthCheckResult[]>}
  */
-export async function runInvidiousHealthCheck(instanceUrl, { proxiesVideos }) {
+export async function runInvidiousHealthCheck(instanceUrl) {
   const base = instanceUrl.trim().replace(/\/+$/, '')
 
   /** @type {HealthCheckResult[]} */
@@ -418,15 +440,14 @@ export async function runInvidiousHealthCheck(instanceUrl, { proxiesVideos }) {
     return results
   }
 
-  return await checkInstance(base, proxiesVideos)
+  return await checkInstance(base)
 }
 
 /**
  * @param {string} base an instance url, already trimmed and without a trailing slash
- * @param {boolean} proxiesVideos
  * @returns {Promise<HealthCheckResult[]>}
  */
-async function checkInstance(base, proxiesVideos) {
+async function checkInstance(base) {
   /** @type {HealthCheckResult[]} */
   const results = []
 
@@ -450,7 +471,7 @@ async function checkInstance(base, proxiesVideos) {
   results.push(
     apiResult(stats),
     corsResult(stats),
-    await checkVideo(base, proxiesVideos)
+    await checkVideo(base)
   )
 
   return results

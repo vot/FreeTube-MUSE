@@ -561,7 +561,7 @@ function runApp() {
 
     const fixedUserAgent = session.defaultSession.getUserAgent()
       .split(' ')
-      .filter(part => !part.includes('Electron') && !part.includes(packageDetails.productName))
+      .filter(part => !part.includes('Electron') && !part.includes(packageDetails.productName) && !part.includes(packageDetails.productName.replace(' ', '') ) )
       .join(' ')
     session.defaultSession.setUserAgent(fixedUserAgent)
 
