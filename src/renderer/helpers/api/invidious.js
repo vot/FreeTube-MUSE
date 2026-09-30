@@ -37,23 +37,28 @@ export function getProxyUrl(uri) {
 
 /**
  * @param {string | URL} url
+ * @param {RequestInit} [init] extra options, e.g. a `Range` header or an abort
+ *   signal. `headers` given here are merged with the instance authorization.
  */
-export function invidiousFetch(url) {
+export function invidiousFetch(url, init = {}) {
   const authorization = store.getters.getCurrentInvidiousInstanceAuthorization
 
-  if (authorization) {
-    return fetch(url, {
-      headers: {
-        Authorization: authorization
-      },
-      ...(process.env.IS_ELECTRON ? { credentials: 'include' } : {})
-    })
-  } else {
+  const options = {
     // `fetch` doesn't send cookies to other origins by default, but instances
     // that use bot protection (e.g. Anubis) hand out a cookie that has to be
     // sent for the requests to keep working after a challenge is completed
-    return fetch(url, process.env.IS_ELECTRON ? { credentials: 'include' } : undefined)
+    ...(process.env.IS_ELECTRON ? { credentials: 'include' } : {}),
+    ...init
   }
+
+  if (authorization) {
+    options.headers = {
+      Authorization: authorization,
+      ...init.headers
+    }
+  }
+
+  return fetch(url, options)
 }
 
 function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, subResource = '' }) {
@@ -96,7 +101,7 @@ function invidiousAPICall({ resource, id = '', params = {}, doLogError = true, s
  * @param {string} body
  * @returns {boolean}
  */
-function isHtmlResponse(body) {
+export function isHtmlResponse(body) {
   return /^\s*</.test(body)
 }
 

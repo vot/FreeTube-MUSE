@@ -72,6 +72,16 @@
       </FtSettingsTableRow>
       <FtSettingsTableRow
         v-if="usesInvidious"
+        :label="t('Settings.Backend Settings.Instance Health')"
+        :tooltip="t('Tooltips.Backend Settings.Instance Health')"
+      >
+        <InstanceHealthCheck
+          :instance="currentInvidiousInstance"
+          :proxies-videos="proxiesVideosThroughInvidious"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="usesInvidious"
         :label="t('Settings.Backend Settings.Default Invidious Instance')"
       >
         <p v-if="defaultInvidiousInstance !== ''">
@@ -105,6 +115,7 @@ import { useI18n } from 'vue-i18n'
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
 import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
 import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
+import InstanceHealthCheck from '../InstanceHealthCheck/InstanceHealthCheck.vue'
 import FtSelect from '../FtSelect/FtSelect.vue'
 import FtInput from '../FtInput/FtInput.vue'
 import FtButton from '../FtButton/FtButton.vue'
@@ -206,6 +217,13 @@ const usesInvidious = computed(() => {
     videoBackendPreference.value === 'invidious' ||
     videoBackendFallback.value
 })
+
+/**
+ * Mirrors how Watch.js decides to route streams through the instance, so that
+ * the video check measures the same thing that playback would
+ * @type {import('vue').ComputedRef<boolean>}
+ */
+const proxiesVideosThroughInvidious = computed(() => videoBackendPreference.value === 'invidious')
 
 /** @type {import('vue').ComputedRef<string[]>} */
 const invidiousInstancesList = computed(() => store.getters.getInvidiousInstancesList)

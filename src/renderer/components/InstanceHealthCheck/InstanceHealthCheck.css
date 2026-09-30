@@ -1,0 +1,51 @@
+.healthCheck {
+  inline-size: 100%;
+}
+
+.controls {
+  display: flex;
+  flex-flow: row wrap;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.summary {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--primary-text-color);
+  text-align: start;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.results {
+  margin-block: 10px 0;
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: 20px min-content 1fr;
+  column-gap: 8px;
+  align-items: baseline;
+  padding-block: 3px;
+}
+
+.statusIcon {
+  align-self: center;
+}
+
+.result.ok .statusIcon {
+  color: var(--accent-color);
+}
+
+.result.warning .statusIcon,
+.result.error .statusIcon {
+  color: var(--destructive-color);
+}
+
+.resultLabel {
+  font-weight: bold;
+}
