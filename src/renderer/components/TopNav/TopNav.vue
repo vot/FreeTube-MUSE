@@ -4,17 +4,10 @@
     :class="{ topNavBarColor: barColor }"
   >
     <div class="side">
-      <RouterLink
-        v-if="!hideHeaderLogo"
-        class="logo"
-        dir="ltr"
-        :title="headerLogoTitle"
-        :to="landingPage"
-      >
+
         <div
           class="logoIcon"
         />
-      </RouterLink>
       <FtIconButton
         class="navIconButton"
         :disabled="isArrowBackwardDisabled"

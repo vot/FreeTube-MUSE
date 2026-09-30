@@ -124,46 +124,23 @@
     }
   }
 
-  .logo {
-    align-items: center;
-    cursor: pointer;
+  .logoIcon {
+    mask: var(--logo-icon);
+    background-color: var(--primary-text-color);
+    block-size: 40px;
+    inline-size: 40px;
+    margin-inline-start: 10px;
+    margin-inline-end: 10px;
     display: flex;
-    margin-inline-end: 12px;
-    padding-block: 0;
-    padding-inline: 10px;
+    align-items: center;
 
-    &:hover {
-      background-color: var(--side-nav-hover-color);
-      color: var(--side-nav-hover-text-color);
-      transition: background 0.2s ease-in;
-
-      @include top-nav-is-colored {
-        background-color: var(--primary-color-hover);
-      }
+    @include top-nav-is-colored {
+      background-color: var(--primary-color);
     }
-
-    &:active {
-      background-color: var(--tertiary-text-color);
-      transition: background 0.2s ease-in;
-
-      @include top-nav-is-colored {
-        background-color: var(--primary-color-active);
-      }
-    }
-
-    .logoIcon {
-      mask: var(--logo-icon);
-      background-color: var(--primary-text-color);
-      block-size: 25px;
-      inline-size: 25px;
-
-
-      @include top-nav-is-colored {
-        background-color: var(--primary-color);
-      }
-    }
-
   }
+
+
+
 }
 
 .middle {
