@@ -14,9 +14,6 @@
         <div
           class="logoIcon"
         />
-        <div
-          class="logoText"
-        />
       </RouterLink>
       <FtIconButton
         class="navIconButton"
