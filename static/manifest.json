@@ -1,7 +1,7 @@
 {
 	"dir" : "ltr",
 	"lang" : "de",
-	"name" : "FreeTube",
+	"name" : "FreeTube-Modern",
 	"scope" : "/",
 	"display" : "standalone",
 	"start_url" : "https://app.freetubeapp.io/",

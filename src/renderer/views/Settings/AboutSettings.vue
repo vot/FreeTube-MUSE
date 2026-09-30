@@ -5,12 +5,11 @@
     >
       <section class="brand">
         <!-- <FtLogoFull class="logo" /> -->
-        <h1>FreeTube-MUSE</h1>
-        <p>Modern Usability, Slop Edition</p>
+        <h1>FreeTube Modern</h1>
 
         <p>{{ versionNumber }} {{ t('About.Beta') }}</p>
 
-        <p>FreeTube-MUSE is a fork of <a href="https://github.com/FreeTubeApp/FreeTube">FreeTube</a><br />with a number of modifications.</p>
+        <p>FreeTube Modern is a fork of <a href="https://github.com/FreeTubeApp/FreeTube">FreeTube</a><br />with a number of modifications.</p>
       </section>
       <section class="about-chunks">
         <figure
@@ -56,7 +55,7 @@ const chunks = computed(() => [
     icon: ['fab', 'github'],
     title: t('About.Source code'),
     content: [
-      '<a href="https://github.com/vot/FreeTube-MUSE" lang="en" dir="ltr">GitHub: vot/FreeTube-MUSE</a>',
+      '<a href="https://github.com/vot/FreeTube-Modern" lang="en" dir="ltr">GitHub: vot/FreeTube-Modern</a>',
       t('About.Licensed under the {licenseLink}', {
         licenseLink: `<a href="https://www.gnu.org/licenses/agpl-3.0.en.html">${t('About.AGPLv3')}</a>`,
       }),
@@ -65,7 +64,7 @@ const chunks = computed(() => [
   {
     icon: ['fas', 'file-download'],
     title: t('About.Downloads / Changelog'),
-    content: `<a href="https://github.com/vot/FreeTube-MUSE/releases">${t('About.GitHub releases')}</a>`,
+    content: `<a href="https://github.com/vot/FreeTube-Modern/releases">${t('About.GitHub releases')}</a>`,
   },
   // {
   //   icon: ['fas', 'file-download'],
@@ -85,7 +84,7 @@ const chunks = computed(() => [
     icon: ['fas', 'exclamation-circle'],
     title: t('About.Report a problem'),
     content: [
-      `<a href="https://github.com/vot/FreeTube-MUSE/issues">${t('About.GitHub issues')}</a>`,
+      `<a href="https://github.com/vot/FreeTube-Modern/issues">${t('About.GitHub issues')}</a>`,
       t('About.Please check for duplicates before posting'),
     ].join('<br>'),
   },

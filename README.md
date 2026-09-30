@@ -49,8 +49,8 @@ longer track you using cookies or JavaScript. Your subscriptions, playlists and 
 > Using a VPN or Tor is highly recommended to hide your IP while using FreeTube.
 -->
 
-## FreeTube-MUSE
-FreeTube-MUSE (Modern Usability, Slop Edition) is a fork of <a href="https://github.com/FreeTubeApp/FreeTube">FreeTube</a>.
+## FreeTube Modern
+FreeTube Modern is a fork of <a href="https://github.com/FreeTubeApp/FreeTube">FreeTube</a>.
 
 It modernises the look of the app and adds a few modifications:
 - Consistent interface with a number of accessibility improvements

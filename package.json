@@ -1,7 +1,7 @@
 {
-  "name": "freetube-muse",
-  "productName": "FreeTube-MUSE",
-  "description": "A private YouTube client (Slopified)",
+  "name": "freetube-modern",
+  "productName": "FreeTube Modern",
+  "description": "A private YouTube client",
   "version": "0.25.3",
   "license": "AGPL-3.0-or-later",
   "main": "./dist/main.js",
@@ -12,14 +12,14 @@
   "author": {
     "name": "FreeTube Team",
     "email": "noreply@example.com",
-    "url": "https://github.com/vot/FreeTube-MUSE"
+    "url": "https://github.com/vot/FreeTube-Modern"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vot/FreeTube-MUSE.git"
+    "url": "git+https://github.com/vot/FreeTube-Modern.git"
   },
   "bugs": {
-    "url": "https://github.com/vot/FreeTube-MUSE/issues"
+    "url": "https://github.com/vot/FreeTube-Modern/issues"
   },
   "scripts": {
     "build": "npm run pack && npm run build-release",
