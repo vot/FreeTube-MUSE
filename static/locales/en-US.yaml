@@ -336,7 +336,8 @@ Settings:
       Invalid Json: Responded with something that is not JSON
       Bot Challenge Required: The instance sent an HTML page instead of a response,
         so it is asking to prove that you are not a bot. Pass the challenge to continue
-        using this instance.
+        using this instance
+      Pass Challenge: Pass challenge
       No Instance: No instance has been entered yet
       No Streams: The test video has no streams that the instance could proxy
       Video Not Proxied: Videos play straight from YouTube with the current settings,

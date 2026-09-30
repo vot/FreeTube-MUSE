@@ -35,6 +35,12 @@
         />
         <span class="resultLabel">{{ resultLabel(result.id) }}</span>
         <span class="resultDetail">{{ result.detail }}</span>
+        <FtButton
+          v-if="result.challengeUrl"
+          class="challengeButton"
+          :label="t('Settings.Backend Settings.Health Check.Pass Challenge')"
+          @click="passChallenge(result.challengeUrl)"
+        />
       </li>
     </ul>
   </div>
@@ -48,6 +54,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FtButton from '../FtButton/FtButton.vue'
 
 import { runInvidiousHealthCheck } from '../../helpers/api/invidiousHealthCheck'
+import { openBlockedResource } from '../../helpers/api/invidious'
 
 const props = defineProps({
   instance: {
@@ -163,6 +170,19 @@ async function startCheck() {
       isRunning.value = false
     }
   }
+}
+
+/**
+ * Opens the bot challenge page for a url, which is what actually resolves a
+ * challenge. This is a button instead of something the check does on its own, as
+ * passing a challenge restarts the app, and the checks run again on startup: an
+ * automatic challenge would reopen the modal right after the user dismissed it,
+ * leaving no way out of it.
+ * @param {string} url
+ * @returns {void}
+ */
+function passChallenge(url) {
+  openBlockedResource(url)
 }
 
 // The instance is only committed to the store once the input loses focus, so

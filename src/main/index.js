@@ -14,6 +14,7 @@ import {
   ABOUT_BITCOIN_ADDRESS,
   KeyboardShortcuts,
   SEARCH_CHAR_LIMIT,
+  HEALTH_CHECK_REQUEST_HEADER,
   LIGHT_BASE_THEMES,
   DARK_BASE_THEMES,
 } from '../constants'
@@ -585,6 +586,31 @@ function runApp() {
       sameSite: 'no_restriction',
     })
 
+    /*
+      Health checks mark their requests with a header so that they can be told
+      apart from ordinary requests. Without this, the request a health check makes
+      for the instance homepage would look exactly like a challenge to the request
+      header listeners below, as that page is HTML on a healthy instance, and the
+      challenge modal would reopen on every startup.
+    */
+    const healthCheckRequestIds = new Set()
+
+    /**
+     * Header names reach this listener with the casing the network stack used, so
+     * a direct lookup would miss the marker on some requests
+     * @param {Record<string, string | string[]> | undefined} requestHeaders
+     * @returns {boolean}
+     */
+    function hasHealthCheckHeader(requestHeaders) {
+      if (!requestHeaders) {
+        return false
+      }
+
+      return Object.keys(requestHeaders).some((name) => {
+        return name.toLowerCase() === HEALTH_CHECK_REQUEST_HEADER
+      })
+    }
+
     const onBeforeSendHeadersRequestFilter = {
       urls: ['https://*/*', 'http://*/*'],
       // `mainFrame`, `subFrame`, `script` and `stylesheet` are needed for the
@@ -594,7 +620,18 @@ function runApp() {
       // (e.g. favicons) can't be authorized
       types: ['xhr', 'media', 'image', 'mainFrame', 'subFrame', 'script', 'stylesheet']
     }
-    session.defaultSession.webRequest.onBeforeSendHeaders(onBeforeSendHeadersRequestFilter, ({ requestHeaders, url, webContents }, callback) => {
+    session.defaultSession.webRequest.onBeforeSendHeaders(onBeforeSendHeadersRequestFilter, ({ requestHeaders, url, webContents, id }, callback) => {
+      /*
+        Health checks ask the instance for its own homepage, which is HTML on a
+        perfectly healthy instance, so without this they would be taken for a
+        challenge on every run and the modal would reopen itself forever. Their
+        request ids are remembered here, as `onHeadersReceived` is the only
+        listener that reports a challenge and it doesn't see request headers.
+      */
+      if (hasHealthCheckHeader(requestHeaders)) {
+        healthCheckRequestIds.add(id)
+      }
+
       const urlObj = new URL(url)
 
       if (url.startsWith('https://www.youtube.com/youtubei/')) {
@@ -666,11 +703,19 @@ function runApp() {
       urls: ['https://*/*', 'http://*/*']
     }
 
-    session.defaultSession.webRequest.onHeadersReceived(onHeadersReceivedRequestFilter, ({ url, webContentsId, responseHeaders }, callback) => {
+    session.defaultSession.webRequest.onHeadersReceived(onHeadersReceivedRequestFilter, ({ url, webContentsId, responseHeaders, id }, callback) => {
+      /*
+        A health check reports what it finds on its own, so it must not also open
+        the challenge modal behind the user's back. Everything else, including
+        the tracking cookie headers below, is left exactly as it was.
+      */
+      const isHealthCheck = healthCheckRequestIds.has(id)
+      healthCheckRequestIds.delete(id)
+
       const contentType = getFirstHeaderValue(responseHeaders, 'content-type')
       const isInstanceRequest = isInvidiousInstanceUrl(url, webContentsId)
 
-      if (contentType && isInstanceRequest && isHtmlContentType(contentType)) {
+      if (!isHealthCheck && contentType && isInstanceRequest && isHtmlContentType(contentType)) {
         notifyInstanceChallenge(webContentsId, url)
       }
 

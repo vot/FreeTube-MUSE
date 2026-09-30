@@ -1,10 +1,11 @@
 import i18n from '../../i18n/index'
-import { getProxyUrl, invidiousFetch, isHtmlResponse, openBlockedResource } from './invidious'
+import { getProxyUrl, invidiousFetch, isHtmlResponse } from './invidious'
+import { HEALTH_CHECK_REQUEST_HEADER } from '../../../constants'
 
 /**
  * @typedef {'ok' | 'warning' | 'error'} HealthCheckStatus
  * @typedef {'reachable' | 'api' | 'cors' | 'video'} HealthCheckId
- * @typedef {{ id: HealthCheckId, status: HealthCheckStatus, detail: string, latencyMs: number | null }} HealthCheckResult
+ * @typedef {{ id: HealthCheckId, status: HealthCheckStatus, detail: string, latencyMs: number | null, challengeUrl?: string }} HealthCheckResult
  */
 
 /**
@@ -55,7 +56,23 @@ function fetchWithTimeout(url, init = {}) {
 
   let timedOut = false
 
-  return invidiousFetch(url, { ...init, signal: controller.signal })
+  /*
+    Electron's main process watches for responses that an instance replaced with
+    an HTML page, and opens the challenge modal when it sees one. That can't tell
+    the requests of a health check apart from the ones it wants to block: the
+    homepage a health check asks for is HTML on a healthy instance, so every run
+    would be reported as a challenge and reopen the modal. A header lets the main
+    process recognise these requests and let them report for themselves instead.
+
+    A web build has no such listener, and a custom header on a cross origin
+    request makes the browser send a preflight that many instances refuse, so
+    this is only sent by the desktop app.
+  */
+  const headers = process.env.IS_ELECTRON
+    ? { [HEALTH_CHECK_REQUEST_HEADER]: '1', ...init.headers }
+    : init.headers
+
+  return invidiousFetch(url, { ...init, headers, signal: controller.signal })
     .catch((err) => {
       // the abort that the deadline above causes arrives as a generic abort
       // error, which would otherwise be reported as an unreachable instance
@@ -71,8 +88,12 @@ function fetchWithTimeout(url, init = {}) {
  *
  * The CORS verdict is read off the same response, so that checking the headers
  * doesn't cost an extra request.
+ *
+ * `challengeUrl` is the url that has to be passed in the challenge page, or an
+ * empty string when there was no challenge. It is only reported, never opened,
+ * as opening it reloads the app and would make these checks run again.
  * @param {string} url
- * @returns {Promise<{ status: HealthCheckStatus, detail: string, latencyMs: number, allowOrigin: string, data: any }>}
+ * @returns {Promise<{ status: HealthCheckStatus, detail: string, latencyMs: number, allowOrigin: string, data: any, challengeUrl: string }>}
  */
 async function requestApiJson(url) {
   const start = performance.now()
@@ -87,7 +108,8 @@ async function requestApiJson(url) {
       detail: i18n.global.t('Settings.Backend Settings.Health Check.Unreachable', { error: errorMessage(err) }),
       latencyMs: Math.round(performance.now() - start),
       allowOrigin: '',
-      data: null
+      data: null,
+      challengeUrl: ''
     }
   }
 
@@ -95,17 +117,24 @@ async function requestApiJson(url) {
   const allowOrigin = response.headers.get('access-control-allow-origin') || ''
   const body = await response.text().catch(() => '')
 
-  // A reachable instance that answers with a challenge page has not told us
-  // anything about its API yet, so the API counts as broken until the
-  // challenge has been passed
+  /*
+    A reachable instance that answers with a challenge page has not told us
+    anything about its API yet, so the API counts as broken until the challenge
+    has been passed.
+
+    The challenge page is deliberately not opened here. Passing a challenge
+    reloads the app, which runs these checks again on startup, so opening it by
+    itself would put the user in a loop of modals with no way out. The caller is
+    given the url instead and lets the user decide to open it.
+  */
   if (isHtmlResponse(body)) {
-    openBlockedResource(url)
     return {
       status: 'error',
       detail: i18n.global.t('Settings.Backend Settings.Health Check.Bot Challenge Required'),
       latencyMs,
       allowOrigin,
-      data: null
+      data: null,
+      challengeUrl: url
     }
   }
 
@@ -115,19 +144,21 @@ async function requestApiJson(url) {
       detail: i18n.global.t('Settings.Backend Settings.Health Check.Http Error', { status: response.status }),
       latencyMs,
       allowOrigin,
-      data: null
+      data: null,
+      challengeUrl: ''
     }
   }
 
   try {
-    return { status: 'ok', detail: '', latencyMs, allowOrigin, data: JSON.parse(body) }
+    return { status: 'ok', detail: '', latencyMs, allowOrigin, data: JSON.parse(body), challengeUrl: '' }
   } catch {
     return {
       status: 'error',
       detail: i18n.global.t('Settings.Backend Settings.Health Check.Invalid Json'),
       latencyMs,
       allowOrigin,
-      data: null
+      data: null,
+      challengeUrl: ''
     }
   }
 }
@@ -163,7 +194,7 @@ async function checkReachable(instanceUrl) {
 }
 
 /**
- * @param {{ status: HealthCheckStatus, detail: string, latencyMs: number }} probe
+ * @param {{ status: HealthCheckStatus, detail: string, latencyMs: number, challengeUrl: string }} probe
  * @returns {HealthCheckResult}
  */
 function apiResult(probe) {
@@ -173,7 +204,8 @@ function apiResult(probe) {
     detail: probe.status === 'ok'
       ? i18n.global.t('Settings.Backend Settings.Health Check.Responds With Json', { milliseconds: probe.latencyMs })
       : probe.detail,
-    latencyMs: probe.latencyMs
+    latencyMs: probe.latencyMs,
+    challengeUrl: probe.challengeUrl
   }
 }
 
@@ -285,11 +317,19 @@ async function probeStream(url) {
     const response = await fetchWithTimeout(url, { headers: { Range: 'bytes=0-0' } })
     const latencyMs = Math.round(performance.now() - start)
 
-    // An instance that refuses to proxy a stream may answer with a challenge
-    // page instead of a partial response
+    /*
+      An instance that refuses to proxy a stream may answer with a challenge page
+      instead of a partial response. As in `requestApiJson`, the url is only
+      reported so that the user can choose to open the challenge page.
+    */
     if (isHtmlResponse(await response.text().catch(() => ''))) {
-      openBlockedResource(url)
-      return { id: 'video', status: 'error', detail: i18n.global.t('Settings.Backend Settings.Health Check.Bot Challenge Required'), latencyMs }
+      return {
+        id: 'video',
+        status: 'error',
+        detail: i18n.global.t('Settings.Backend Settings.Health Check.Bot Challenge Required'),
+        latencyMs,
+        challengeUrl: url
+      }
     }
 
     if (!response.ok) {
@@ -330,7 +370,13 @@ async function checkVideo(instanceUrl, proxiesVideos) {
   const info = await requestApiJson(`${instanceUrl}/api/v1/videos/${HEALTH_CHECK_VIDEO_ID}`)
 
   if (info.status === 'error') {
-    return { id: 'video', status: info.status, detail: info.detail, latencyMs: info.latencyMs }
+    return {
+      id: 'video',
+      status: info.status,
+      detail: info.detail,
+      latencyMs: info.latencyMs,
+      challengeUrl: info.challengeUrl
+    }
   }
 
   const streamUrl = pickSmallestProgressiveStream(info.data)

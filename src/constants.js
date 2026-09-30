@@ -250,6 +250,11 @@ const UnsupportedPlayerActions = /** @type {const} */({
 // Utils
 const MAIN_PROFILE_ID = 'allChannels'
 
+// Marks requests that the Invidious instance health check makes, so that the
+// main process can tell them apart from requests that were actually blocked.
+// Not a real CORS safelisted header name, as this never has to leave the app.
+const HEALTH_CHECK_REQUEST_HEADER = 'x-freetube-health-check'
+
 // Width threshold in px at which we switch to using a more heavily altered view for mobile users
 const MOBILE_WIDTH_THRESHOLD = 680
 
@@ -302,6 +307,7 @@ export {
   PlayerIcons,
   UnsupportedPlayerActions,
   MAIN_PROFILE_ID,
+  HEALTH_CHECK_REQUEST_HEADER,
   MOBILE_WIDTH_THRESHOLD,
   PLAYLIST_HEIGHT_FORCE_LIST_THRESHOLD,
   SEARCH_CHAR_LIMIT,

@@ -49,3 +49,12 @@
 .resultLabel {
   font-weight: bold;
 }
+
+/*
+  The challenge button is the only content that is worth its own line, as it sits
+  below an explanation of why the button is there at all
+*/
+.challengeButton {
+  grid-column: 3;
+  justify-self: start;
+}
