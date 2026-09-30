@@ -2,112 +2,119 @@
   <FtSettingsSection
     :title="$t('Settings.Proxy Settings.Proxy Settings')"
   >
-    <FtFlexBox class="settingsFlexStart500px">
-      <p
-        v-if="useProxy"
-        class="proxy-warning"
-      >
-        <FontAwesomeIcon
-          :icon="['fas', 'circle-exclamation']"
-          class="warning-icon"
-        />
-        {{ $t('Settings.Proxy Settings.Proxy Warning') }}
-      </p>
-      <FtToggleSwitch
-        :label="$t('Settings.Proxy Settings.Enable Tor / Proxy')"
-        :default-value="useProxy"
-        @change="handleUpdateProxy"
-      />
-    </FtFlexBox>
-    <template
+    <p
       v-if="useProxy"
+      class="proxy-warning"
     >
-      <FtFlexBox>
+      <FontAwesomeIcon
+        :icon="['fas', 'circle-exclamation']"
+        class="warning-icon"
+      />
+      {{ $t('Settings.Proxy Settings.Proxy Warning') }}
+    </p>
+    <FtSettingsTable>
+      <FtSettingsTableRow
+        :label="$t('Settings.Proxy Settings.Enable Tor / Proxy')"
+      >
+        <FtToggleSwitch
+          :label="$t('Settings.Proxy Settings.Enabled')"
+          :default-value="useProxy"
+          :compact="true"
+          @change="handleUpdateProxy"
+        />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="useProxy"
+        :label="$t('Settings.Proxy Settings.Proxy Protocol')"
+      >
         <FtSelect
           :placeholder="$t('Settings.Proxy Settings.Proxy Protocol')"
           :value="proxyProtocol"
           :select-names="PROTOCOL_NAMES"
           :select-values="PROTOCOL_VALUES"
-          class="protocol-dropdown"
           :icon="['fas', 'network-wired']"
           @change="handleUpdateProxyProtocol"
         />
-      </FtFlexBox>
-      <FtFlexBox>
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="useProxy"
+        :label="$t('Settings.Proxy Settings.Proxy Host')"
+      >
         <FtInput
           :placeholder="$t('Settings.Proxy Settings.Proxy Host')"
           :show-action-button="false"
-          show-label
           :value="proxyHostname"
           @input="handleUpdateProxyHostname"
-          @keydown.enter="testProxy"
+          @keydown.enter="checkYourIp"
         />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="useProxy"
+        :label="$t('Settings.Proxy Settings.Proxy Port Number')"
+      >
         <FtInput
           :placeholder="$t('Settings.Proxy Settings.Proxy Port Number')"
           :show-action-button="false"
-          show-label
           :value="proxyPort"
           :maxlength="5"
           @input="handleUpdateProxyPort"
-          @keydown.enter="testProxy"
+          @keydown.enter="checkYourIp"
         />
-      </FtFlexBox>
-      <FtFlexBox
-        v-if="areCredentialsSupported"
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="useProxy && areCredentialsSupported"
+        :label="$t('Settings.Proxy Settings.Proxy Username')"
       >
         <FtInput
           :placeholder="$t('Settings.Proxy Settings.Proxy Username')"
           :show-action-button="false"
-          show-label
           :value="proxyUsername"
           @input="handleUpdateProxyUsername"
-          @keydown.enter="testProxy"
+          @keydown.enter="checkYourIp"
         />
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        v-if="useProxy && areCredentialsSupported"
+        :label="$t('Settings.Proxy Settings.Proxy Password')"
+      >
         <FtInput
           :placeholder="$t('Settings.Proxy Settings.Proxy Password')"
           :show-action-button="false"
-          show-label
           :value="proxyPassword"
           input-type="password"
           @input="handleUpdateProxyPassword"
-          @keydown.enter="testProxy"
+          @keydown.enter="checkYourIp"
         />
-      </FtFlexBox>
-      <p
-        class="center"
+      </FtSettingsTableRow>
+      <FtSettingsTableRow
+        :label="$t('Settings.Proxy Settings.Check Your IP')"
+        :tooltip="$t('Tooltips.Proxy Settings.Check Your IP', { url: ipCheckUrl })"
       >
-        {{ $t('Settings.Proxy Settings.Clicking on Test Proxy will send a request to') }} {{ proxyTestUrl }}
-      </p>
-      <FtFlexBox>
-        <FtButton
-          :label="$t('Settings.Proxy Settings.Test Proxy')"
-          @click="testProxy"
-        />
-      </FtFlexBox>
-      <FtLoader
-        v-if="isLoading"
-      />
-      <div
-        v-else-if="dataAvailable"
-        class="center"
-      >
-        <h3>
-          {{ $t('Settings.Proxy Settings.Your Info') }}
-        </h3>
-        <p>
-          {{ $t('Display Label', { label: $t('Settings.Proxy Settings.Ip'), value: proxyIp }) }}
-        </p>
-        <p>
-          {{ $t('Display Label', { label: $t('Settings.Proxy Settings.Country'), value: proxyCountry }) }}
-        </p>
-        <p>
-          {{ $t('Display Label', { label: $t('Settings.Proxy Settings.Region'), value: proxyRegion }) }}
-        </p>
-        <p>
-          {{ $t('Display Label', { label: $t('Settings.Proxy Settings.City'), value: proxyCity }) }}
-        </p>
-      </div>
-    </template>
+        <div class="ipCheck">
+          <FtButton
+            :label="$t('Settings.Proxy Settings.Check Your IP')"
+            :disabled="isLoading"
+            @click="checkYourIp"
+          />
+          <p v-if="isLoading">
+            {{ $t('Settings.Proxy Settings.Checking') }}
+          </p>
+          <div
+            v-if="dataAvailable"
+            class="ipDetails"
+          >
+            <p>
+              <strong>{{ $t('Settings.Proxy Settings.YourIP') }}:</strong>
+              {{ proxyIp }}
+            </p>
+            <p>
+              <strong>{{ $t('Settings.Proxy Settings.YourLocation') }}:</strong>
+              {{ proxyCity }}, {{ proxyRegion }}, {{ proxyCountry }}
+            </p>
+          </div>
+        </div>
+      </FtSettingsTableRow>
+    </FtSettingsTable>
   </FtSettingsSection>
 </template>
 
@@ -117,12 +124,12 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
+import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
+import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
 import FtToggleSwitch from '../FtToggleSwitch/FtToggleSwitch.vue'
 import FtButton from '../FtButton/FtButton.vue'
 import FtSelect from '../FtSelect/FtSelect.vue'
 import FtInput from '../FtInput/FtInput.vue'
-import FtLoader from '../FtLoader/FtLoader.vue'
-import FtFlexBox from '../ft-flex-box/ft-flex-box.vue'
 
 import store from '../../store/index'
 
@@ -194,14 +201,14 @@ const localeToUse = computed(() => {
   return SUPPORTED_LANGS.find(lang => freeTubeLang === lang) ?? SUPPORTED_LANGS.find(lang => freeTubeLang.slice(0, 2) === lang.slice(0, 2))
 })
 
-const proxyTestUrl = computed(() => {
-  let proxyTestUrl = 'https://ipwho.is/?output=json&fields=ip,country,city,region'
+const ipCheckUrl = computed(() => {
+  let url = 'https://ipwho.is/?output=json&fields=ip,country,city,region'
 
   if (localeToUse.value) {
-    proxyTestUrl += `&lang=${localeToUse.value}`
+    url += `&lang=${localeToUse.value}`
   }
 
-  return proxyTestUrl
+  return url
 })
 
 /** @type {import('vue').ComputedRef<boolean>} */
@@ -307,15 +314,21 @@ function disableProxy() {
   proxyCity.value = ''
 }
 
-async function testProxy() {
+/**
+ * Asks ipwho.is who FreeTube currently looks like it is, which is the proxy's
+ * address while a proxy is enabled and FreeTube's own address otherwise.
+ *
+ * The proxy is deliberately left exactly as the user configured it instead of
+ * being forced on and off around the request. This is reachable with the proxy
+ * disabled, where turning it on would check a proxy the user has not asked to
+ * use, and turning it back off afterwards would throw the answer away.
+ * @returns {Promise<void>}
+ */
+async function checkYourIp() {
   isLoading.value = true
 
-  if (!useProxy.value) {
-    enableProxy()
-  }
-
   try {
-    const response = await fetch(proxyTestUrl.value)
+    const response = await fetch(ipCheckUrl.value)
     const json = await response.json()
 
     proxyIp.value = json.ip
@@ -324,16 +337,24 @@ async function testProxy() {
     proxyCity.value = json.city
     dataAvailable.value = true
   } catch (error) {
-    console.error('errored while testing proxy:', error)
-    showToast(t('Settings.Proxy Settings["Error getting network information. Is your proxy configured properly?"]'))
+    console.error('errored while getting network information:', error)
     dataAvailable.value = false
+    showToast(errorMessage())
   } finally {
-    if (!useProxy.value) {
-      disableProxy()
-    }
-
     isLoading.value = false
   }
+}
+
+/**
+ * A failed request only points at the proxy when a proxy is what FreeTube is
+ * going through, as without one there is nothing of the user's own to
+ * misconfigure
+ * @returns {string}
+ */
+function errorMessage() {
+  return useProxy.value
+    ? t('Settings.Proxy Settings["Error getting network information. Is your proxy configured properly?"]')
+    : t('Settings.Proxy Settings.Error getting network information')
 }
 </script>
 

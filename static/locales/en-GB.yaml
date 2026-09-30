@@ -481,7 +481,7 @@ Settings:
     'Limit the number of videos displayed for each channel': Limit the number of videos displayed for each channel
     To: To
   Data Settings:
-    Data Settings: 'Data'
+    Data Settings: User data
     Select Export Type: 'Select export type'
     Import Subscriptions: 'Import subscriptions'
     Export Subscriptions: 'Export Subscriptions'
@@ -581,19 +581,18 @@ Settings:
     Hide Channel Courses: Hide Channel "Courses" Tab
   The app needs to restart for changes to take effect. Restart and apply change?: The app needs to restart for changes to take effect. Do you want to restart and apply the changes?
   Proxy Settings:
+    Error getting network information: Error getting network information. Check your internet connection
     Error getting network information. Is your proxy configured properly?: Error getting network information. Is your proxy configured properly?
-    City: City
-    Region: Region
-    Country: Country
-    Ip: Ip
-    Your Info: Your Info
-    Test Proxy: Test Proxy
-    Clicking on Test Proxy will send a request to: Clicking on Test Proxy will send a request to
+    Check Your IP: Check your IP
+    Checking: Checking...
+    YourIP: Your IP
+    YourLocation: Your location
     Proxy Port Number: Proxy Port Number
     Proxy Host: Proxy Host
     Proxy Protocol: Proxy Protocol
-    Enable Tor / Proxy: Enable Tor / Proxy
-    Proxy Settings: Proxy
+    Enable Tor / Proxy: Proxy
+    Enabled: Enabled
+    Proxy Settings: Network
     Proxy Warning: FreeTube doesn't have a built-in proxy but can connect to an external proxy, such as one running on your machine like Tor or an external proxy such-as a SOCKS5 proxy provided by some VPNs. If enabled, make sure your proxy/Tor is configured properly, or FreeTube won't be able to fetch any data.
     Proxy Username: Proxy Username
     Proxy Password: Proxy Password
@@ -979,6 +978,8 @@ Tooltips:
   Subscription Settings:
     Fetch Feeds from RSS: When enabled, FreeTube will use RSS instead of its default method to grab your subscription feed. RSS is faster and prevents IP blocking, but it doesn’t provide certain information like video duration, live status or posts
     Fetch Automatically: When enabled, FreeTube will automatically fetch your subscription feed on startup and when a new window is opened.
+  Proxy Settings:
+    Check Your IP: Clicking on Check your IP will send a request to {url}
   Player Settings:
     Default Video Format: Set the formats used when a video plays. DASH formats can play higher qualities. Legacy formats are limited to a max of 360p but use less bandwidth. Audio formats are audio only streams.
     Proxy Videos Through Invidious: Will connect to Invidious to serve videos instead of making a direct connection to YouTube.

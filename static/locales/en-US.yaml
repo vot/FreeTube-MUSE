@@ -747,21 +747,21 @@ Settings:
     How do I import my subscriptions?: How do I import my subscriptions?
     Manage Subscriptions: Manage Subscriptions
   Proxy Settings:
-    Proxy Settings: Proxy
+    Proxy Settings: Network
     Proxy Warning: FreeTube doesn't have a built-in proxy but can connect to an external proxy, such as one running on your machine like Tor or an external proxy such-as a SOCKS5 proxy provided by some VPNs. If enabled, make sure your proxy/Tor is configured properly, or FreeTube won't be able to fetch any data.
-    Enable Tor / Proxy: Enable Tor / Proxy
+    Enable Tor / Proxy: Proxy
+    Enabled: Enabled
     Proxy Protocol: Proxy Protocol
     Proxy Host: Proxy Host
     Proxy Port Number: Proxy Port Number
     Proxy Username: Proxy Username
     Proxy Password: Proxy Password
-    Clicking on Test Proxy will send a request to: Clicking on Test Proxy will send a request to
-    Test Proxy: Test Proxy
-    Your Info: Your Info
-    Ip: Ip
-    Country: Country
-    Region: Region
-    City: City
+    Check Your IP: Check your IP
+    Checking: Checking...
+    YourIP: Your IP
+    YourLocation: Your location
+    Error getting network information: Error getting network information. Check your
+      internet connection
     Error getting network information. Is your proxy configured properly?: Error getting network information. Is your proxy configured properly?
   SponsorBlock Settings:
     SponsorBlock Settings: SponsorBlock
@@ -1200,6 +1200,8 @@ Tooltips:
     Allow Fallback to Direct YouTube for Video: When your video backend has a problem,
       FreeTube will automatically attempt to play through a direct YouTube connection as
       a fallback method when enabled.
+  Proxy Settings:
+    Check Your IP: Clicking on Check your IP will send a request to {url}
   Player Settings:
     Subtitles Size: Subtitles are sized to match the video, so this scales them up or
       down everywhere you watch.
