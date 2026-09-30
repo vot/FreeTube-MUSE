@@ -96,18 +96,18 @@ const USING_ELECTRON = !!process.env.IS_ELECTRON
 
 const { t } = useI18n()
 
-/** @type {('general' | 'display' | 'data' | 'safety' | 'about')[]} */
-const tabTypes = ['general', 'display', 'data', 'safety', 'about']
+/** @type {('general' | 'display' | 'distraction' | 'data' | 'safety' | 'about')[]} */
+const tabTypes = ['general', 'display', 'distraction', 'data', 'safety', 'about']
 
 /**
- * @returns {'general' | 'display' | 'data' | 'safety' | 'about'}
+ * @returns {'general' | 'display' | 'distraction' | 'data' | 'safety' | 'about'}
  */
 function restoreCurrentTab() {
   const savedTab = sessionStorage.getItem('Settings/currentTab')
   return tabTypes.includes(savedTab) ? savedTab : 'general'
 }
 
-/** @type {import('vue').Ref<'general' | 'display' | 'data' | 'safety' | 'about'>} */
+/** @type {import('vue').Ref<'general' | 'display' | 'distraction' | 'data' | 'safety' | 'about'>} */
 const currentTab = ref(restoreCurrentTab())
 
 watch(currentTab, (value) => {
@@ -146,8 +146,15 @@ const settingsTabs = computed(() => [
             component: ExternalPlayerSettings
           }]
         : []),
-      { type: 'distraction', component: DistractionSettings },
       { type: 'sponsor-block', component: SponsorBlockSettings }
+    ]
+  },
+  {
+    type: 'distraction',
+    title: t('Settings.Tabs.Distraction'),
+    icon: ['fas', 'eye-slash'],
+    sections: [
+      { type: 'distraction', component: DistractionSettings }
     ]
   },
   {
@@ -201,7 +208,7 @@ function showKeyboardShortcutPrompt() {
 }
 
 /**
- * @param {'general' | 'display' | 'data' | 'safety' | 'about'} tab
+ * @param {'general' | 'display' | 'distraction' | 'data' | 'safety' | 'about'} tab
  */
 function changeTab(tab) {
   if (tab === currentTab.value) {
@@ -226,7 +233,7 @@ function setTabRef(element, type) {
 
 /**
  * @param {KeyboardEvent} event
- * @param {'general' | 'display' | 'data' | 'safety' | 'about'} focusedTab
+ * @param {'general' | 'display' | 'distraction' | 'data' | 'safety' | 'about'} focusedTab
  */
 function focusTab(event, focusedTab) {
   if (event.altKey) {
