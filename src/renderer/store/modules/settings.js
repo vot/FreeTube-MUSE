@@ -230,7 +230,6 @@ const state = {
   hideWatchedSubs: false,
   hideUploader: false,
   unsubscriptionPopupStatus: false,
-  hideLabelsSideBar: false,
   hideChapters: false,
   showDistractionFreeTitles: false,
   landingPage: 'subscriptions',

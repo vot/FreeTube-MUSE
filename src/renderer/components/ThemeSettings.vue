@@ -26,12 +26,6 @@
       </div>
       <div class="switchColumn">
         <FtToggleSwitch
-          :label="$t('Settings.Theme Settings.Hide Side Bar Labels')"
-          compact
-          :default-value="hideLabelsSideBar"
-          @change="updateHideLabelsSideBar"
-        />
-        <FtToggleSwitch
           :label="$t('Settings.Theme Settings.Hide FreeTube Header Logo')"
           compact
           :default-value="hideHeaderLogo"
@@ -220,18 +214,6 @@ function handleExpandSideBar(value) {
   }
 
   store.dispatch('updateExpandSideBar', value)
-}
-
-/** @type {import('vue').ComputedRef<boolean>} */
-const hideLabelsSideBar = computed(() => {
-  return store.getters.getHideLabelsSideBar
-})
-
-/**
- * @param {boolean} value
- */
-function updateHideLabelsSideBar(value) {
-  store.dispatch('updateHideLabelsSideBar', value)
 }
 
 /** @type {import('vue').ComputedRef<boolean>} */

@@ -6,7 +6,7 @@
       hideOutlines: outlinesHidden,
       isLocaleRightToLeft: isLocaleRightToLeft,
       isSideNavOpen: isSideNavOpen,
-      hideLabelsSideBar: hideLabelsSideBar && !isSideNavOpen,
+      hideLabelsSideBar: !isSideNavOpen,
       hasTabBar: enableTabbedInterface
     }"
   >
@@ -177,9 +177,6 @@ const backendFallback = computed(() => store.getters.getBackendFallback)
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isSideNavOpen = computed(() => store.getters.getIsSideNavOpen)
-
-/** @type {import('vue').ComputedRef<boolean>} */
-const hideLabelsSideBar = computed(() => store.getters.getHideLabelsSideBar)
 
 /** @type {import('vue').ComputedRef<boolean>} */
 const isAnyPromptOpen = computed(() => store.getters.isAnyPromptOpen)

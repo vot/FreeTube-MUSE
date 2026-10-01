@@ -15,10 +15,8 @@
       <FontAwesomeIcon
         :icon="['fas', 'ellipsis-h']"
         class="navIcon"
-        :class="applyNavIconExpand"
       />
       <p
-        v-if="!hideLabelsSideBar"
         id="moreNavLabel"
         class="navLabel"
       >
@@ -32,7 +30,6 @@
       <router-link
         class="navOption mobileHidden"
         :title="$t('Channels.Channels')"
-        :aria-label="hideLabelsSideBar ? $t('Channels.Channels') : null"
         to="/subscribedchannels"
         @click="closeMenu"
       >
@@ -42,11 +39,9 @@
           <FontAwesomeIcon
             :icon="['fas', 'user-check']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
-          v-if="!hideLabelsSideBar"
           id="channelLabel"
           class="navLabel"
         >
@@ -57,17 +52,14 @@
         v-if=" SUPPORTS_LOCAL_API && trendingVisible"
         class="navOption"
         :title="$t('Trending.Trending')"
-        :aria-label="hideLabelsSideBar ? $t('Trending.Trending') : null"
         to="/trending"
         @click="closeMenu"
       >
         <FontAwesomeIcon
           :icon="['fas', 'fire']"
           class="navIcon"
-          :class="applyNavIconExpand"
         />
         <p
-          v-if="!hideLabelsSideBar"
           id="trendingNavLabel"
           class="navLabel"
         >
@@ -78,17 +70,14 @@
         v-if="popularVisible"
         class="navOption"
         :title="$t('Most Popular')"
-        :aria-label="hideLabelsSideBar ? $t('Most Popular') : null"
         to="/popular"
         @click="closeMenu"
       >
         <FontAwesomeIcon
           :icon="['fas', 'users']"
           class="navIcon"
-          :class="applyNavIconExpand"
         />
         <p
-          v-if="!hideLabelsSideBar"
           id="mostPopularNavLabel"
           class="navLabel"
         >
@@ -99,13 +88,11 @@
     <router-link
       class="navOption mobileShow"
       :title="$t('History.History')"
-      :aria-label="hideLabelsSideBar ? $t('History.History'): null"
       to="/history"
     >
       <FontAwesomeIcon
         :icon="['fas', 'history']"
         class="navIcon"
-        :class="applyNavIconExpand"
       />
       <p
         id="historyNavLabel"
@@ -137,20 +124,9 @@ const trendingVisible = computed(() => {
 })
 
 /** @type {import('vue').ComputedRef<boolean>} */
-const hideLabelsSideBar = computed(() => {
-  return store.getters.getHideLabelsSideBar
-})
-
-/** @type {import('vue').ComputedRef<boolean>} */
 const popularVisible = computed(() => {
   return !store.getters.getHidePopularVideos &&
     (store.getters.getBackendFallback || store.getters.getBackendPreference === 'invidious')
-})
-
-const applyNavIconExpand = computed(() => {
-  return {
-    navIconExpand: hideLabelsSideBar.value
-  }
 })
 
 function closeMenu() {
