@@ -31,7 +31,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'rss']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -52,7 +51,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'user-check']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -74,7 +72,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'fire']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -96,7 +93,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'users']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -118,7 +114,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'list']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -140,7 +135,6 @@
           <FontAwesomeIcon
             :icon="['fas', 'history']"
             class="navIcon"
-            :class="applyNavIconExpand"
           />
         </div>
         <p
@@ -170,8 +164,8 @@
             <img
               v-if="channel.thumbnail != null"
               class="channelThumbnail"
-              height="35"
-              width="35"
+              height="25"
+              width="25"
               loading="lazy"
               :src="channel.thumbnail"
               :alt="isOpen ? '' : channel.name"
@@ -243,9 +237,9 @@ const activeSubscriptions = computed(() => {
   const subscriptions = deepCopy(activeProfile.value.subscriptions)
 
   subscriptions.forEach(channel => {
-    // Change thumbnail size to 35x35, as that's the size we display it
+    // Change thumbnail size to 25x25, as that's the size we display it
     // so we don't need to download a bigger image (the default is 176x176)
-    channel.thumbnail = channel.thumbnail?.replace(/=s\d+/, '=s35')
+    channel.thumbnail = channel.thumbnail?.replace(/=s\d+/, '=s25')
   })
 
   const locale_ = locale.value
@@ -287,12 +281,6 @@ const hideActiveSubscriptions = computed(() => {
 /** @type {import('vue').ComputedRef<boolean>} */
 const hideText = computed(() => {
   return !isOpen.value
-})
-
-const applyNavIconExpand = computed(() => {
-  return {
-    navIconExpand: hideText.value
-  }
 })
 
 const applyHiddenLabels = computed(() => {

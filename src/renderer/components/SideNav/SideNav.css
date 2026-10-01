@@ -17,6 +17,16 @@
   transition-duration: 150ms;
   transition-timing-function: ease-in-out;
   user-select: none;
+
+  /*
+    Icon geometry, shared by both states so that icons keep the same distance
+    from the left edge when the rail expands. The collapsed rail is 60px wide
+    and centres a 35px icon box inside it, which puts the box 12.5px in; the
+    expanded rail reuses that same inset rather than re-centring.
+  */
+  --nav-icon-box-size: 35px;
+  --nav-icon-inset: 12.5px;
+  --nav-icon-gap: 5px;
 }
 
 .inner {
@@ -58,8 +68,10 @@
 .navOption,
 .navChannel {
   position: relative;
+  display: flex;
+  align-items: center;
   padding: 5px;
-  min-block-size: 35px;
+  min-block-size: 40px;
 }
 
 .moreOption {
@@ -67,7 +79,6 @@
 }
 
 .navOption {
-  display: block;
   color: inherit;
   text-decoration: inherit;
   padding-block: 5px;
@@ -76,7 +87,6 @@
 }
 
 .channelLink {
-  display: block;
   color: inherit;
   text-decoration: inherit;
 }
@@ -111,9 +121,28 @@
 }
 
 .navIcon {
-  block-size: 1em;
+  position: relative;
+
+  --nav-icon-drop: 0;
+
+  inset-block-start: var(--nav-icon-drop);
+  block-size: 1.3em;
   inline-size: 100%;
   display: block;
+}
+
+/* Glyphs whose artwork is off-centre within the box, tuned by eye. */
+.navIcon.fa-rss {
+  --nav-icon-drop: -2px;
+}
+
+.navIcon.fa-list {
+  --nav-icon-drop: -1px;
+}
+
+.navIcon.fa-angles-left,
+.navIcon.fa-angles-right {
+  --nav-icon-drop: 0px;
 }
 
 .sideNavToggle .navIcon {
@@ -122,15 +151,20 @@
 }
 
 .navIcon.fa-user-check {
-  /* Align icon according to torso */
-  transform: translateX(0.2em);
+  --nav-icon-drop: -2px;
 }
 
 .navLabel {
   text-align: center;
   inset-inline-start: 0;
   font-size: 11px;
-  margin-block-end: 0;
+  min-inline-size: 0;
+
+  /*
+    `margin-block: 0` also clears the UA default `p { margin-block: 1em }`,
+    which otherwise offsets the label downwards when the row centres it.
+  */
+  margin-block: 0;
 }
 
 .navOption .navLabel {
@@ -140,30 +174,16 @@
 
 .navChannel .navLabel {
   overflow: hidden;
-  /* stylelint-disable-next-line csstools/use-logical */
-  margin-left: 40px;
   overflow-wrap: break-word;
   /* font-size: 12px; */
 }
 
-/* stylelint-disable csstools/use-logical */
-:global(body[dir='rtl'] .navChannel .navLabel) {
-  margin-left: initial;
-  margin-right: 40px;
-}
-/* stylelint-enable csstools/use-logical */
-
+/* `auto` centres the icon box in the collapsed rail */
 .thumbnailContainer {
-  inline-size: 35px;
+  inline-size: var(--nav-icon-box-size);
   display: block;
-  margin: 0;
-  position: static;
   text-align: center;
-  transform: none;
-  float: none;
   margin-inline: auto;
-  inset-block-start: 0;
-  margin-block: 0.3em;
 }
 
 .channelThumbnail {
@@ -173,11 +193,16 @@
 
 .noThumbnail {
   /* font-size is used for font-icon */
-  font-size: 35px;
+  font-size: 25px;
 }
 
+/*
+  Inset by the same amount in both states. A percentage width would scale the
+  left edge with the rail (3px collapsed, 10px expanded), so the divider would
+  appear to slide inwards as the rail grows.
+*/
 .sideNav hr {
-  inline-size: 90%;
+  margin-inline: 2px;
   block-size: 1px;
   border: 0;
   background-color: var(--primary-color);
@@ -196,10 +221,6 @@
 
 .hiddenLabels .navLabel {
   display: none;
-}
-
-.navIconExpand {
-  block-size: 1.3em;
 }
 
 .disabledIcon {
@@ -224,49 +245,30 @@
     display: block;
   }
 
-  .opened .navIcon {
-    inline-size: 1.25em;
-    margin-inline-start: 10px;
-  }
-
-  .opened .navIcon.fa-user-check {
-    block-size: 1em;
-  }
-
-  .opened .navOption {
-    padding-inline: 5px;
+  .opened .navOption,
+  .opened .navChannel {
+    padding-inline: var(--nav-icon-inset) 5px;
+    gap: var(--nav-icon-gap);
   }
 
   .opened .navLabel {
     text-align: start;
-    margin-inline-start: 40px;
-    margin-block-end: 16px;
     font-size: 16px;
-  }
-
-  .opened .channelLink {
-    display: flex;
-    align-items: center;
   }
 
   .opened .navChannel .navLabel {
     /* font-size: 12px; */
     flex-grow: 1;
-    margin: 0 0 0 4px;
-
   }
 
+  /*
+    The icon box is a plain flex item when expanded, so the row is spaced by
+    `gap` rather than absolute positioning. `margin-inline` has to be reset:
+    the collapsed rail centres the box with `auto`, which would otherwise
+    absorb all the free space and shove the label to the far edge.
+  */
   .opened .thumbnailContainer {
-    inset-block-start: 50%;
-    position: absolute;
-    transform: translateY(-50%);
-    margin-block: 0;
-  }
-
-  .opened .navChannel .thumbnailContainer {
-    position: static;
-    transform: none;
-    margin: 5px;
+    margin-inline: 0;
   }
 
   .opened.hiddenLabels .navLabel {
