@@ -4,10 +4,10 @@
     :class="{ topNavBarColor: barColor }"
   >
     <div class="side">
-
-        <div
-          class="logoIcon"
-        />
+      <div
+        v-if="!hideHeaderLogo"
+        class="logoIcon"
+      />
       <FtIconButton
         class="navIconButton"
         :disabled="isArrowBackwardDisabled"
@@ -124,7 +124,6 @@ import store from '../../store/index'
 import { KeyboardShortcuts, MOBILE_WIDTH_THRESHOLD, SEARCH_RESULTS_DISPLAY_LIMIT } from '../../../constants'
 import { debounce, localizeAndAddKeyboardShortcutToActionTitle, openInternalPath } from '../../helpers/utils'
 import { getActiveTab, getActiveTabId } from '../../helpers/tabs'
-import { translateWindowTitle } from '../../helpers/strings'
 import { clearLocalSearchSuggestionsSession, getLocalClip, getLocalSearchSuggestions } from '../../helpers/api/local'
 import { getClipInvidious, getInvidiousSearchSuggestions } from '../../helpers/api/invidious'
 
@@ -149,15 +148,6 @@ const enableSearchSuggestions = computed(() => store.getters.getEnableSearchSugg
 const barColor = computed(() => store.getters.getBarColor)
 
 const landingPage = computed(() => '/' + store.getters.getLandingPage)
-
-const headerLogoTitle = computed(() => {
-  return t('Go to page', {
-    page: translateWindowTitle(
-      router.getRoutes()
-        .find((route) => route.path === landingPage.value)
-        .meta.title)
-  })
-})
 
 const navigationHistoryAddendum = computed(() => {
   return navigationHistoryDropdownOptions.value.length === 0

@@ -70,7 +70,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import GeneralSettings from '../../components/GeneralSettings/GeneralSettings.vue'
-import MuseSettings from '../../components/MuseSettings/MuseSettings.vue'
+import ModernTweaks from '../../components/ModernTweaks/ModernTweaks.vue'
 import ThemeSettings from '../../components/ThemeSettings.vue'
 import PlayerSettings from '../../components/PlayerSettings/PlayerSettings.vue'
 import ScreenshotSettings from '../../components/ScreenshotSettings/ScreenshotSettings.vue'
@@ -122,7 +122,7 @@ const settingsTabs = computed(() => [
     icon: ['fas', 'border-all'],
     sections: [
       { type: 'general', component: GeneralSettings },
-      { type: 'muse', component: MuseSettings },
+      { type: 'modern-tweaks', component: ModernTweaks },
       { type: 'subscription', component: SubscriptionSettings },
       ...(process.env.IS_ELECTRON
         ? [{

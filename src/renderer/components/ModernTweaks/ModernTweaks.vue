@@ -1,5 +1,5 @@
 <template>
-  <FtSettingsSection title="MUSE">
+  <FtSettingsSection :title="t('Settings.Modern Tweaks.Modern Tweaks')">
     <div class="switchColumnGrid">
       <div class="switchColumn">
         <FtToggleSwitch
@@ -19,17 +19,22 @@
         />
       </div>
     </div>
-    <div class="switchGrid">
-      <FtSelect
-        :placeholder="t('Settings.Player Settings.Subtitles Size.Subtitles Size')"
-        :value="subtitleSize"
-        :select-names="subtitleSizeNames"
-        :select-values="SUBTITLE_SIZE_VALUES"
+    <FtSettingsTable>
+      <FtSettingsTableRow
+        :label="t('Settings.Player Settings.Subtitles Size.Subtitles Size')"
         :tooltip="t('Tooltips.Player Settings.Subtitles Size')"
-        :icon="['fas', 'font']"
-        @change="updateSubtitleSize"
-      />
-    </div>
+      >
+        <FtSelect
+          :placeholder="t('Settings.Player Settings.Subtitles Size.Subtitles Size')"
+          :value="subtitleSize"
+          :select-names="subtitleSizeNames"
+          :select-values="SUBTITLE_SIZE_VALUES"
+          :tooltip="t('Tooltips.Player Settings.Subtitles Size')"
+          :icon="['fas', 'font']"
+          @change="updateSubtitleSize"
+        />
+      </FtSettingsTableRow>
+    </FtSettingsTable>
   </FtSettingsSection>
 </template>
 
@@ -38,6 +43,8 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import FtSettingsSection from '../FtSettingsSection/FtSettingsSection.vue'
+import FtSettingsTable from '../FtSettingsTable/FtSettingsTable.vue'
+import FtSettingsTableRow from '../FtSettingsTableRow/FtSettingsTableRow.vue'
 import FtSelect from '../FtSelect/FtSelect.vue'
 import FtToggleSwitch from '../FtToggleSwitch/FtToggleSwitch.vue'
 
@@ -86,4 +93,4 @@ function updateSubtitleSize(value) {
 }
 </script>
 
-<style scoped src="./MuseSettings.css" />
+<style scoped src="./ModernTweaks.css" />
